@@ -3,8 +3,8 @@ import {DragDropContext, Draggable, Droppable, DropResult, DraggableLocation} fr
 import {initialData} from "utils/initial-data";
 import axios from "axios";
 import {WorkflowList} from "utils/models";
+import BoardComponent from "components/BoardComponent";
 
-const grid = 8;
 
 /**
  * Reorder items inside a list.
@@ -13,6 +13,20 @@ const reorder = (items: Array<WorkflowList>, startIndex: number, endIndex: numbe
     const [removed] = items.splice(startIndex, 1);
     items.splice(endIndex, 0, removed);
     return items;
+};
+
+/**
+ * Recursively reorder items inside a list.
+ */
+const recursiveReorder = (lists: Array<WorkflowList>, listUUidToReorder: string, startIndex: number, endIndex: number) => {
+    lists.forEach(list => {
+        if (list.uuid == listUUidToReorder) {
+            const [removed] = list.children.splice(startIndex, 1);
+            list.children.splice(endIndex, 0, removed);
+        } else {
+            recursiveReorder(list.children, listUUidToReorder, startIndex, endIndex)
+        }
+    })
 };
 
 /**
@@ -31,41 +45,23 @@ const move = (sourceItems: Array<WorkflowList>,
     return [sourceClone, destinationClone];
 };
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: "none",
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
-
-    // change background colour if dragging
-    background: isDragging ? "lightgreen" : "grey",
-
-    // styles we need to apply on draggables
-    ...draggableStyle
-});
-const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: grid,
-    width: 250
-});
 
 const Home: FunctionComponent = (): JSX.Element => {
 
     const [state, setState] = useState(initialData);
 
     useEffect(() => {
-        getWorkflowLists();
+        //getWorkflowLists();
     }, []);
 
     const getWorkflowLists = async () => {
-        axios.get('http://localhost:5001/workflowList', {
-            method: 'GET'
-        }).then(function (response) {
-            const workflowLists: Array<WorkflowList> = response.data;
-            console.log(workflowLists)
-            setState(workflowLists);
-        }).catch(function (error) {
-            console.log(error)
+        axios.get('http://localhost:5001/workflowList')
+            .then(function (response) {
+                const workflowLists: Array<WorkflowList> = response.data;
+                console.log(workflowLists);
+                setState(workflowLists);
+            }).catch(function (error) {
+            console.log(error);
         });
     }
 
@@ -80,12 +76,8 @@ const Home: FunctionComponent = (): JSX.Element => {
         const destinationDroppableId: string = destination.droppableId;
 
         if (sourceDroppableId === destinationDroppableId) {
-            const list = state.find(list => list.uuid == sourceDroppableId);
-            const listIndex = state.indexOf(list);
-            const reorderedItems = reorder(list.children, source.index, destination.index);
-            // Make shallow copy
-            const newState = [...state];
-            newState[listIndex].children = reorderedItems;
+            let newState = [...state]
+            recursiveReorder(newState, sourceDroppableId, source.index, destination.index)
             setState(newState);
         } else {
             const sourceList = state.find(list => list.uuid == sourceDroppableId);
@@ -107,38 +99,11 @@ const Home: FunctionComponent = (): JSX.Element => {
         // TODO move into components
         <div style={{display: "flex"}}>
             <DragDropContext onDragEnd={onDragEnd}>
-                {state.map((list, index) => (
-                    <Droppable key={index} droppableId={list.uuid}>
-                        {(provided, snapshot) => (
-                            <div className="container mx-auto">
-                                <div>{list.title}</div>
-                                <div ref={provided.innerRef}
-                                     {...provided.droppableProps}
-                                     style={getListStyle(snapshot.isDraggingOver)}
-                                >
-                                    {list.children.map((item, index) => (
-                                        <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
-                                            {(provided, snapshot) => (
-                                                <div ref={provided.innerRef}
-                                                     {...provided.draggableProps}
-                                                     {...provided.dragHandleProps}
-                                                     style={getItemStyle(
-                                                         snapshot.isDragging,
-                                                         provided.draggableProps.style
-                                                     )}
-                                                     className="container mx-auto"
-                                                >
-                                                    {item.description}
-                                                </div>
-                                            )}
-                                        </Draggable>))}
-                                    {provided.placeholder}
-                                </div>
-                            </div>
-                        )}
-                    </Droppable>
-
-                ))}
+                <div>
+                    {state.map((board, index) => (
+                        <BoardComponent key={index} board={board} index={index}/>
+                    ))}
+                </div>
             </DragDropContext>
         </div>
     );

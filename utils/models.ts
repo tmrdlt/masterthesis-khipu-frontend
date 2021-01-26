@@ -3,5 +3,6 @@ export type WorkflowList = {
     uuid: string,
     title: string,
     description: string,
+    usageType: String,
     children: Array<WorkflowList>
 }
