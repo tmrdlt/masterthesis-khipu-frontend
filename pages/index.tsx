@@ -2,14 +2,14 @@ import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Draggable, Droppable, DropResult, DraggableLocation} from "react-beautiful-dnd";
 import {initialData} from "utils/initial-data";
 import axios from "axios";
-import {Item, List} from "utils/models";
+import {WorkflowList} from "utils/models";
 
 const grid = 8;
 
 /**
  * Reorder items inside a list.
  */
-const reorder = (items: Array<Item>, startIndex: number, endIndex: number) => {
+const reorder = (items: Array<WorkflowList>, startIndex: number, endIndex: number) => {
     const [removed] = items.splice(startIndex, 1);
     items.splice(endIndex, 0, removed);
     return items;
@@ -18,10 +18,10 @@ const reorder = (items: Array<Item>, startIndex: number, endIndex: number) => {
 /**
  * Move an item from one list to another list.
  */
-const move = (sourceItems: Array<Item>,
-              destinationItems: Array<Item>,
+const move = (sourceItems: Array<WorkflowList>,
+              destinationItems: Array<WorkflowList>,
               droppableSource: DraggableLocation,
-              droppableDestination: DraggableLocation): [Array<Item>, Array<Item>] => {
+              droppableDestination: DraggableLocation): [Array<WorkflowList>, Array<WorkflowList>] => {
     const sourceClone = Array.from(sourceItems);
     const destinationClone = Array.from(destinationItems);
     const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -54,14 +54,16 @@ const Home: FunctionComponent = (): JSX.Element => {
     const [state, setState] = useState(initialData);
 
     useEffect(() => {
-        //getWorkflowLists();
+        getWorkflowLists();
     }, []);
 
     const getWorkflowLists = async () => {
         axios.get('http://localhost:5001/workflowList', {
             method: 'GET'
         }).then(function (response) {
-            console.log(response.data)
+            const workflowLists: Array<WorkflowList> = response.data;
+            console.log(workflowLists)
+            setState(workflowLists);
         }).catch(function (error) {
             console.log(error)
         });
@@ -78,7 +80,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         const destinationDroppableId: string = destination.droppableId;
 
         if (sourceDroppableId === destinationDroppableId) {
-            const list = state.find(list => list.id == sourceDroppableId);
+            const list = state.find(list => list.uuid == sourceDroppableId);
             const listIndex = state.indexOf(list);
             const reorderedItems = reorder(list.children, source.index, destination.index);
             // Make shallow copy
@@ -86,8 +88,8 @@ const Home: FunctionComponent = (): JSX.Element => {
             newState[listIndex].children = reorderedItems;
             setState(newState);
         } else {
-            const sourceList = state.find(list => list.id == sourceDroppableId);
-            const destinationList = state.find(list => list.id == destinationDroppableId);
+            const sourceList = state.find(list => list.uuid == sourceDroppableId);
+            const destinationList = state.find(list => list.uuid == destinationDroppableId);
             const sourceListIndex = state.indexOf(sourceList);
             const destinationListIndex = state.indexOf(destinationList);
 
@@ -106,17 +108,16 @@ const Home: FunctionComponent = (): JSX.Element => {
         <div style={{display: "flex"}}>
             <DragDropContext onDragEnd={onDragEnd}>
                 {state.map((list, index) => (
-                    <Droppable key={index} droppableId={list.id}>
+                    <Droppable key={index} droppableId={list.uuid}>
                         {(provided, snapshot) => (
                             <div className="container mx-auto">
                                 <div>{list.title}</div>
-
                                 <div ref={provided.innerRef}
                                      {...provided.droppableProps}
                                      style={getListStyle(snapshot.isDraggingOver)}
                                 >
                                     {list.children.map((item, index) => (
-                                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                                        <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
                                             {(provided, snapshot) => (
                                                 <div ref={provided.innerRef}
                                                      {...provided.draggableProps}

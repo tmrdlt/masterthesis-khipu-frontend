@@ -1,9 +1,7 @@
-export type Item = {
-    id: string;
-    description: string;
-}
-export type List = {
-    id: string;
+export type WorkflowList = {
+    id: number,
+    uuid: string,
     title: string,
-    children: Array<Item>
+    description: string,
+    children: Array<WorkflowList>
 }

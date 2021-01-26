@@ -1,5 +1,5 @@
 import axios from "axios";
-import {List} from "utils/models";
+import {WorkflowList} from "utils/models";
 
 const getWorkflowLists = async () => {
     return axios.get('http://localhost:5001/workflowList', {
@@ -14,26 +14,27 @@ const getWorkflowLists = async () => {
 }
 
 
-export const initialData: Array<List> =
+export const initialData: Array<WorkflowList> =
     [
         {
-            id: 'list-1',
+            id: 1,
+            uuid: 'list-1',
             title: 'To do',
+            description: 'test',
             children: [
-                {id: 'item-1', description: 'Take out the garbage'},
-                {id: 'item-2', description: 'Watch my favorite show'},
-                {id: 'item-3', description: 'Charge my phone'},
-                {id: 'item-4', description: 'Cook dinner'}
+                {id: 3, uuid: 'item-3', title: 'item', description: 'item-3', children: []},
+                {id: 4, uuid: 'item-4', title: 'item', description: 'item-4', children: []}
             ]
         },
         {
-            id: 'list-2',
+            id: 2,
+            uuid: 'list-2',
             title: 'In progress',
+            description: 'test',
             children: [
-                {id: 'item-5', description: 'Take out the garbage'},
-                {id: 'item-6', description: 'Watch my favorite show'},
-                {id: 'item-7', description: 'Charge my phone'},
-                {id: 'item-8', description: 'Cook dinner'}
+                {id: 5, uuid: 'item-5', title: 'item', description: 'item-5', children: []},
+                {id: 6, uuid: 'item-6', title: 'item', description: 'item-6', children: []}
+
             ]
         }
     ];
