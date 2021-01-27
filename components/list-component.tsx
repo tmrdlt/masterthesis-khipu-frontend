@@ -6,9 +6,10 @@ import ItemComponent from "components/item-component";
 interface IListProps {
     list: WorkflowList
     index: number
+    addWorkflowList
 }
 
-const ListComponent = ({list, index}: IListProps): JSX.Element => {
+const ListComponent = ({list, index, addWorkflowList}: IListProps): JSX.Element => {
     return (
         <Draggable
             key={list.uuid}
@@ -19,6 +20,17 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                 <div ref={provided.innerRef} {...provided.draggableProps}>
                     <div className="rounded bg-gray-200 w-64 p-2 m-1">
                         <div {...provided.dragHandleProps}>{list.title}</div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                addWorkflowList({
+                                    title: "item",
+                                    description: "item",
+                                    parentUuid: list.uuid
+                                })
+                            }}
+                        >Add item
+                        </button>
                         <Droppable droppableId={list.uuid} type="LIST">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}

@@ -48,25 +48,28 @@ const Home: FunctionComponent = (): JSX.Element => {
         }
     }
 
+    const addWorkflowList = (createWorkflowListEntity: CreateWorkflowListEntity) => {
+        createWorkflowList(createWorkflowListEntity)
+        .then(res => {
+            if (res) {
+                getWorkflowLists().then(workflowLists => {
+                    if (workflowLists) {
+                        setState(workflowLists)
+                    }
+                })
+            }
+        });
+    }
+
     return (
         <div>
             <button
                 type="button"
                 onClick={() => {
-                    const createWorkflowListEntity: CreateWorkflowListEntity = {
+                    addWorkflowList({
                         title: "board",
                         description: "board"
-                    }
-                    createWorkflowList(createWorkflowListEntity)
-                        .then(res => {
-                            if (res) {
-                                getWorkflowLists().then(workflowLists => {
-                                    if (workflowLists) {
-                                        setState(workflowLists)
-                                    }
-                                })
-                            }
-                        });
+                    })
                 }}
             >Add board
             </button>
@@ -77,7 +80,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                              {...provided.droppableProps}
                         >
                             {state.map((board, index) => (
-                                <BoardComponent key={index} board={board} index={index}/>
+                                <BoardComponent key={index} board={board} index={index} addWorkflowList={addWorkflowList}/>
                             ))}
                             {provided.placeholder}
                         </div>

@@ -7,9 +7,10 @@ import {createWorkflowList, getWorkflowLists} from "utils/workflow-api";
 interface IBoardProps {
     board: WorkflowList
     index: number
+    addWorkflowList
 }
 
-const BoardComponent = ({board, index}: IBoardProps): JSX.Element => {
+const BoardComponent = ({board, index, addWorkflowList}: IBoardProps): JSX.Element => {
     return (
         <Draggable
             key={board.uuid}
@@ -23,20 +24,11 @@ const BoardComponent = ({board, index}: IBoardProps): JSX.Element => {
                         <button
                             type="button"
                             onClick={() => {
-                                const createWorkflowListEntity: CreateWorkflowListEntity = {
+                                addWorkflowList({
                                     title: "list",
                                     description: "list",
                                     parentUuid: board.uuid
-                                }
-                                createWorkflowList(createWorkflowListEntity)
-                                    .then(res => {
-                                        if (res) {
-                                            getWorkflowLists().then(workflowLists => {
-                                                if (workflowLists) {
-                                                }
-                                            })
-                                        }
-                                    });
+                                })
                             }}
                         >Add List
                         </button>
@@ -46,7 +38,7 @@ const BoardComponent = ({board, index}: IBoardProps): JSX.Element => {
                                      {...provided.droppableProps}>
                                     <div className="w-full p-8 flex justify-start font-sans">
                                         {board.children.map((list, index) => (
-                                            <ListComponent key={index} list={list} index={index}/>
+                                            <ListComponent key={index} list={list} index={index} addWorkflowList={addWorkflowList}/>
                                         ))}
                                         {provided.placeholder}
                                     </div>
