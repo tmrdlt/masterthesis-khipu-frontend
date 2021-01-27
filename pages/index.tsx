@@ -52,41 +52,29 @@ const move = (sourceItems: Array<WorkflowList>,
  * Recursively move an item from one list to another list.
  */
 const recursiveMove = (lists: Array<WorkflowList>,
-                       elementToMoveUuid: string,
                        droppableSource: DraggableLocation,
                        droppableDestination: DraggableLocation) => {
 
-    const elementToMove: WorkflowList = recursiveFind(lists, elementToMoveUuid)
-    recursiveRemove(lists, droppableSource);
+    const elementToMove: WorkflowList = recursiveRemove(lists, droppableSource);
     recursiveInsert(lists, droppableDestination, elementToMove);
 };
 
-const recursiveFind = (lists: Array<WorkflowList>, elementToMoveUuid: string): WorkflowList => {
+const recursiveRemove = (lists: Array<WorkflowList>, droppableSource: DraggableLocation): WorkflowList => {
     for (let i = 0; i < lists.length; i++) {
-        if (lists[i].uuid == elementToMoveUuid) {
-            return lists[i]
+        if (lists[i].uuid == droppableSource.droppableId) {
+            const [elementToMove] = lists[i].children.splice(droppableSource.index, 1);
+            return elementToMove
         }
-        const found = recursiveFind(lists[i].children, elementToMoveUuid)
-        if (found) {
-            return found;
+        const elementToMove = recursiveRemove(lists[i].children, droppableSource)
+        if (elementToMove) {
+            return elementToMove;
         }
     }
-}
-const recursiveRemove = (lists: Array<WorkflowList>,
-                         droppableSource: DraggableLocation) => {
-    lists.forEach(list => {
-        if (list.uuid == droppableSource.droppableId) {
-            list.children.splice(droppableSource.index, 1);
-        } else {
-            recursiveRemove(list.children, droppableSource)
-        }
-    })
 }
 
 const recursiveInsert = (lists: Array<WorkflowList>,
                          droppableDestination: DraggableLocation,
                          elementToMove: WorkflowList) => {
-
     lists.forEach(list => {
         if (list.uuid == droppableDestination.droppableId) {
             list.children.splice(droppableDestination.index, 0, elementToMove);
@@ -117,7 +105,7 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     function onDragEnd(result: DropResult) {
-        const {destination, source, draggableId} = result;
+        const {destination, source} = result;
 
         if (!destination) {
             return;
@@ -127,12 +115,14 @@ const Home: FunctionComponent = (): JSX.Element => {
         const destinationDroppableId: string = destination.droppableId;
 
         if (sourceDroppableId === destinationDroppableId) {
+            // It's a REORDER action
             let newState = [...state]
             recursiveReorder(newState, sourceDroppableId, source.index, destination.index)
             setState(newState);
         } else {
+            // It's a MOVE action
             let newState = [...state]
-            recursiveMove(newState, draggableId, source, destination)
+            recursiveMove(newState, source, destination)
             setState(newState);
         }
     }
