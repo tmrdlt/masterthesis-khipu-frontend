@@ -22,14 +22,19 @@ const recursiveReorder = (lists: Array<WorkflowList>,
                           listUUidToReorder: string,
                           startIndex: number,
                           endIndex: number) => {
-    lists.forEach(list => {
-        if (list.uuid == listUUidToReorder) {
-            const [removed] = list.children.splice(startIndex, 1);
-            list.children.splice(endIndex, 0, removed);
-        } else {
-            recursiveReorder(list.children, listUUidToReorder, startIndex, endIndex)
-        }
-    })
+    if (listUUidToReorder == "HIGHEST_DROPPABLE") {
+        const [removed] = lists.splice(startIndex, 1);
+        lists.splice(endIndex, 0, removed);
+    } else {
+        lists.forEach(list => {
+            if (list.uuid == listUUidToReorder) {
+                const [removed] = list.children.splice(startIndex, 1);
+                list.children.splice(endIndex, 0, removed);
+            } else {
+                recursiveReorder(list.children, listUUidToReorder, startIndex, endIndex)
+            }
+        })
+    }
 };
 
 /**
@@ -90,7 +95,7 @@ const Home: FunctionComponent = (): JSX.Element => {
     const [state, setState] = useState(initialData);
 
     useEffect(() => {
-        //getWorkflowLists();
+        getWorkflowLists();
     }, []);
 
     const getWorkflowLists = async () => {
@@ -106,6 +111,8 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     function onDragEnd(result: DropResult) {
         const {destination, source} = result;
+
+        console.log("OnDratEnd", result);
 
         if (!destination) {
             return;
@@ -130,9 +137,20 @@ const Home: FunctionComponent = (): JSX.Element => {
     return (
         <div>
             <DragDropContext onDragEnd={onDragEnd}>
-                {state.map((board, index) => (
-                    <BoardComponent key={index} board={board} index={index}/>
-                ))}
+                <Droppable droppableId="HIGHEST_DROPPABLE" type="HIGHEST_DROPPABLE">
+                    {(provided, snapshot) => (
+                        <div ref={provided.innerRef}
+                             {...provided.droppableProps}
+                        >
+                            {state.map((board, index) => (
+                                <BoardComponent key={index} board={board} index={index}/>
+                            ))}
+                            {provided.placeholder}
+
+                        </div>
+
+                    )}
+                </Droppable>
             </DragDropContext>
         </div>
     );
