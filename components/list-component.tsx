@@ -6,10 +6,11 @@ import ItemComponent from "components/item-component";
 interface IListProps {
     list: WorkflowList
     index: number
-    addWorkflowList
+    createWorkflowList
+    removeWorkflowList
 }
 
-const ListComponent = ({list, index, addWorkflowList}: IListProps): JSX.Element => {
+const ListComponent = ({list, index, createWorkflowList, removeWorkflowList}: IListProps): JSX.Element => {
     return (
         <Draggable
             key={list.uuid}
@@ -23,7 +24,7 @@ const ListComponent = ({list, index, addWorkflowList}: IListProps): JSX.Element 
                         <button
                             type="button"
                             onClick={() => {
-                                addWorkflowList({
+                                createWorkflowList({
                                     title: "item",
                                     description: "item",
                                     parentUuid: list.uuid
@@ -31,13 +32,18 @@ const ListComponent = ({list, index, addWorkflowList}: IListProps): JSX.Element 
                             }}
                         >Add item
                         </button>
+                        <button type="button" onClick={() => {
+                            removeWorkflowList(list.uuid)
+                        }}>Delete
+                        </button>
                         <Droppable droppableId={list.uuid} type="LIST">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      {...provided.droppableProps}
                                 >
                                     {list.children.map((item, index) => (
-                                        <ItemComponent key={item.uuid} item={item} index={index}/>
+                                        <ItemComponent key={item.uuid} item={item} index={index}
+                                                       removeWorkflowList={removeWorkflowList}/>
                                     ))}
                                     {provided.placeholder}
                                 </div>

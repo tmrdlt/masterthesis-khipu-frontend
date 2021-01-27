@@ -1,16 +1,16 @@
-import {CreateWorkflowListEntity, WorkflowList} from "utils/models";
+import {WorkflowList} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React from "react";
-import {createWorkflowList, getWorkflowLists} from "utils/workflow-api";
 
 interface IBoardProps {
     board: WorkflowList
     index: number
-    addWorkflowList
+    createWorkflowList
+    removeWorkflowList
 }
 
-const BoardComponent = ({board, index, addWorkflowList}: IBoardProps): JSX.Element => {
+const BoardComponent = ({board, index, createWorkflowList, removeWorkflowList}: IBoardProps): JSX.Element => {
     return (
         <Draggable
             key={board.uuid}
@@ -24,7 +24,7 @@ const BoardComponent = ({board, index, addWorkflowList}: IBoardProps): JSX.Eleme
                         <button
                             type="button"
                             onClick={() => {
-                                addWorkflowList({
+                                createWorkflowList({
                                     title: "list",
                                     description: "list",
                                     parentUuid: board.uuid
@@ -32,13 +32,19 @@ const BoardComponent = ({board, index, addWorkflowList}: IBoardProps): JSX.Eleme
                             }}
                         >Add List
                         </button>
+                        <button type="button" onClick={() => {
+                            removeWorkflowList(board.uuid)
+                        }}>Delete
+                        </button>
                         <Droppable droppableId={board.uuid} direction="horizontal" type="BOARD">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      {...provided.droppableProps}>
                                     <div className="w-full p-8 flex justify-start font-sans">
                                         {board.children.map((list, index) => (
-                                            <ListComponent key={index} list={list} index={index} addWorkflowList={addWorkflowList}/>
+                                            <ListComponent key={index} list={list} index={index}
+                                                           createWorkflowList={createWorkflowList}
+                                                           removeWorkflowList={removeWorkflowList}/>
                                         ))}
                                         {provided.placeholder}
                                     </div>

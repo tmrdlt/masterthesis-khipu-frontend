@@ -13,8 +13,18 @@ export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> =>
         });
 }
 
-export const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
+export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
     return axios.post('http://localhost:5001/workflowList', createWorkflowListEntity)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const deleteWorkflowList = async (uuid: string) => {
+    return axios.delete('http://localhost:5001/workflowList/' + uuid)
         .then(response => {
             return response;
         }).catch(error => {

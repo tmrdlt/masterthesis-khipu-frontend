@@ -4,7 +4,7 @@ import {initialData} from "utils/initial-data";
 import {CreateWorkflowListEntity} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
-import {createWorkflowList, getWorkflowLists} from "utils/workflow-api";
+import {deleteWorkflowList, getWorkflowLists, postWorkflowList} from "utils/workflow-api";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -48,17 +48,30 @@ const Home: FunctionComponent = (): JSX.Element => {
         }
     }
 
-    const addWorkflowList = (createWorkflowListEntity: CreateWorkflowListEntity) => {
-        createWorkflowList(createWorkflowListEntity)
-        .then(res => {
-            if (res) {
-                getWorkflowLists().then(workflowLists => {
-                    if (workflowLists) {
-                        setState(workflowLists)
-                    }
-                })
-            }
-        });
+    const createWorkflowList = (createWorkflowListEntity: CreateWorkflowListEntity) => {
+        postWorkflowList(createWorkflowListEntity)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+            });
+    }
+
+    const removeWorkflowList = (uuid: string) => {
+        deleteWorkflowList(uuid)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+            });
     }
 
     return (
@@ -66,7 +79,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             <button
                 type="button"
                 onClick={() => {
-                    addWorkflowList({
+                    createWorkflowList({
                         title: "board",
                         description: "board"
                     })
@@ -80,7 +93,10 @@ const Home: FunctionComponent = (): JSX.Element => {
                              {...provided.droppableProps}
                         >
                             {state.map((board, index) => (
-                                <BoardComponent key={index} board={board} index={index} addWorkflowList={addWorkflowList}/>
+                                <BoardComponent key={index} board={board} index={index}
+                                                createWorkflowList={createWorkflowList}
+                                                removeWorkflowList={removeWorkflowList}
+                                />
                             ))}
                             {provided.placeholder}
                         </div>
