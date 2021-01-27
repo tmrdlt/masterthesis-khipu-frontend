@@ -1,8 +1,7 @@
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import React from "react";
-import {getItemStyle, getListStyle} from "utils/styleElements";
 import {WorkflowList} from "utils/models";
-import ItemComponent from "components/ItemComponent";
+import ItemComponent from "components/item-component";
 
 interface IListProps {
     list: WorkflowList
@@ -22,15 +21,13 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                         <div {...provided.dragHandleProps}>{list.title}</div>
                         <Droppable droppableId={list.uuid} type="LIST">
                             {(provided, snapshot) => (
-                                <div className="container mx-auto">
-                                    <div ref={provided.innerRef}
-                                         {...provided.droppableProps}
-                                    >
-                                        {list.children.map((item, index) => (
-                                            <ItemComponent key={item.uuid} item={item} index={index}/>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
+                                <div ref={provided.innerRef}
+                                     {...provided.droppableProps}
+                                >
+                                    {list.children.map((item, index) => (
+                                        <ItemComponent key={item.uuid} item={item} index={index}/>
+                                    ))}
+                                    {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>
@@ -38,7 +35,6 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                 </div>
             )}
         </Draggable>
-
     )
 }
 

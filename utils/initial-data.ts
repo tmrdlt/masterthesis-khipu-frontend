@@ -1,19 +1,6 @@
 import axios from "axios";
 import {WorkflowList} from "utils/models";
 
-const getWorkflowLists = async () => {
-    return axios.get('http://localhost:5001/workflowList', {
-        method: 'GET'
-    }).then(res => {
-        console.log(res);
-        return res.data;
-    }).catch(e => {
-        console.error(e);
-    });
-
-}
-
-
 export const initialData: Array<WorkflowList> =
     [
         {

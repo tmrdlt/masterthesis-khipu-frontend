@@ -1,6 +1,6 @@
 import {WorkflowList} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
-import ListComponent from "components/ListComponent";
+import ListComponent from "components/list-component";
 import React from "react";
 
 interface IBoardProps {
