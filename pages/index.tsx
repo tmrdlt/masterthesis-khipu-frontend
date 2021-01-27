@@ -18,7 +18,10 @@ const reorder = (items: Array<WorkflowList>, startIndex: number, endIndex: numbe
 /**
  * Recursively reorder items inside a list.
  */
-const recursiveReorder = (lists: Array<WorkflowList>, listUUidToReorder: string, startIndex: number, endIndex: number) => {
+const recursiveReorder = (lists: Array<WorkflowList>,
+                          listUUidToReorder: string,
+                          startIndex: number,
+                          endIndex: number) => {
     lists.forEach(list => {
         if (list.uuid == listUUidToReorder) {
             const [removed] = list.children.splice(startIndex, 1);
@@ -45,6 +48,54 @@ const move = (sourceItems: Array<WorkflowList>,
     return [sourceClone, destinationClone];
 };
 
+/**
+ * Recursively move an item from one list to another list.
+ */
+const recursiveMove = (lists: Array<WorkflowList>,
+                       elementToMoveUuid: string,
+                       droppableSource: DraggableLocation,
+                       droppableDestination: DraggableLocation) => {
+
+    const elementToMove: WorkflowList = recursiveFind(lists, elementToMoveUuid)
+    recursiveRemove(lists, droppableSource);
+    recursiveInsert(lists, droppableDestination, elementToMove);
+};
+
+const recursiveFind = (lists: Array<WorkflowList>, elementToMoveUuid: string): WorkflowList => {
+    for (let i = 0; i < lists.length; i++) {
+        if (lists[i].uuid == elementToMoveUuid) {
+            return lists[i]
+        }
+        const found = recursiveFind(lists[i].children, elementToMoveUuid)
+        if (found) {
+            return found;
+        }
+    }
+}
+const recursiveRemove = (lists: Array<WorkflowList>,
+                         droppableSource: DraggableLocation) => {
+    lists.forEach(list => {
+        if (list.uuid == droppableSource.droppableId) {
+            list.children.splice(droppableSource.index, 1);
+        } else {
+            recursiveRemove(list.children, droppableSource)
+        }
+    })
+}
+
+const recursiveInsert = (lists: Array<WorkflowList>,
+                         droppableDestination: DraggableLocation,
+                         elementToMove: WorkflowList) => {
+
+    lists.forEach(list => {
+        if (list.uuid == droppableDestination.droppableId) {
+            list.children.splice(droppableDestination.index, 0, elementToMove);
+        } else {
+            recursiveInsert(list.children, droppableDestination, elementToMove)
+        }
+    })
+}
+
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -66,7 +117,7 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     function onDragEnd(result: DropResult) {
-        const {destination, source} = result;
+        const {destination, source, draggableId} = result;
 
         if (!destination) {
             return;
@@ -80,23 +131,13 @@ const Home: FunctionComponent = (): JSX.Element => {
             recursiveReorder(newState, sourceDroppableId, source.index, destination.index)
             setState(newState);
         } else {
-            const sourceList = state.find(list => list.uuid == sourceDroppableId);
-            const destinationList = state.find(list => list.uuid == destinationDroppableId);
-            const sourceListIndex = state.indexOf(sourceList);
-            const destinationListIndex = state.indexOf(destinationList);
-
-            const result = move(sourceList.children, destinationList.children, source, destination);
-            // Make shallow copy
-            const newState = [...state];
-            newState[sourceListIndex].children = result[0];
-            newState[destinationListIndex].children = result[1];
-
+            let newState = [...state]
+            recursiveMove(newState, draggableId, source, destination)
             setState(newState);
         }
     }
 
     return (
-        // TODO move into components
         <div style={{display: "flex"}}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <div>
