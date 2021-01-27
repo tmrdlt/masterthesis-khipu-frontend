@@ -6,3 +6,9 @@ export type WorkflowList = {
     usageType: String,
     children: Array<WorkflowList>
 }
+
+export type CreateWorkflowListEntity = {
+    title: string,
+    description?: string,
+    parentUuid?: string
+}

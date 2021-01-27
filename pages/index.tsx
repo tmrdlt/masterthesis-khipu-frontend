@@ -1,28 +1,25 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {initialData} from "utils/initial-data";
-import axios from "axios";
-import {WorkflowList} from "utils/models";
+import {CreateWorkflowListEntity} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
+import {createWorkflowList, getWorkflowLists} from "utils/workflow-api";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
     const [state, setState] = useState(initialData);
 
     useEffect(() => {
-        getWorkflowLists();
+        init();
     }, []);
 
-    const getWorkflowLists = async () => {
-        axios.get('http://localhost:5001/workflowList')
-            .then(function (response) {
-                const workflowLists: Array<WorkflowList> = response.data;
-                console.log(workflowLists);
-                setState(workflowLists);
-            }).catch(function (error) {
-            console.log(error);
-        });
+    const init = () => {
+        getWorkflowLists().then(workflowLists => {
+            if (workflowLists) {
+                setState(workflowLists)
+            }
+        })
     }
 
     function onDragEnd(result: DropResult) {
@@ -53,6 +50,26 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     return (
         <div>
+            <button
+                type="button"
+                onClick={() => {
+                    const createWorkflowListEntity: CreateWorkflowListEntity = {
+                        title: "board",
+                        description: "board"
+                    }
+                    createWorkflowList(createWorkflowListEntity)
+                        .then(res => {
+                            if (res) {
+                                getWorkflowLists().then(workflowLists => {
+                                    if (workflowLists) {
+                                        setState(workflowLists)
+                                    }
+                                })
+                            }
+                        });
+                }}
+            >Add board
+            </button>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="HIGHEST_DROPPABLE" type="HIGHEST_DROPPABLE">
                     {(provided, snapshot) => (

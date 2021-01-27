@@ -1,7 +1,8 @@
-import {WorkflowList} from "utils/models";
+import {CreateWorkflowListEntity, WorkflowList} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React from "react";
+import {createWorkflowList, getWorkflowLists} from "utils/workflow-api";
 
 interface IBoardProps {
     board: WorkflowList
@@ -19,6 +20,26 @@ const BoardComponent = ({board, index}: IBoardProps): JSX.Element => {
                 <div ref={provided.innerRef} {...provided.draggableProps}>
                     <div className="bg-blue-400 m-1">
                         <div {...provided.dragHandleProps}>{board.title}</div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                const createWorkflowListEntity: CreateWorkflowListEntity = {
+                                    title: "list",
+                                    description: "list",
+                                    parentUuid: board.uuid
+                                }
+                                createWorkflowList(createWorkflowListEntity)
+                                    .then(res => {
+                                        if (res) {
+                                            getWorkflowLists().then(workflowLists => {
+                                                if (workflowLists) {
+                                                }
+                                            })
+                                        }
+                                    });
+                            }}
+                        >Add List
+                        </button>
                         <Droppable droppableId={board.uuid} direction="horizontal" type="BOARD">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
