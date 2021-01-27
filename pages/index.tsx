@@ -128,13 +128,11 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     return (
-        <div style={{display: "flex"}}>
+        <div>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div>
-                    {state.map((board, index) => (
-                        <BoardComponent key={index} board={board} index={index}/>
-                    ))}
-                </div>
+                {state.map((board, index) => (
+                    <BoardComponent key={index} board={board} index={index}/>
+                ))}
             </DragDropContext>
         </div>
     );

@@ -20,11 +20,7 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      {...provided.dragHandleProps}
-                     style={getItemStyle(
-                         snapshot.isDragging,
-                         provided.draggableProps.style
-                     )}
-                     className="container mx-auto"
+                     className="rounded bg-gray-200 w-64 p-2 m-1"
                 >
                     <Droppable droppableId={list.uuid} type="LIST">
                         {(provided, snapshot) => (
@@ -32,7 +28,6 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                                 <div>{list.title}</div>
                                 <div ref={provided.innerRef}
                                      {...provided.droppableProps}
-                                     style={getListStyle(snapshot.isDraggingOver)}
                                 >
                                     {list.children.map((item, index) => (
                                         <ItemComponent key={item.uuid} item={item} index={index}/>))}
@@ -42,7 +37,6 @@ const ListComponent = ({list, index}: IListProps): JSX.Element => {
                         )}
                     </Droppable></div>
             )}
-
         </Draggable>
 
     )

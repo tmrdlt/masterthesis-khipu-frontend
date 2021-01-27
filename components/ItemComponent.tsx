@@ -1,7 +1,6 @@
 import {Draggable} from "react-beautiful-dnd";
 import React from "react";
 import {WorkflowList} from "utils/models";
-import {getItemStyle} from "utils/styleElements";
 
 
 interface IItemProps {
@@ -16,11 +15,7 @@ const ItemComponent = ({item, index}: IItemProps): JSX.Element => {
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      {...provided.dragHandleProps}
-                     style={getItemStyle(
-                         snapshot.isDragging,
-                         provided.draggableProps.style
-                     )}
-                     className="container mx-auto"
+                     className="bg-white p-2 rounded mt-1 border-b border-grey cursor-pointer hover:bg-grey-lighter"
                 >
                     {item.description}
                 </div>

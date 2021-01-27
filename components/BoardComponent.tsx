@@ -11,11 +11,11 @@ interface IBoardProps {
 
 const BoardComponent = ({board, index}: IBoardProps): JSX.Element => {
     return (
-        <Droppable droppableId={board.uuid} type="BOARD">
+        <Droppable droppableId={board.uuid} direction="horizontal">
             {(provided, snapshot) => (
                 <div ref={provided.innerRef}
                      {...provided.droppableProps}
-                     style={getListStyle(snapshot.isDraggingOver)}
+                     className="bg-blue-400 w-full p-8 flex justify-center font-sans"
                 >
                     {board.children.map((list, index) => (
                         <ListComponent key={index} list={list} index={index}/>
