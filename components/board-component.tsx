@@ -19,23 +19,37 @@ const BoardComponent = ({board, index, createWorkflowList, removeWorkflowList}: 
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="bg-blue-400 m-1">
-                        <div {...provided.dragHandleProps}>{board.title}</div>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                createWorkflowList({
-                                    title: "list",
-                                    description: "list",
-                                    parentUuid: board.uuid
-                                })
-                            }}
-                        >Add List
-                        </button>
-                        <button type="button" onClick={() => {
-                            removeWorkflowList(board.uuid)
-                        }}>Delete
-                        </button>
+                    <div className="bg-blue-400 grid rounded shadow border p-2 m-2">
+                        <div {...provided.dragHandleProps} className="font-bold m-1">{board.title}</div>
+                        <div className="m-1">{board.description}</div>
+                        <div className="grid, grid-cols-3">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    createWorkflowList({
+                                        title: "List Title",
+                                        description: "List Description",
+                                        parentUuid: board.uuid
+                                    })
+                                }}
+                                className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-1 border border-black hover:border-transparent rounded m-1"
+                            >Add List
+                            </button>
+                            <button type="button"
+                                    onClick={() => {
+                                        removeWorkflowList(board.uuid)
+                                    }}
+                                    className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-1 border border-black hover:border-transparent rounded m-1"
+                            >Delete
+                            </button>
+                            <button type="button"
+                                    onClick={() => {
+                                        console.log("modify")
+                                    }}
+                                    className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-1 border border-black hover:border-transparent rounded m-1"
+                            >Modify
+                            </button>
+                        </div>
                         <Droppable droppableId={board.uuid} direction="horizontal" type="BOARD">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
