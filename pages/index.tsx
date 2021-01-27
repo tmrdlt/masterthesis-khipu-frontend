@@ -5,16 +5,6 @@ import axios from "axios";
 import {WorkflowList} from "utils/models";
 import BoardComponent from "components/BoardComponent";
 
-
-/**
- * Reorder items inside a list.
- */
-const reorder = (items: Array<WorkflowList>, startIndex: number, endIndex: number) => {
-    const [removed] = items.splice(startIndex, 1);
-    items.splice(endIndex, 0, removed);
-    return items;
-};
-
 /**
  * Recursively reorder items inside a list.
  */
@@ -38,22 +28,6 @@ const recursiveReorder = (lists: Array<WorkflowList>,
 };
 
 /**
- * Move an item from one list to another list.
- */
-const move = (sourceItems: Array<WorkflowList>,
-              destinationItems: Array<WorkflowList>,
-              droppableSource: DraggableLocation,
-              droppableDestination: DraggableLocation): [Array<WorkflowList>, Array<WorkflowList>] => {
-    const sourceClone = Array.from(sourceItems);
-    const destinationClone = Array.from(destinationItems);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-    destinationClone.splice(droppableDestination.index, 0, removed);
-
-    return [sourceClone, destinationClone];
-};
-
-/**
  * Recursively move an item from one list to another list.
  */
 const recursiveMove = (lists: Array<WorkflowList>,
@@ -64,7 +38,11 @@ const recursiveMove = (lists: Array<WorkflowList>,
     recursiveInsert(lists, droppableDestination, elementToMove);
 };
 
-const recursiveRemove = (lists: Array<WorkflowList>, droppableSource: DraggableLocation): WorkflowList => {
+/**
+ * Helper function for recursiveMove
+ */
+const recursiveRemove = (lists: Array<WorkflowList>,
+                         droppableSource: DraggableLocation): WorkflowList => {
     for (let i = 0; i < lists.length; i++) {
         if (lists[i].uuid == droppableSource.droppableId) {
             const [elementToMove] = lists[i].children.splice(droppableSource.index, 1);
@@ -77,6 +55,9 @@ const recursiveRemove = (lists: Array<WorkflowList>, droppableSource: DraggableL
     }
 }
 
+/**
+ * Helper function for recursiveMove
+ */
 const recursiveInsert = (lists: Array<WorkflowList>,
                          droppableDestination: DraggableLocation,
                          elementToMove: WorkflowList) => {
@@ -112,8 +93,9 @@ const Home: FunctionComponent = (): JSX.Element => {
     function onDragEnd(result: DropResult) {
         const {destination, source} = result;
 
-        console.log("OnDratEnd", result);
+        console.log("OnDragEnd", result);
 
+        // Do nothing if invalid drag
         if (!destination) {
             return;
         }
@@ -146,9 +128,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                 <BoardComponent key={index} board={board} index={index}/>
                             ))}
                             {provided.placeholder}
-
                         </div>
-
                     )}
                 </Droppable>
             </DragDropContext>
