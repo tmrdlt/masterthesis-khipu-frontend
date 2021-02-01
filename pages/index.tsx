@@ -4,7 +4,7 @@ import {initialData} from "utils/initial-data";
 import {CreateWorkflowListEntity, WorkflowListType} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
-import {deleteWorkflowList, getWorkflowLists, postWorkflowList} from "utils/workflow-api";
+import {deleteWorkflowList, getWorkflowLists, postWorkflowList, putWorkflowList} from "utils/workflow-api";
 import CreateWorkflowListModal from "components/create-workflow-list-modal";
 
 const Home: FunctionComponent = (): JSX.Element => {
@@ -25,7 +25,7 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     function onDragEnd(result: DropResult) {
-        const {destination, source} = result;
+        const {destination, source, draggableId} = result;
 
         console.log("OnDragEnd", result);
 
@@ -47,6 +47,14 @@ const Home: FunctionComponent = (): JSX.Element => {
             let newState = [...state]
             recursiveMove(newState, source, destination)
             setState(newState);
+
+            putWorkflowList(draggableId, {newParentUuid: destinationDroppableId}).then(res => {
+                getWorkflowLists().then(workflowLists => {
+                    if (workflowLists) {
+                        setState(workflowLists)
+                    }
+                })
+            })
         }
     }
 
