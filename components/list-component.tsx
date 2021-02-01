@@ -2,23 +2,42 @@ import {Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useState} from "react";
 import {WorkflowList, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
-import CreateWorkflowListModal from "components/create-workflow-list-modal";
+import CreateWorkflowListModal from "components/create-workflowlist-modal";
+import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 
 interface IListProps {
     index: number
     list: WorkflowList
     createWorkflowList
+    modifyWorkflowList
     removeWorkflowList
 }
 
-const ListComponent = ({index, list, createWorkflowList, removeWorkflowList}: IListProps): JSX.Element => {
-    const [showModal, setShowModal] = useState(false);
-    const openModal = () => {
-        setShowModal(true);
+const ListComponent = ({
+                           index,
+                           list,
+                           createWorkflowList,
+                           modifyWorkflowList,
+                           removeWorkflowList
+                       }: IListProps): JSX.Element => {
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showModifyModal, setShowModifyModal] = useState(false)
+
+    const openCreateModal = () => {
+        setShowCreateModal(true);
     }
-    const closeModal = () => {
-        setShowModal(false);
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
     }
+
+    const openModifyModal = () => {
+        setShowModifyModal(true);
+    }
+    const closeModifyModal = () => {
+        setShowModifyModal(false);
+    }
+
     return (
         <Draggable
             key={list.uuid}
@@ -34,13 +53,13 @@ const ListComponent = ({index, list, createWorkflowList, removeWorkflowList}: IL
                             <button
                                 type="button"
                                 onClick={() => {
-                                    openModal()
+                                    openCreateModal()
                                 }}
                                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
                             >Add item
                             </button>
-                            <CreateWorkflowListModal show={showModal}
-                                                     closeModal={closeModal}
+                            <CreateWorkflowListModal show={showCreateModal}
+                                                     closeModal={closeCreateModal}
                                                      createType={WorkflowListType.Item}
                                                      parentUuid={list.uuid}
                                                      createWorkflowList={createWorkflowList}/>
@@ -53,11 +72,16 @@ const ListComponent = ({index, list, createWorkflowList, removeWorkflowList}: IL
                             </button>
                             <button type="button"
                                     onClick={() => {
-                                        console.log("modify")
+                                        openModifyModal()
                                     }}
                                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
                             >Modify
                             </button>
+                            <ModifyWorkflowListModal show={showModifyModal}
+                                                     closeModal={closeModifyModal}
+                                                     modifyType={WorkflowListType.List}
+                                                     workflowList={list}
+                                                     modifyWorkflowList={modifyWorkflowList}/>
                         </div>
                         <Droppable droppableId={list.uuid} type="LIST">
                             {(provided, snapshot) => (
@@ -66,6 +90,7 @@ const ListComponent = ({index, list, createWorkflowList, removeWorkflowList}: IL
                                 >
                                     {list.children.map((item, index) => (
                                         <ItemComponent key={item.uuid} item={item} index={index}
+                                                       modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}/>
                                     ))}
                                     {provided.placeholder}

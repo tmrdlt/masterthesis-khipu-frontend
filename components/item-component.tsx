@@ -1,15 +1,27 @@
 import {Draggable} from "react-beautiful-dnd";
-import React from "react";
-import {WorkflowList} from "utils/models";
+import React, {useState} from "react";
+import {WorkflowList, WorkflowListType} from "utils/models";
+import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 
 
 interface IItemProps {
     item: WorkflowList
     index: number
+    modifyWorkflowList
     removeWorkflowList
 }
 
-const ItemComponent = ({item, index, removeWorkflowList}: IItemProps): JSX.Element => {
+const ItemComponent = ({item, index, modifyWorkflowList, removeWorkflowList}: IItemProps): JSX.Element => {
+
+    const [showModifyModal, setShowModifyModal] = useState(false)
+
+    const openModifyModal = () => {
+        setShowModifyModal(true);
+    }
+    const closeModifyModal = () => {
+        setShowModifyModal(false);
+    }
+
     return (
         <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
             {(provided, snapshot) => (
@@ -31,16 +43,18 @@ const ItemComponent = ({item, index, removeWorkflowList}: IItemProps): JSX.Eleme
                             </button>
                             <button type="button"
                                     onClick={() => {
-                                        console.log("modify")
+                                        openModifyModal()
                                     }}
                                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
                             >Modify
                             </button>
+                            <ModifyWorkflowListModal show={showModifyModal}
+                                                     closeModal={closeModifyModal}
+                                                     modifyType={WorkflowListType.Item}
+                                                     workflowList={item}
+                                                     modifyWorkflowList={modifyWorkflowList}/>
                         </div>
-
-
                     </div>
-
                 </div>
             )}
         </Draggable>

@@ -1,16 +1,16 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {initialData} from "utils/initial-data";
-import {CreateWorkflowListEntity, WorkflowListType} from "utils/models";
+import {CreateWorkflowListEntity, UpdateWorkflowListEntity, WorkflowListType} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
 import {deleteWorkflowList, getWorkflowLists, postWorkflowList, putWorkflowList} from "utils/workflow-api";
-import CreateWorkflowListModal from "components/create-workflow-list-modal";
+import CreateWorkflowListModal from "components/create-workflowlist-modal";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
     const [state, setState] = useState(initialData);
-    const [showModal, setShowModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     useEffect(() => {
         init();
@@ -78,6 +78,26 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
+    const modifyWorkflowList = async (workflowListUuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
+        let newUpdateWorkflowListEntity: UpdateWorkflowListEntity;
+        if (updateWorkflowListEntity.newDescription == "") {
+            newUpdateWorkflowListEntity = {...updateWorkflowListEntity, newDescription: null}
+        } else {
+            newUpdateWorkflowListEntity = updateWorkflowListEntity
+        }
+        putWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+                return res
+            });
+    }
+
     const removeWorkflowList = (uuid: string) => {
         deleteWorkflowList(uuid)
             .then(res => {
@@ -92,10 +112,10 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     const openModal = () => {
-        setShowModal(true);
+        setShowCreateModal(true);
     }
     const closeModal = () => {
-        setShowModal(false);
+        setShowCreateModal(false);
     }
 
     return (
@@ -108,7 +128,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded m-1"
             >Add board
             </button>
-            <CreateWorkflowListModal show={showModal}
+            <CreateWorkflowListModal show={showCreateModal}
                                      closeModal={closeModal}
                                      createType={WorkflowListType.Board}
                                      parentUuid={null}
@@ -124,6 +144,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                 index={index}
                                                 board={board}
                                                 createWorkflowList={createWorkflowList}
+                                                modifyWorkflowList={modifyWorkflowList}
                                                 removeWorkflowList={removeWorkflowList}
                                 />
                             ))}

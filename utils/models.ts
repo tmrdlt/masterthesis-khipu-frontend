@@ -2,8 +2,8 @@ export type WorkflowList = {
     id: number,
     uuid: string,
     title: string,
-    description: string,
-    usageType: String,
+    description?: string,
+    usageType: WorkflowListType,
     children: Array<WorkflowList>
 }
 
@@ -20,5 +20,5 @@ export type UpdateWorkflowListEntity = {
 }
 
 export enum WorkflowListType {
-    Board = "Board", List = "List", Item = "Item"
+    Board = "BOARD", List = "LIST", Item = "ITEM"
 }

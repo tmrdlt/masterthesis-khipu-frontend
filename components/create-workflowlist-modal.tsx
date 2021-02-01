@@ -10,9 +10,13 @@ interface CreateWorkflowListModalProps {
     createWorkflowList
 }
 
-const CreateWorkflowListModal = (
-    {show, closeModal, createType, parentUuid, createWorkflowList}: CreateWorkflowListModalProps
-): JSX.Element => {
+const CreateWorkflowListModal = ({
+                                     show,
+                                     closeModal,
+                                     createType,
+                                     parentUuid,
+                                     createWorkflowList
+                                 }: CreateWorkflowListModalProps): JSX.Element => {
 
     const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
         title: "",

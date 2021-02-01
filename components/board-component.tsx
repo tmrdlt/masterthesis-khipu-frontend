@@ -2,24 +2,42 @@ import {WorkflowList, WorkflowListType} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React, {useState} from "react";
-import CreateWorkflowListModal from "components/create-workflow-list-modal";
+import CreateWorkflowListModal from "components/create-workflowlist-modal";
+import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 
 interface IBoardProps {
     index: number
     board: WorkflowList
     createWorkflowList
+    modifyWorkflowList
     removeWorkflowList
 }
 
-const BoardComponent = ({index, board, createWorkflowList, removeWorkflowList}: IBoardProps): JSX.Element => {
+const BoardComponent = ({
+                            index,
+                            board,
+                            createWorkflowList,
+                            modifyWorkflowList,
+                            removeWorkflowList
+                        }: IBoardProps): JSX.Element => {
 
-    const [showModal, setShowModal] = useState(false);
-    const openModal = () => {
-        setShowModal(true);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showModifyModal, setShowModifyModal] = useState(false)
+
+    const openCreateModal = () => {
+        setShowCreateModal(true);
     }
-    const closeModal = () => {
-        setShowModal(false);
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
     }
+
+    const openModifyModal = () => {
+        setShowModifyModal(true);
+    }
+    const closeModifyModal = () => {
+        setShowModifyModal(false);
+    }
+
     return (
         <Draggable
             key={board.uuid}
@@ -35,13 +53,13 @@ const BoardComponent = ({index, board, createWorkflowList, removeWorkflowList}: 
                             <button
                                 type="button"
                                 onClick={() => {
-                                    openModal()
+                                    openCreateModal()
                                 }}
                                 className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-1 border border-black hover:border-transparent rounded m-1"
                             >Add List
                             </button>
-                            <CreateWorkflowListModal show={showModal}
-                                                     closeModal={closeModal}
+                            <CreateWorkflowListModal show={showCreateModal}
+                                                     closeModal={closeCreateModal}
                                                      createType={WorkflowListType.List}
                                                      parentUuid={board.uuid}
                                                      createWorkflowList={createWorkflowList}/>
@@ -54,11 +72,16 @@ const BoardComponent = ({index, board, createWorkflowList, removeWorkflowList}: 
                             </button>
                             <button type="button"
                                     onClick={() => {
-                                        console.log("modify")
+                                        openModifyModal()
                                     }}
                                     className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-1 border border-black hover:border-transparent rounded m-1"
                             >Modify
                             </button>
+                            <ModifyWorkflowListModal show={showModifyModal}
+                                                     closeModal={closeModifyModal}
+                                                     modifyType={WorkflowListType.Board}
+                                                     workflowList={board}
+                                                     modifyWorkflowList={modifyWorkflowList}/>
                         </div>
                         <Droppable droppableId={board.uuid} direction="horizontal" type="BOARD">
                             {(provided, snapshot) => (
@@ -70,6 +93,7 @@ const BoardComponent = ({index, board, createWorkflowList, removeWorkflowList}: 
                                                            index={index}
                                                            list={list}
                                                            createWorkflowList={createWorkflowList}
+                                                           modifyWorkflowList={modifyWorkflowList}
                                                            removeWorkflowList={removeWorkflowList}/>
                                         ))}
                                         {provided.placeholder}
