@@ -9,11 +9,14 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript.
 - [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
 
 ## Requirements
-- Node.js v14.xx.x (`nvm install lts/fermium`)
-
+- Node.js v14.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
+  ```bash
+  nvm install
+  nvm use
+  ```
 
 ## Development
 - Run dev server on `http://localhost:3000/`:
-```
+```bash
 npm run dev
 ```
