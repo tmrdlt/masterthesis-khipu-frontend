@@ -1,16 +1,24 @@
 import {Draggable, Droppable} from "react-beautiful-dnd";
-import React from "react";
-import {WorkflowList} from "utils/models";
+import React, {useState} from "react";
+import {WorkflowList, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
+import CreateWorkflowListModal from "components/create-workflow-list-modal";
 
 interface IListProps {
-    list: WorkflowList
     index: number
+    list: WorkflowList
     createWorkflowList
     removeWorkflowList
 }
 
-const ListComponent = ({list, index, createWorkflowList, removeWorkflowList}: IListProps): JSX.Element => {
+const ListComponent = ({index, list, createWorkflowList, removeWorkflowList}: IListProps): JSX.Element => {
+    const [showModal, setShowModal] = useState(false);
+    const openModal = () => {
+        setShowModal(true);
+    }
+    const closeModal = () => {
+        setShowModal(false);
+    }
     return (
         <Draggable
             key={list.uuid}
@@ -26,15 +34,16 @@ const ListComponent = ({list, index, createWorkflowList, removeWorkflowList}: IL
                             <button
                                 type="button"
                                 onClick={() => {
-                                    createWorkflowList({
-                                        title: "Item Title",
-                                        description: "Item Description",
-                                        parentUuid: list.uuid
-                                    })
+                                    openModal()
                                 }}
                                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
                             >Add item
                             </button>
+                            <CreateWorkflowListModal show={showModal}
+                                                     closeModal={closeModal}
+                                                     createType={WorkflowListType.Item}
+                                                     parentUuid={list.uuid}
+                                                     createWorkflowList={createWorkflowList}/>
                             <button type="button"
                                     onClick={() => {
                                         removeWorkflowList(list.uuid)

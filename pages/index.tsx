@@ -1,14 +1,16 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {initialData} from "utils/initial-data";
-import {CreateWorkflowListEntity} from "utils/models";
+import {CreateWorkflowListEntity, WorkflowListType} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
 import {deleteWorkflowList, getWorkflowLists, postWorkflowList} from "utils/workflow-api";
+import CreateWorkflowListModal from "components/create-workflow-list-modal";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
     const [state, setState] = useState(initialData);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         init();
@@ -48,8 +50,14 @@ const Home: FunctionComponent = (): JSX.Element => {
         }
     }
 
-    const createWorkflowList = (createWorkflowListEntity: CreateWorkflowListEntity) => {
-        postWorkflowList(createWorkflowListEntity)
+    const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
+        let newCreateWorkflowListEntity: CreateWorkflowListEntity;
+        if (createWorkflowListEntity.description == "") {
+            newCreateWorkflowListEntity = {...createWorkflowListEntity, description: null}
+        } else {
+            newCreateWorkflowListEntity = createWorkflowListEntity
+        }
+        postWorkflowList(newCreateWorkflowListEntity)
             .then(res => {
                 if (res) {
                     getWorkflowLists().then(workflowLists => {
@@ -58,6 +66,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                         }
                     })
                 }
+                return res
             });
     }
 
@@ -74,19 +83,28 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
+    const openModal = () => {
+        setShowModal(true);
+    }
+    const closeModal = () => {
+        setShowModal(false);
+    }
+
     return (
         <div>
             <button
                 type="button"
                 onClick={() => {
-                    createWorkflowList({
-                        title: "Board Title",
-                        description: "Board Description"
-                    })
+                    openModal()
                 }}
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded m-1"
             >Add board
             </button>
+            <CreateWorkflowListModal show={showModal}
+                                     closeModal={closeModal}
+                                     createType={WorkflowListType.Board}
+                                     parentUuid={null}
+                                     createWorkflowList={createWorkflowList}/>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="HIGHEST_DROPPABLE" type="HIGHEST_DROPPABLE">
                     {(provided, snapshot) => (
@@ -94,7 +112,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                              {...provided.droppableProps}
                         >
                             {state.map((board, index) => (
-                                <BoardComponent key={index} board={board} index={index}
+                                <BoardComponent key={index}
+                                                index={index}
+                                                board={board}
                                                 createWorkflowList={createWorkflowList}
                                                 removeWorkflowList={removeWorkflowList}
                                 />

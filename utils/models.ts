@@ -12,3 +12,7 @@ export type CreateWorkflowListEntity = {
     description?: string,
     parentUuid?: string
 }
+
+export enum WorkflowListType {
+    Board = "Board", List = "List", Item = "Item"
+}
