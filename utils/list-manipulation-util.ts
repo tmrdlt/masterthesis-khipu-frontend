@@ -1,5 +1,6 @@
 import {WorkflowList} from "utils/models";
 import {DraggableLocation} from "react-beautiful-dnd";
+import {element} from "prop-types";
 
 /**
  * Recursively reorder items inside a list.
@@ -8,7 +9,7 @@ export const recursiveReorder = (lists: Array<WorkflowList>,
                           listUUidToReorder: string,
                           startIndex: number,
                           endIndex: number) => {
-    if (listUUidToReorder == "HIGHEST_DROPPABLE") {
+    if (listUUidToReorder == "ROOT") {
         const [removed] = lists.splice(startIndex, 1);
         lists.splice(endIndex, 0, removed);
     } else {
@@ -31,6 +32,7 @@ export const recursiveMove = (lists: Array<WorkflowList>,
                        droppableDestination: DraggableLocation) => {
 
     const elementToMove: WorkflowList = recursiveRemove(lists, droppableSource);
+    console.log("elementToMove", elementToMove)
     recursiveInsert(lists, droppableDestination, elementToMove);
 };
 

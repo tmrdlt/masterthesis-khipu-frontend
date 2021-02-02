@@ -14,8 +14,11 @@ export type CreateWorkflowListEntity = {
 }
 
 export type UpdateWorkflowListEntity = {
-    newTitle?: string,
-    newDescription?: string,
+    newTitle: string,
+    newDescription?: string
+}
+
+export type MoveWorkflowListEntity = {
     newParentUuid?: string
 }
 

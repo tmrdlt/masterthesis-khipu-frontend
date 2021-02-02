@@ -1,5 +1,5 @@
 import axios from "axios";
-import {CreateWorkflowListEntity, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
+import {CreateWorkflowListEntity, MoveWorkflowListEntity, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
     return axios.get('http://localhost:5001/workflowList')
@@ -35,6 +35,16 @@ export const putWorkflowList = async (uuid: string, updateWorkflowListEntity: Up
 
 export const deleteWorkflowList = async (uuid: string) => {
     return axios.delete('http://localhost:5001/workflowList/' + uuid)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const moveWorkflowList = async (uuid: string, moveWorkflowListEntity: MoveWorkflowListEntity) => {
+    return axios.put('http://localhost:5001/workflowList/' + uuid + '/move', moveWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {

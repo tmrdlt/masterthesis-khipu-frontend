@@ -4,8 +4,15 @@ import {initialData} from "utils/initial-data";
 import {CreateWorkflowListEntity, UpdateWorkflowListEntity, WorkflowListType} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
-import {deleteWorkflowList, getWorkflowLists, postWorkflowList, putWorkflowList} from "utils/workflow-api";
+import {
+    deleteWorkflowList,
+    getWorkflowLists,
+    moveWorkflowList,
+    postWorkflowList,
+    putWorkflowList
+} from "utils/workflow-api";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
+import ListComponent from "components/list-component";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -48,7 +55,11 @@ const Home: FunctionComponent = (): JSX.Element => {
             recursiveMove(newState, source, destination)
             setState(newState);
 
-            putWorkflowList(draggableId, {newParentUuid: destinationDroppableId}).then(res => {
+            let newParentUuid = null
+            if (!(destinationDroppableId === "ROOT")) {
+                newParentUuid = destinationDroppableId;
+            }
+            moveWorkflowList(draggableId, {newParentUuid: newParentUuid}).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
@@ -134,20 +145,34 @@ const Home: FunctionComponent = (): JSX.Element => {
                                      parentUuid={null}
                                      createWorkflowList={createWorkflowList}/>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="HIGHEST_DROPPABLE" type="HIGHEST_DROPPABLE">
+                <Droppable droppableId="ROOT" type="ROOT">
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}
                              {...provided.droppableProps}
                         >
-                            {state.map((board, index) => (
-                                <BoardComponent key={index}
-                                                index={index}
-                                                board={board}
-                                                createWorkflowList={createWorkflowList}
-                                                modifyWorkflowList={modifyWorkflowList}
-                                                removeWorkflowList={removeWorkflowList}
-                                />
-                            ))}
+                            {state.map((wl, index) => {
+                                if (wl.usageType == WorkflowListType.Board) {
+                                    return (
+                                        <BoardComponent key={index}
+                                                        index={index}
+                                                        board={wl}
+                                                        createWorkflowList={createWorkflowList}
+                                                        modifyWorkflowList={modifyWorkflowList}
+                                                        removeWorkflowList={removeWorkflowList}
+                                        />
+                                    )
+                                } else {
+                                    return (
+                                        <ListComponent key={index}
+                                                       index={index}
+                                                       list={wl}
+                                                       createWorkflowList={createWorkflowList}
+                                                       modifyWorkflowList={modifyWorkflowList}
+                                                       removeWorkflowList={removeWorkflowList}
+                                        />
+                                    )
+                                }
+                            })}
                             {provided.placeholder}
                         </div>
                     )}
