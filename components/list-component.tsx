@@ -55,7 +55,7 @@ const ListComponent = ({
                                 onClick={() => {
                                     openCreateModal()
                                 }}
-                                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
+                                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
                             >Add item
                             </button>
                             <CreateWorkflowListModal show={showCreateModal}
@@ -67,15 +67,22 @@ const ListComponent = ({
                                     onClick={() => {
                                         removeWorkflowList(list.uuid)
                                     }}
-                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
                             >Delete
                             </button>
                             <button type="button"
                                     onClick={() => {
                                         openModifyModal()
                                     }}
-                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-1 border border-blue-500 hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
                             >Modify
+                            </button>
+                            <button type="button"
+                                    onClick={() => {
+                                        openModifyModal()
+                                    }}
+                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
+                            >Convert
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
                                                      closeModal={closeModifyModal}
