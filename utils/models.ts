@@ -23,6 +23,10 @@ export type MoveWorkflowListEntity = {
     newParentUuid?: string
 }
 
+export type ConvertWorkflowListEntity = {
+    newUsageType: WorkflowListType
+}
+
 export enum WorkflowListType {
     BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
 }

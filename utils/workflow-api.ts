@@ -1,5 +1,11 @@
 import axios from "axios";
-import {CreateWorkflowListEntity, MoveWorkflowListEntity, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
+import {
+    ConvertWorkflowListEntity,
+    CreateWorkflowListEntity,
+    MoveWorkflowListEntity,
+    UpdateWorkflowListEntity,
+    WorkflowList
+} from "utils/models";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
     return axios.get('http://localhost:5001/workflowList')
@@ -43,8 +49,18 @@ export const deleteWorkflowList = async (uuid: string) => {
         });
 }
 
-export const moveWorkflowList = async (uuid: string, moveWorkflowListEntity: MoveWorkflowListEntity) => {
+export const postWorkflowListMove = async (uuid: string, moveWorkflowListEntity: MoveWorkflowListEntity) => {
     return axios.post('http://localhost:5001/workflowList/' + uuid + '/move', moveWorkflowListEntity)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postWorkflowListConvert = async (uuid: string, convertWorkflowListEntity: ConvertWorkflowListEntity) => {
+    return axios.post('http://localhost:5001/workflowList/' + uuid + '/convert', convertWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {

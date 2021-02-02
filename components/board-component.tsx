@@ -1,4 +1,4 @@
-import {WorkflowList, WorkflowListType} from "utils/models";
+import {ConvertWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React, {useState} from "react";
@@ -12,6 +12,7 @@ interface IBoardProps {
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
+    convertWorkflowList
 }
 
 const BoardComponent = ({
@@ -19,7 +20,8 @@ const BoardComponent = ({
                             workflowList,
                             createWorkflowList,
                             modifyWorkflowList,
-                            removeWorkflowList
+                            removeWorkflowList,
+                            convertWorkflowList
                         }: IBoardProps): JSX.Element => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -80,10 +82,11 @@ const BoardComponent = ({
                             </button>
                             <button type="button"
                                     onClick={() => {
-                                        console.log("Toggle View")
+                                        const cwle: ConvertWorkflowListEntity = {newUsageType: WorkflowListType.LIST}
+                                        convertWorkflowList(workflowList.uuid, cwle)
                                     }}
                                     className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
-                            >Convert
+                            >To List
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
                                                      closeModal={closeModifyModal}
@@ -105,6 +108,7 @@ const BoardComponent = ({
                                                                     createWorkflowList={createWorkflowList}
                                                                     modifyWorkflowList={modifyWorkflowList}
                                                                     removeWorkflowList={removeWorkflowList}
+                                                                    convertWorkflowList={convertWorkflowList}
                                                     />
                                                 )
                                             } else if (wl.usageType == WorkflowListType.LIST) {
@@ -115,10 +119,11 @@ const BoardComponent = ({
                                                                    createWorkflowList={createWorkflowList}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
+                                                                   convertWorkflowList={convertWorkflowList}
                                                     />
                                                 )
                                             } else {
-                                                return(
+                                                return (
                                                     <ItemComponent key={index}
                                                                    index={index}
                                                                    workflowList={wl}

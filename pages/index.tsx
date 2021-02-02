@@ -1,14 +1,20 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {initialData} from "utils/initial-data";
-import {CreateWorkflowListEntity, UpdateWorkflowListEntity, WorkflowListType} from "utils/models";
+import {
+    ConvertWorkflowListEntity,
+    CreateWorkflowListEntity,
+    UpdateWorkflowListEntity,
+    WorkflowListType
+} from "utils/models";
 import BoardComponent from "components/board-component";
 import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
 import {
     deleteWorkflowList,
     getWorkflowLists,
-    moveWorkflowList,
     postWorkflowList,
+    postWorkflowListConvert,
+    postWorkflowListMove,
     putWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
@@ -60,7 +66,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             if (!(destinationDroppableId === "ROOT")) {
                 newParentUuid = destinationDroppableId;
             }
-            moveWorkflowList(draggableId, {newParentUuid: newParentUuid}).then(res => {
+            postWorkflowListMove(draggableId, {newParentUuid: newParentUuid}).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
@@ -123,6 +129,19 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
+    const convertWorkflowList = (uuid: string, convertWorkflowListEntity: ConvertWorkflowListEntity) => {
+        postWorkflowListConvert(uuid, convertWorkflowListEntity)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+            });
+    }
+
     const openModal = () => {
         setShowCreateModal(true);
     }
@@ -160,6 +179,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         createWorkflowList={createWorkflowList}
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
+                                                        convertWorkflowList={convertWorkflowList}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -170,6 +190,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
+                                                       convertWorkflowList={convertWorkflowList}
                                         />
                                     )
                                 } else {
