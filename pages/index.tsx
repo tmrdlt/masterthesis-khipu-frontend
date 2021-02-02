@@ -44,7 +44,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         console.log("OnDragEnd", result);
 
         // Do nothing if invalid drag
-        if (!destination) {
+        if (!destination || draggableId === destination.droppableId) {
             return;
         }
 
@@ -150,13 +150,13 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     return (
-        <div>
+        <div className="bg-gray-200 h-screen">
             <button
                 type="button"
                 onClick={() => {
                     openModal()
                 }}
-                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded m-1"
+                className="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded m-2"
             >Add board
             </button>
             <CreateWorkflowListModal show={showCreateModal}

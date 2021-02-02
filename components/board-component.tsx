@@ -49,7 +49,7 @@ const BoardComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="bg-blue-400 grid rounded shadow border p-2 m-2">
+                    <div className="grid bg-blue-300 border border-gray-500 rounded shadow p-2 m-2">
                         <div {...provided.dragHandleProps} className="font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
                         <div className="grid, grid-cols-3">
@@ -58,7 +58,7 @@ const BoardComponent = ({
                                 onClick={() => {
                                     openCreateModal()
                                 }}
-                                className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
+                                className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >Add List
                             </button>
                             <CreateWorkflowListModal show={showCreateModal}
@@ -70,14 +70,14 @@ const BoardComponent = ({
                                     onClick={() => {
                                         removeWorkflowList(workflowList.uuid)
                                     }}
-                                    className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >Delete
                             </button>
                             <button type="button"
                                     onClick={() => {
                                         openModifyModal()
                                     }}
-                                    className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >Modify
                             </button>
                             <button type="button"
@@ -85,7 +85,7 @@ const BoardComponent = ({
                                         const cwle: ConvertWorkflowListEntity = {newUsageType: WorkflowListType.LIST}
                                         convertWorkflowList(workflowList.uuid, cwle)
                                     }}
-                                    className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >To List
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}

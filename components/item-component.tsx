@@ -30,7 +30,7 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                      {...provided.dragHandleProps}
                 >
                     <div
-                        className="bg-white grid p-2 rounded shadow border m-1">
+                        className="grid bg-white border border-gray-500 rounded shadow p-2 m-2">
                         <div className="font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
                         <div className="grid grid-cols-2">
@@ -38,14 +38,14 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                                     onClick={() => {
                                         removeWorkflowList(workflowList.uuid)
                                     }}
-                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >Delete
                             </button>
                             <button type="button"
                                     onClick={() => {
                                         openModifyModal()
                                     }}
-                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
                             >Modify
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
