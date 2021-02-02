@@ -44,7 +44,7 @@ export const deleteWorkflowList = async (uuid: string) => {
 }
 
 export const moveWorkflowList = async (uuid: string, moveWorkflowListEntity: MoveWorkflowListEntity) => {
-    return axios.put('http://localhost:5001/workflowList/' + uuid + '/move', moveWorkflowListEntity)
+    return axios.post('http://localhost:5001/workflowList/' + uuid + '/move', moveWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {

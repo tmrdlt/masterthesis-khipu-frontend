@@ -4,10 +4,11 @@ import ListComponent from "components/list-component";
 import React, {useState} from "react";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
+import ItemComponent from "components/item-component";
 
 interface IBoardProps {
     index: number
-    board: WorkflowList
+    workflowList: WorkflowList
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -15,7 +16,7 @@ interface IBoardProps {
 
 const BoardComponent = ({
                             index,
-                            board,
+                            workflowList,
                             createWorkflowList,
                             modifyWorkflowList,
                             removeWorkflowList
@@ -40,15 +41,15 @@ const BoardComponent = ({
 
     return (
         <Draggable
-            key={board.uuid}
-            draggableId={board.uuid}
+            key={workflowList.uuid}
+            draggableId={workflowList.uuid}
             index={index}
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
                     <div className="bg-blue-400 grid rounded shadow border p-2 m-2">
-                        <div {...provided.dragHandleProps} className="font-bold m-1">{board.title}</div>
-                        <div className="m-1">{board.description}</div>
+                        <div {...provided.dragHandleProps} className="font-bold m-1">{workflowList.title}</div>
+                        <div className="m-1">{workflowList.description}</div>
                         <div className="grid, grid-cols-3">
                             <button
                                 type="button"
@@ -60,12 +61,12 @@ const BoardComponent = ({
                             </button>
                             <CreateWorkflowListModal show={showCreateModal}
                                                      closeModal={closeCreateModal}
-                                                     createType={WorkflowListType.List}
-                                                     parentUuid={board.uuid}
+                                                     createType={WorkflowListType.LIST}
+                                                     parentUuid={workflowList.uuid}
                                                      createWorkflowList={createWorkflowList}/>
                             <button type="button"
                                     onClick={() => {
-                                        removeWorkflowList(board.uuid)
+                                        removeWorkflowList(workflowList.uuid)
                                     }}
                                     className="bg-transparent hover:bg-black text-black font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-black hover:border-transparent rounded m-1"
                             >Delete
@@ -86,23 +87,46 @@ const BoardComponent = ({
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
                                                      closeModal={closeModifyModal}
-                                                     modifyType={WorkflowListType.Board}
-                                                     workflowList={board}
+                                                     modifyType={WorkflowListType.BOARD}
+                                                     workflowList={workflowList}
                                                      modifyWorkflowList={modifyWorkflowList}/>
                         </div>
-                        <Droppable droppableId={board.uuid} direction="horizontal" type="BOARD">
+                        <Droppable droppableId={workflowList.uuid} direction="horizontal" type="LIST">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      {...provided.droppableProps}>
                                     <div className="w-full p-8 flex justify-start font-sans">
-                                        {board.children.map((list, index) => (
-                                            <ListComponent key={index}
-                                                           index={index}
-                                                           list={list}
-                                                           createWorkflowList={createWorkflowList}
-                                                           modifyWorkflowList={modifyWorkflowList}
-                                                           removeWorkflowList={removeWorkflowList}/>
-                                        ))}
+                                        {workflowList.children.map((wl, index) => {
+                                            if (wl.usageType == WorkflowListType.BOARD) {
+                                                return (
+                                                    <BoardComponent key={index}
+                                                                    index={index}
+                                                                    workflowList={wl}
+                                                                    createWorkflowList={createWorkflowList}
+                                                                    modifyWorkflowList={modifyWorkflowList}
+                                                                    removeWorkflowList={removeWorkflowList}
+                                                    />
+                                                )
+                                            } else if (wl.usageType == WorkflowListType.LIST) {
+                                                return (
+                                                    <ListComponent key={index}
+                                                                   index={index}
+                                                                   workflowList={wl}
+                                                                   createWorkflowList={createWorkflowList}
+                                                                   modifyWorkflowList={modifyWorkflowList}
+                                                                   removeWorkflowList={removeWorkflowList}
+                                                    />
+                                                )
+                                            } else {
+                                                return(
+                                                    <ItemComponent key={index}
+                                                                   index={index}
+                                                                   workflowList={wl}
+                                                                   modifyWorkflowList={modifyWorkflowList}
+                                                                   removeWorkflowList={removeWorkflowList}/>
+                                                )
+                                            }
+                                        })}
                                         {provided.placeholder}
                                     </div>
                                 </div>

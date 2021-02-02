@@ -6,9 +6,9 @@ import {element} from "prop-types";
  * Recursively reorder items inside a list.
  */
 export const recursiveReorder = (lists: Array<WorkflowList>,
-                          listUUidToReorder: string,
-                          startIndex: number,
-                          endIndex: number) => {
+                                 listUUidToReorder: string,
+                                 startIndex: number,
+                                 endIndex: number) => {
     if (listUUidToReorder == "ROOT") {
         const [removed] = lists.splice(startIndex, 1);
         lists.splice(endIndex, 0, removed);
@@ -28,12 +28,20 @@ export const recursiveReorder = (lists: Array<WorkflowList>,
  * Recursively move an item from one list to another list.
  */
 export const recursiveMove = (lists: Array<WorkflowList>,
-                       droppableSource: DraggableLocation,
-                       droppableDestination: DraggableLocation) => {
-
-    const elementToMove: WorkflowList = recursiveRemove(lists, droppableSource);
+                              droppableSource: DraggableLocation,
+                              droppableDestination: DraggableLocation) => {
+    let elementToMove: WorkflowList;
+    if (droppableSource.droppableId == "ROOT") {
+        [elementToMove] = lists.splice(droppableSource.index, 1);
+    } else {
+        elementToMove = recursiveRemove(lists, droppableSource);
+    }
     console.log("elementToMove", elementToMove)
-    recursiveInsert(lists, droppableDestination, elementToMove);
+    if (droppableDestination.droppableId == "ROOT") {
+        lists.splice(droppableDestination.index, 0, elementToMove);
+    } else {
+        recursiveInsert(lists, droppableDestination, elementToMove);
+    }
 };
 
 /**

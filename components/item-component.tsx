@@ -5,13 +5,13 @@ import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 
 
 interface IItemProps {
-    item: WorkflowList
     index: number
+    workflowList: WorkflowList
     modifyWorkflowList
     removeWorkflowList
 }
 
-const ItemComponent = ({item, index, modifyWorkflowList, removeWorkflowList}: IItemProps): JSX.Element => {
+const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowList}: IItemProps): JSX.Element => {
 
     const [showModifyModal, setShowModifyModal] = useState(false)
 
@@ -23,7 +23,7 @@ const ItemComponent = ({item, index, modifyWorkflowList, removeWorkflowList}: II
     }
 
     return (
-        <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
+        <Draggable key={workflowList.uuid} draggableId={workflowList.uuid} index={index}>
             {(provided, snapshot) => (
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
@@ -31,12 +31,12 @@ const ItemComponent = ({item, index, modifyWorkflowList, removeWorkflowList}: II
                 >
                     <div
                         className="bg-white grid p-2 rounded shadow border m-1">
-                        <div className="font-bold m-1">{item.title}</div>
-                        <div className="m-1">{item.description}</div>
+                        <div className="font-bold m-1">{workflowList.title}</div>
+                        <div className="m-1">{workflowList.description}</div>
                         <div className="grid grid-cols-2">
                             <button type="button"
                                     onClick={() => {
-                                        removeWorkflowList(item.uuid)
+                                        removeWorkflowList(workflowList.uuid)
                                     }}
                                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-blue-500 hover:border-transparent rounded m-1"
                             >Delete
@@ -50,8 +50,8 @@ const ItemComponent = ({item, index, modifyWorkflowList, removeWorkflowList}: II
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
                                                      closeModal={closeModifyModal}
-                                                     modifyType={WorkflowListType.Item}
-                                                     workflowList={item}
+                                                     modifyType={WorkflowListType.ITEM}
+                                                     workflowList={workflowList}
                                                      modifyWorkflowList={modifyWorkflowList}/>
                         </div>
                     </div>

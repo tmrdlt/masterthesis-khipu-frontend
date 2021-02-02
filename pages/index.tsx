@@ -13,6 +13,7 @@ import {
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ListComponent from "components/list-component";
+import ItemComponent from "components/item-component";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -141,35 +142,43 @@ const Home: FunctionComponent = (): JSX.Element => {
             </button>
             <CreateWorkflowListModal show={showCreateModal}
                                      closeModal={closeModal}
-                                     createType={WorkflowListType.Board}
+                                     createType={WorkflowListType.BOARD}
                                      parentUuid={null}
                                      createWorkflowList={createWorkflowList}/>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="ROOT" type="ROOT">
+                <Droppable droppableId="ROOT" type="LIST">
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}
                              {...provided.droppableProps}
                         >
                             {state.map((wl, index) => {
-                                if (wl.usageType == WorkflowListType.Board) {
+                                if (wl.usageType == WorkflowListType.BOARD) {
                                     return (
                                         <BoardComponent key={index}
                                                         index={index}
-                                                        board={wl}
+                                                        workflowList={wl}
                                                         createWorkflowList={createWorkflowList}
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
                                         />
                                     )
-                                } else {
+                                } else if (wl.usageType == WorkflowListType.LIST) {
                                     return (
                                         <ListComponent key={index}
                                                        index={index}
-                                                       list={wl}
+                                                       workflowList={wl}
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                         />
+                                    )
+                                } else {
+                                    return (
+                                        <ItemComponent key={index}
+                                                       index={index}
+                                                       workflowList={wl}
+                                                       modifyWorkflowList={modifyWorkflowList}
+                                                       removeWorkflowList={removeWorkflowList}/>
                                     )
                                 }
                             })}

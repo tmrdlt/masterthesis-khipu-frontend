@@ -20,6 +20,7 @@ const CreateWorkflowListModal = ({
 
     const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
         title: "",
+        usageType: createType,
         parentUuid: parentUuid,
         description: ""
     }

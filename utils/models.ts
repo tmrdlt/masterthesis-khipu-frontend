@@ -10,6 +10,7 @@ export type WorkflowList = {
 export type CreateWorkflowListEntity = {
     title: string,
     description?: string,
+    usageType: WorkflowListType
     parentUuid?: string
 }
 
@@ -23,5 +24,5 @@ export type MoveWorkflowListEntity = {
 }
 
 export enum WorkflowListType {
-    Board = "BOARD", List = "LIST", Item = "ITEM"
+    BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
 }
