@@ -50,11 +50,11 @@ const BoardComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}
-                     className="grid bg-blue-300 border border-gray-500 rounded shadow p-2 m-2">
+                     className="grid bg-blue-300 border border-gray-500 rounded shadow mb-2 p-1">
                     <div className="grid grid-cols-2 hover:bg-blue-200"
                          {...provided.dragHandleProps}>
                         <div className="w-full font-bold m-1">{workflowList.title}</div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end m-1">
                             <div
                                 className="grid grid-cols-5 min-w-min max-w-max border border-gray-600 bg-blue-200 rounded">
                                 <button
@@ -129,7 +129,8 @@ const BoardComponent = ({
                         {(provided, snapshot) => (
                             <div ref={provided.innerRef}
                                  style={getDroppableStyle(snapshot.isDraggingOver)}
-                                 {...provided.droppableProps}>
+                                 {...provided.droppableProps}
+                                 className="p-1">
                                 <div className="w-full h-auto min-h-full flex justify-start">
                                     {workflowList.children.map((wl, index) => {
                                         if (wl.usageType == WorkflowListType.BOARD) {

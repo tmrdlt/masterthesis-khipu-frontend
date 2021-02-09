@@ -50,11 +50,11 @@ const ListComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}
-                     className="grid bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max p-2 m-2">
+                     className="grid bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max mb-2 mr-2 p-1">
                     <div className="grid grid-cols-2 hover:bg-red-200"
                          {...provided.dragHandleProps}>
                         <div className="w-full font-bold m-1">{workflowList.title}</div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end m-1">
                             <div
                                 className="grid grid-cols-5 min-w-min max-w-max border border-gray-600 bg-red-200 rounded">
                                 <button
@@ -128,6 +128,7 @@ const ListComponent = ({
                             <div ref={provided.innerRef}
                                  style={getDroppableStyle(snapshot.isDraggingOver)}
                                  {...provided.droppableProps}
+                                 className="p-1"
                             >
                                 {workflowList.children.map((wl, index) => {
                                     if (wl.usageType == WorkflowListType.BOARD) {

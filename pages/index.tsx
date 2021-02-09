@@ -151,19 +151,19 @@ const Home: FunctionComponent = (): JSX.Element => {
     }
 
     return (
-        <div className="bg-gray-200 h-screen">
+        <div className="bg-gray-200 h-screen p-3">
             <button
                 type="button"
                 onClick={() => {
                     openModal()
                 }}
-                className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded m-2 w-8 h-8"
+                className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded m-1 mb-3 w-8 h-8"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
+                     stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
             </button>
             <CreateWorkflowListModal show={showCreateModal}
                                      closeModal={closeModal}
@@ -176,6 +176,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                         <div ref={provided.innerRef}
                              style={getDroppableStyle(snapshot.isDraggingOver)}
                              {...provided.droppableProps}
+                             className="p-1"
                         >
                             {state.map((wl, index) => {
                                 if (wl.usageType == WorkflowListType.BOARD) {

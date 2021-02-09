@@ -28,12 +28,13 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                    index={index}>
             {(provided, snapshot) => (
                 <div ref={provided.innerRef}
-                     {...provided.draggableProps}>
-                    <div className="grid bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-2 m-2"
+                     {...provided.draggableProps}
+                     className="mb-2">
+                    <div className="grid bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1"
                          {...provided.dragHandleProps}>
                         <div className="grid grid-cols-2">
                             <div className="w-full font-bold m-1">{workflowList.title}</div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-end m-1">
                                 <div
                                     className="grid grid-cols-2 min-w-min max-w-max border border-gray-600 bg-gray-200 rounded">
                                     <button type="button"
