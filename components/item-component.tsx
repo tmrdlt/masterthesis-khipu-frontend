@@ -2,6 +2,7 @@ import {Draggable} from "react-beautiful-dnd";
 import React, {useState} from "react";
 import {WorkflowList, WorkflowListType} from "utils/models";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
+import MoveWorkflowListModal from "components/move-workflowlist-modal";
 
 
 interface IItemProps {
@@ -9,17 +10,31 @@ interface IItemProps {
     workflowList: WorkflowList
     modifyWorkflowList
     removeWorkflowList
+    selectElementUuidToMove
 }
 
-const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowList}: IItemProps): JSX.Element => {
+const ItemComponent = ({
+                           index,
+                           workflowList,
+                           modifyWorkflowList,
+                           removeWorkflowList,
+                           selectElementUuidToMove
+                       }: IItemProps): JSX.Element => {
 
     const [showModifyModal, setShowModifyModal] = useState(false)
-
     const openModifyModal = () => {
         setShowModifyModal(true);
     }
     const closeModifyModal = () => {
         setShowModifyModal(false);
+    }
+
+    const [showMoveModal, setShowMoveModal] = useState(false)
+    const openMoveModal = () => {
+        setShowMoveModal(true);
+    }
+    const closeMoveModal = () => {
+        setShowMoveModal(false);
     }
 
     return (
@@ -51,7 +66,7 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                                     </button>
                                     <button type="button"
                                             onClick={() => {
-                                                openModifyModal()
+                                                openModifyModal();
                                             }}
                                             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
                                     >
@@ -64,6 +79,8 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                                     <button type="button"
                                             onClick={() => {
                                                 console.log("MOVE");
+                                                selectElementUuidToMove(workflowList.uuid);
+                                                openMoveModal();
                                             }}
                                             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
                                     >
@@ -83,6 +100,9 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
                                              modifyType={WorkflowListType.ITEM}
                                              workflowList={workflowList}
                                              modifyWorkflowList={modifyWorkflowList}/>
+                    <MoveWorkflowListModal show={showMoveModal}
+                                           closeModal={closeMoveModal}
+                                           selectElementUuidToMove={selectElementUuidToMove}/>
                 </div>
             )}
         </Draggable>

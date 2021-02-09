@@ -26,6 +26,9 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     const [state, setState] = useState(initialData);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [elementUuidToMove, setElementUuidToMove] = useState(null);
+    const showHideDropButtonStyle = elementUuidToMove ? {display: "block"} : {display: "none"};
+
 
     useEffect(() => {
         init();
@@ -143,11 +146,31 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
+    const moveWorkflowList = (destinationElementUuid: string) => {
+        console.log("MOVING " + elementUuidToMove + " to " + destinationElementUuid);
+        setElementUuidToMove(null);
+        let newParentUuid = null
+        if (!(destinationElementUuid === "ROOT")) {
+            newParentUuid = destinationElementUuid;
+        }
+        postWorkflowListMove(elementUuidToMove, {newParentUuid: newParentUuid}).then(res => {
+            getWorkflowLists().then(workflowLists => {
+                if (workflowLists) {
+                    setState(workflowLists)
+                }
+            })
+        })
+    }
+
     const openModal = () => {
         setShowCreateModal(true);
     }
     const closeModal = () => {
         setShowCreateModal(false);
+    }
+
+    const selectElementUuidToMove = (uuid: string) => {
+        setElementUuidToMove(uuid);
     }
 
     return (
@@ -165,11 +188,6 @@ const Home: FunctionComponent = (): JSX.Element => {
                           d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                 </svg>
             </button>
-            <CreateWorkflowListModal show={showCreateModal}
-                                     closeModal={closeModal}
-                                     createType={WorkflowListType.BOARD}
-                                     parentUuid={null}
-                                     createWorkflowList={createWorkflowList}/>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="ROOT" type="ROOT">
                     {(provided, snapshot) => (
@@ -188,6 +206,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
+                                                        selectElementUuidToMove={selectElementUuidToMove}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -199,6 +218,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
+                                                       selectElementUuidToMove={selectElementUuidToMove}
                                         />
                                     )
                                 } else {
@@ -207,15 +227,42 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        index={index}
                                                        workflowList={wl}
                                                        modifyWorkflowList={modifyWorkflowList}
-                                                       removeWorkflowList={removeWorkflowList}/>
+                                                       removeWorkflowList={removeWorkflowList}
+                                                       selectElementUuidToMove={selectElementUuidToMove}
+                                        />
                                     )
                                 }
                             })}
+                            <div style={showHideDropButtonStyle}
+                                 className="z-50 relative transition-all">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        moveWorkflowList("ROOT");
+                                    }}
+                                    className="bg-transparent hover:bg-black text-black hover:text-white border border-black hover:border-transparent rounded m-1 mb-3 w-32 h-10"
+                                >
+                                    <div className="flex items-center justify-center">
+                                        <div className="w-8 h-8">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                            </svg>
+                                        </div>
+                                        <div> Drop here</div>
+                                    </div>
+                                </button>
+                            </div>
                             {provided.placeholder}
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
+            <CreateWorkflowListModal show={showCreateModal}
+                                     closeModal={closeModal}
+                                     createType={WorkflowListType.BOARD}
+                                     parentUuid={null}
+                                     createWorkflowList={createWorkflowList}/>
         </div>
     );
 };

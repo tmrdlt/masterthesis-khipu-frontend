@@ -6,6 +6,7 @@ import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 import ItemComponent from "components/item-component";
 import {getDroppableStyle} from "utils/style-elements";
+import MoveWorkflowListModal from "components/move-workflowlist-modal";
 
 interface IBoardProps {
     index: number
@@ -14,6 +15,7 @@ interface IBoardProps {
     modifyWorkflowList
     removeWorkflowList
     convertWorkflowList
+    selectElementUuidToMove
 }
 
 const BoardComponent = ({
@@ -22,12 +24,11 @@ const BoardComponent = ({
                             createWorkflowList,
                             modifyWorkflowList,
                             removeWorkflowList,
-                            convertWorkflowList
+                            convertWorkflowList,
+                            selectElementUuidToMove
                         }: IBoardProps): JSX.Element => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [showModifyModal, setShowModifyModal] = useState(false)
-
     const openCreateModal = () => {
         setShowCreateModal(true);
     }
@@ -35,11 +36,20 @@ const BoardComponent = ({
         setShowCreateModal(false);
     }
 
+    const [showModifyModal, setShowModifyModal] = useState(false)
     const openModifyModal = () => {
         setShowModifyModal(true);
     }
     const closeModifyModal = () => {
         setShowModifyModal(false);
+    }
+
+    const [showMoveModal, setShowMoveModal] = useState(false)
+    const openMoveModal = () => {
+        setShowMoveModal(true);
+    }
+    const closeMoveModal = () => {
+        setShowMoveModal(false);
     }
 
     return (
@@ -110,7 +120,8 @@ const BoardComponent = ({
                                 <button type="button"
                                         onClick={() => {
                                             console.log("MOVE");
-                                        }}
+                                            selectElementUuidToMove(workflowList.uuid);
+                                            openMoveModal();                                        }}
                                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -142,6 +153,7 @@ const BoardComponent = ({
                                                                 modifyWorkflowList={modifyWorkflowList}
                                                                 removeWorkflowList={removeWorkflowList}
                                                                 convertWorkflowList={convertWorkflowList}
+                                                                selectElementUuidToMove={selectElementUuidToMove}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -153,6 +165,7 @@ const BoardComponent = ({
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                convertWorkflowList={convertWorkflowList}
+                                                               selectElementUuidToMove={selectElementUuidToMove}
                                                 />
                                             )
                                         } else {
@@ -161,7 +174,8 @@ const BoardComponent = ({
                                                                index={index}
                                                                workflowList={wl}
                                                                modifyWorkflowList={modifyWorkflowList}
-                                                               removeWorkflowList={removeWorkflowList}/>
+                                                               removeWorkflowList={removeWorkflowList}
+                                                               selectElementUuidToMove={selectElementUuidToMove}/>
                                             )
                                         }
                                     })}
@@ -180,6 +194,9 @@ const BoardComponent = ({
                                              modifyType={WorkflowListType.BOARD}
                                              workflowList={workflowList}
                                              modifyWorkflowList={modifyWorkflowList}/>
+                    <MoveWorkflowListModal show={showMoveModal}
+                                           closeModal={closeMoveModal}
+                                           selectElementUuidToMove={selectElementUuidToMove}/>
                 </div>
             )}
         </Draggable>
