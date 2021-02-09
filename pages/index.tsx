@@ -157,8 +157,13 @@ const Home: FunctionComponent = (): JSX.Element => {
                 onClick={() => {
                     openModal()
                 }}
-                className="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded m-2"
-            >Add board
+                className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded m-2 w-8 h-8"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
             </button>
             <CreateWorkflowListModal show={showCreateModal}
                                      closeModal={closeModal}

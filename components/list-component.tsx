@@ -50,18 +50,23 @@ const ListComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="grid bg-red-300 border border-gray-500 rounded shadow max-w-max p-2 m-2">
+                    <div className="grid bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max p-2 m-2">
                         <div {...provided.dragHandleProps}
                              className="w-full hover:bg-red-200 font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
-                        <div className="grid grid-cols-4">
+                        <div className="grid grid-cols-5 min-w-min max-w-max border border-gray-600 bg-red-200 rounded">
                             <button
                                 type="button"
                                 onClick={() => {
                                     openCreateModal()
                                 }}
-                                className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
-                            >Add item
+                                className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
                             </button>
                             <CreateWorkflowListModal show={showCreateModal}
                                                      closeModal={closeCreateModal}
@@ -72,23 +77,48 @@ const ListComponent = ({
                                     onClick={() => {
                                         removeWorkflowList(workflowList.uuid)
                                     }}
-                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
-                            >Delete
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
                             </button>
                             <button type="button"
                                     onClick={() => {
                                         openModifyModal()
                                     }}
-                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
-                            >Modify
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
                             </button>
                             <button type="button"
                                     onClick={() => {
                                         const cwle: ConvertWorkflowListEntity = {newUsageType: WorkflowListType.BOARD}
                                         convertWorkflowList(workflowList.uuid, cwle)
                                     }}
-                                    className="bg-transparent hover:bg-gray-600 text-gray-600 font-semibold hover:text-white py-0.5 px-0.5 text-xs border border-gray-600 hover:border-transparent rounded m-1"
-                            >To Board
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            </button>
+                            <button type="button"
+                                    onClick={() => {
+                                        console.log("MOVE");
+                                    }}
+                                    className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
                             </button>
                             <ModifyWorkflowListModal show={showModifyModal}
                                                      closeModal={closeModifyModal}
