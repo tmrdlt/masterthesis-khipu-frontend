@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 import ItemComponent from "components/item-component";
+import {getDroppableStyle} from "utils/style-elements";
 
 interface IBoardProps {
     index: number
@@ -49,10 +50,11 @@ const BoardComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="grid bg-blue-300 border border-gray-500 rounded shadow p-2 m-2">
-                        <div {...provided.dragHandleProps} className="font-bold m-1">{workflowList.title}</div>
+                    <div className="grid bg-blue-300 border border-gray-500 rounded shadow max-w-max p-2 m-2">
+                        <div {...provided.dragHandleProps}
+                             className="w-full hover:bg-blue-200 font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
-                        <div className="grid, grid-cols-3">
+                        <div className="grid grid-cols-4 w-64">
                             <button
                                 type="button"
                                 onClick={() => {
@@ -97,8 +99,9 @@ const BoardComponent = ({
                         <Droppable droppableId={workflowList.uuid} direction="horizontal" type="LIST">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
+                                     style={getDroppableStyle(snapshot.isDraggingOver)}
                                      {...provided.droppableProps}>
-                                    <div className="w-full p-8 flex justify-start font-sans">
+                                    <div className="w-full h-auto min-h-full flex justify-start">
                                         {workflowList.children.map((wl, index) => {
                                             if (wl.usageType == WorkflowListType.BOARD) {
                                                 return (
@@ -132,8 +135,8 @@ const BoardComponent = ({
                                                 )
                                             }
                                         })}
-                                        {provided.placeholder}
                                     </div>
+                                    {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>

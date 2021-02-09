@@ -23,17 +23,18 @@ const ItemComponent = ({index, workflowList, modifyWorkflowList, removeWorkflowL
     }
 
     return (
-        <Draggable key={workflowList.uuid} draggableId={workflowList.uuid} index={index}>
+        <Draggable key={workflowList.uuid}
+                   draggableId={workflowList.uuid}
+                   index={index}>
             {(provided, snapshot) => (
                 <div ref={provided.innerRef}
-                     {...provided.draggableProps}
-                     {...provided.dragHandleProps}
-                >
+                     {...provided.draggableProps}>
                     <div
-                        className="grid bg-white border border-gray-500 rounded shadow p-2 m-2">
-                        <div className="font-bold m-1">{workflowList.title}</div>
+                        className="grid bg-white border border-gray-500 rounded shadow w-60 p-2 m-2">
+                        <div {...provided.dragHandleProps}
+                              className="w-full hover:bg-gray-200 font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
-                        <div className="grid grid-cols-2">
+                        <div className="grid grid-cols-2 w-32">
                             <button type="button"
                                     onClick={() => {
                                         removeWorkflowList(workflowList.uuid)

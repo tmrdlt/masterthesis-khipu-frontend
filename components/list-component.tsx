@@ -5,6 +5,7 @@ import ItemComponent from "components/item-component";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 import BoardComponent from "components/board-component";
+import {getDroppableStyle} from "utils/style-elements";
 
 interface IListProps {
     index: number
@@ -49,8 +50,9 @@ const ListComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="grid bg-red-300 border border-gray-500 rounded shadow w-70 p-2 m-2">
-                        <div {...provided.dragHandleProps} className="font-bold m-1">{workflowList.title}</div>
+                    <div className="grid bg-red-300 border border-gray-500 rounded shadow max-w-max p-2 m-2">
+                        <div {...provided.dragHandleProps}
+                             className="w-full hover:bg-red-200 font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
                         <div className="grid grid-cols-4">
                             <button
@@ -97,6 +99,7 @@ const ListComponent = ({
                         <Droppable droppableId={workflowList.uuid} type="LIST">
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
+                                     style={getDroppableStyle(snapshot.isDraggingOver)}
                                      {...provided.droppableProps}
                                 >
                                     {workflowList.children.map((wl, index) => {

@@ -20,6 +20,7 @@ import {
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ListComponent from "components/list-component";
 import ItemComponent from "components/item-component";
+import {getDroppableStyle} from "utils/style-elements";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -168,6 +169,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                 <Droppable droppableId="ROOT" type="LIST">
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}
+                             style={getDroppableStyle(snapshot.isDraggingOver)}
                              {...provided.droppableProps}
                         >
                             {state.map((wl, index) => {
