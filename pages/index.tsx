@@ -171,7 +171,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                      parentUuid={null}
                                      createWorkflowList={createWorkflowList}/>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="ROOT" type="LIST">
+                <Droppable droppableId="ROOT" type="ROOT">
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}
                              style={getDroppableStyle(snapshot.isDraggingOver)}

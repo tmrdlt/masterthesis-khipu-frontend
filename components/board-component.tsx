@@ -50,7 +50,7 @@ const BoardComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="grid bg-blue-300 border border-gray-500 rounded shadow min-w-min max-w-max p-2 m-2">
+                    <div className="grid bg-blue-300 border border-gray-500 rounded shadow p-2 m-2">
                         <div {...provided.dragHandleProps}
                              className="w-full hover:bg-blue-200 font-bold m-1">{workflowList.title}</div>
                         <div className="m-1">{workflowList.description}</div>
@@ -126,7 +126,7 @@ const BoardComponent = ({
                                                      workflowList={workflowList}
                                                      modifyWorkflowList={modifyWorkflowList}/>
                         </div>
-                        <Droppable droppableId={workflowList.uuid} direction="horizontal" type="LIST">
+                        <Droppable droppableId={workflowList.uuid} direction="horizontal" type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      style={getDroppableStyle(snapshot.isDraggingOver)}

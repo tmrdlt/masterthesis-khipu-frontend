@@ -4,7 +4,8 @@ export type WorkflowList = {
     title: string,
     description?: string,
     usageType: WorkflowListType,
-    children: Array<WorkflowList>
+    children: Array<WorkflowList>,
+    level: number
 }
 
 export type CreateWorkflowListEntity = {

@@ -126,7 +126,7 @@ const ListComponent = ({
                                                      workflowList={workflowList}
                                                      modifyWorkflowList={modifyWorkflowList}/>
                         </div>
-                        <Droppable droppableId={workflowList.uuid} type="LIST">
+                        <Droppable droppableId={workflowList.uuid} type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      style={getDroppableStyle(snapshot.isDraggingOver)}
