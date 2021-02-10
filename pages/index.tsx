@@ -5,10 +5,11 @@ import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
     UpdateWorkflowListEntity,
+    WorkflowList,
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
-import {isDirectChildOfParent, recursiveIsChildOfParent, recursiveMove, recursiveReorder} from "utils/list-util";
+import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
     deleteWorkflowList,
     getWorkflowLists,
@@ -25,10 +26,10 @@ import DropButton from "components/drop-button";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
-    const initElementUuidToMove: string | null = null;
     const [state, setState] = useState(initialData);
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [elementUuidToMove, setElementUuidToMove] = useState(initElementUuidToMove);
+    const initWorkflowListToMove: WorkflowList | null = null;
+    const [workflowListToMove, setWorkflowListToMove] = useState(initWorkflowListToMove);
 
     useEffect(() => {
         init();
@@ -146,17 +147,18 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
-    const moveWorkflowList = (destinationElementUuid: string) => {
-        console.log("MOVING " + elementUuidToMove + " to " + destinationElementUuid);
-        setElementUuidToMove(null);
+    const moveWorkflowList = (destinationWorkflowList?: WorkflowList) => {
         let newParentUuid = null
-        if (!(destinationElementUuid === "ROOT")) {
-            newParentUuid = destinationElementUuid;
+        // We are not on root
+        if (destinationWorkflowList) {
+            newParentUuid = destinationWorkflowList.uuid;
         }
-        postWorkflowListMove(elementUuidToMove, {newParentUuid: newParentUuid}).then(res => {
+        console.log("MOVING " + workflowListToMove.uuid + " to " + newParentUuid);
+        postWorkflowListMove(workflowListToMove.uuid, {newParentUuid: newParentUuid}).then(res => {
             getWorkflowLists().then(workflowLists => {
                 if (workflowLists) {
                     setState(workflowLists)
+                    setWorkflowListToMove(null);
                 }
             })
         })
@@ -169,22 +171,29 @@ const Home: FunctionComponent = (): JSX.Element => {
         setShowCreateModal(false);
     }
 
-    const selectElementUuidToMove = (uuid: string) => {
-        setElementUuidToMove(uuid);
+    const selectWorkflowListToMove = (wl: WorkflowList) => {
+        setWorkflowListToMove(wl);
     }
 
-    const showDropButton = (destinationUuidToDrop: string) => {
-        if (!elementUuidToMove) {
+    const showDropButton = (destinationToDropOn?: WorkflowList) => {
+        // Move modal is not open do not show drop button
+        if (!workflowListToMove) {
             return false
-        } else {
-            const isChildOfParent = recursiveIsChildOfParent(state, destinationUuidToDrop, elementUuidToMove)
-            const directChildOfParent = isDirectChildOfParent(state, elementUuidToMove, destinationUuidToDrop)
-            const directChildOfRoot = destinationUuidToDrop == "ROOT" && state.some(list => list.uuid == elementUuidToMove)
+        } else { // Move Modal is Open
 
-            if ((destinationUuidToDrop == elementUuidToMove) || isChildOfParent || directChildOfParent || directChildOfRoot) {
+            // The following would be illegal moves or moves that doesn't make sense
+            // Destination is already the list the element is in
+            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(state, destinationToDropOn, workflowListToMove)
+            // The destination would be inside the element we want to move
+            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
+            // The destination would be exactly the element we want to move
+            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
+
+            // Show drop button
+            if (!destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove) {
+                return true;
+            } else { // Do not show drop button
                 return false;
-            } else {
-                return true
             }
         }
     }
@@ -223,7 +232,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
                                                         moveWorkflowList={moveWorkflowList}
-                                                        selectElementUuidToMove={selectElementUuidToMove}
+                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
                                         />
                                     )
@@ -237,7 +246,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
                                                        moveWorkflowList={moveWorkflowList}
-                                                       selectElementUuidToMove={selectElementUuidToMove}
+                                                       selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
                                         />
                                     )
@@ -248,12 +257,12 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
-                                                       selectElementUuidToMove={selectElementUuidToMove}
+                                                       selectWorkflowListToMove={selectWorkflowListToMove}
                                         />
                                     )
                                 }
                             })}
-                            <DropButton workflowListUuid={"ROOT"}
+                            <DropButton workflowList={null}
                                         moveWorkflowList={moveWorkflowList}
                                         showDropButton={showDropButton}/>
                             {provided.placeholder}

@@ -17,7 +17,7 @@ interface IBoardProps {
     removeWorkflowList
     convertWorkflowList
     moveWorkflowList
-    selectElementUuidToMove
+    selectWorkflowListToMove
     showDropButton
 }
 
@@ -29,7 +29,7 @@ const BoardComponent = ({
                             removeWorkflowList,
                             convertWorkflowList,
                             moveWorkflowList,
-                            selectElementUuidToMove,
+                            selectWorkflowListToMove,
                             showDropButton
                         }: IBoardProps): JSX.Element => {
 
@@ -126,8 +126,7 @@ const BoardComponent = ({
                                     </button>
                                     <button type="button"
                                             onClick={() => {
-                                                console.log("MOVE");
-                                                selectElementUuidToMove(workflowList.uuid);
+                                                selectWorkflowListToMove(workflowList);
                                                 openMoveModal();
                                             }}
                                             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
@@ -162,7 +161,7 @@ const BoardComponent = ({
                                                                     removeWorkflowList={removeWorkflowList}
                                                                     convertWorkflowList={convertWorkflowList}
                                                                     moveWorkflowList={moveWorkflowList}
-                                                                    selectElementUuidToMove={selectElementUuidToMove}
+                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
                                                     />
                                                 )
@@ -176,7 +175,7 @@ const BoardComponent = ({
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    convertWorkflowList={convertWorkflowList}
                                                                    moveWorkflowList={moveWorkflowList}
-                                                                   selectElementUuidToMove={selectElementUuidToMove}
+                                                                   selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
                                                     />
                                                 )
@@ -187,11 +186,11 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
-                                                                   selectElementUuidToMove={selectElementUuidToMove}/>
+                                                                   selectWorkflowListToMove={selectWorkflowListToMove}/>
                                                 )
                                             }
                                         })}
-                                        <DropButton workflowListUuid={workflowList.uuid}
+                                        <DropButton workflowList={workflowList}
                                                     moveWorkflowList={moveWorkflowList}
                                                     showDropButton={showDropButton}/>
                                         {provided.placeholder}
@@ -212,7 +211,7 @@ const BoardComponent = ({
                                              modifyWorkflowList={modifyWorkflowList}/>
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
-                                           selectElementUuidToMove={selectElementUuidToMove}/>
+                                           selectWorkflowListToMove={selectWorkflowListToMove}/>
                 </div>
             )}
         </Draggable>

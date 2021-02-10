@@ -17,7 +17,7 @@ interface IListProps {
     removeWorkflowList
     convertWorkflowList
     moveWorkflowList
-    selectElementUuidToMove
+    selectWorkflowListToMove
     showDropButton
 }
 
@@ -29,7 +29,7 @@ const ListComponent = ({
                            removeWorkflowList,
                            convertWorkflowList,
                            moveWorkflowList,
-                           selectElementUuidToMove,
+                           selectWorkflowListToMove,
                            showDropButton
                        }: IListProps): JSX.Element => {
 
@@ -67,7 +67,8 @@ const ListComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max mb-2 mr-2 p-1" + moveClassName}>
+                    <div
+                        className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max mb-2 mr-2 p-1" + moveClassName}>
                         <div className="grid grid-cols-2 hover:bg-red-200"
                              {...provided.dragHandleProps}>
                             <div className="w-full font-bold m-1">{workflowList.title}</div>
@@ -126,8 +127,7 @@ const ListComponent = ({
                                     </button>
                                     <button type="button"
                                             onClick={() => {
-                                                console.log("MOVE");
-                                                selectElementUuidToMove(workflowList.uuid);
+                                                selectWorkflowListToMove(workflowList);
                                                 openMoveModal();
                                             }}
                                             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
@@ -160,7 +160,7 @@ const ListComponent = ({
                                                                 removeWorkflowList={removeWorkflowList}
                                                                 convertWorkflowList={convertWorkflowList}
                                                                 moveWorkflowList={moveWorkflowList}
-                                                                selectElementUuidToMove={selectElementUuidToMove}
+                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
                                                 />
                                             )
@@ -174,7 +174,7 @@ const ListComponent = ({
                                                                removeWorkflowList={removeWorkflowList}
                                                                convertWorkflowList={convertWorkflowList}
                                                                moveWorkflowList={moveWorkflowList}
-                                                               selectElementUuidToMove={selectElementUuidToMove}
+                                                               selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
                                                 />
                                             )
@@ -185,11 +185,11 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
-                                                               selectElementUuidToMove={selectElementUuidToMove}/>
+                                                               selectWorkflowListToMove={selectWorkflowListToMove}/>
                                             )
                                         }
                                     })}
-                                    <DropButton workflowListUuid={workflowList.uuid}
+                                    <DropButton workflowList={workflowList}
                                                 moveWorkflowList={moveWorkflowList}
                                                 showDropButton={showDropButton}/>
                                     {provided.placeholder}
@@ -209,7 +209,7 @@ const ListComponent = ({
                                              modifyWorkflowList={modifyWorkflowList}/>
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
-                                           selectElementUuidToMove={selectElementUuidToMove}/>
+                                           selectWorkflowListToMove={selectWorkflowListToMove}/>
                 </div>
             )}
         </Draggable>

@@ -1,21 +1,22 @@
 import React from "react";
+import {WorkflowList} from "utils/models";
 
 interface IDropButtonProps {
-    workflowListUuid: string
+    workflowList?: WorkflowList
     moveWorkflowList
     showDropButton
 }
 
-const DropButton = ({workflowListUuid, moveWorkflowList, showDropButton}: IDropButtonProps): JSX.Element => {
+const DropButton = ({workflowList, moveWorkflowList, showDropButton}: IDropButtonProps): JSX.Element => {
 
-    const showHideButton = showDropButton(workflowListUuid) ? {display: "block"} : {display: "none"}
+    const showHideButton = showDropButton(workflowList) ? {display: "block"} : {display: "none"}
     return (
         <div style={showHideButton}
              className="z-20 relative transition-all">
             <button
                 type="button"
                 onClick={() => {
-                    moveWorkflowList(workflowListUuid);
+                    moveWorkflowList(workflowList);
                 }}
                 className="flex items-center justify-center bg-green-400 hover:bg-green-600 text-gray-600 border border-gray-600 hover:border-transparent hover:text-white rounded mb-3 w-52 h-14"
             >

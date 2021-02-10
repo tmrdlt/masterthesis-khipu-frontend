@@ -10,7 +10,7 @@ interface IItemProps {
     workflowList: WorkflowList
     modifyWorkflowList
     removeWorkflowList
-    selectElementUuidToMove
+    selectWorkflowListToMove
 }
 
 const ItemComponent = ({
@@ -18,7 +18,7 @@ const ItemComponent = ({
                            workflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
-                           selectElementUuidToMove
+                           selectWorkflowListToMove
                        }: IItemProps): JSX.Element => {
 
     const [showModifyModal, setShowModifyModal] = useState(false)
@@ -81,7 +81,7 @@ const ItemComponent = ({
                                     <button type="button"
                                             onClick={() => {
                                                 console.log("MOVE");
-                                                selectElementUuidToMove(workflowList.uuid);
+                                                selectWorkflowListToMove(workflowList);
                                                 openMoveModal();
                                             }}
                                             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
@@ -104,7 +104,7 @@ const ItemComponent = ({
                                              modifyWorkflowList={modifyWorkflowList}/>
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
-                                           selectElementUuidToMove={selectElementUuidToMove}/>
+                                           selectWorkflowListToMove={selectWorkflowListToMove}/>
                 </div>
             )}
         </Draggable>
