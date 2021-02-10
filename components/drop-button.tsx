@@ -3,13 +3,15 @@ import React from "react";
 interface IDropButtonProps {
     workflowListUuid: string
     moveWorkflowList
-    showHideDropButtonStyle
+    showDropButton
 }
 
-const DropButton = ({workflowListUuid, moveWorkflowList, showHideDropButtonStyle}: IDropButtonProps): JSX.Element => {
+const DropButton = ({workflowListUuid, moveWorkflowList, showDropButton}: IDropButtonProps): JSX.Element => {
+
+    const showHideButton = showDropButton(workflowListUuid) ? {display: "block"} : {display: "none"}
     return (
-        <div style={showHideDropButtonStyle(workflowListUuid)}
-             className="z-50 relative transition-all">
+        <div style={showHideButton}
+             className="z-20 relative transition-all">
             <button
                 type="button"
                 onClick={() => {

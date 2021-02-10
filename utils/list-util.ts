@@ -76,14 +76,21 @@ const recursiveInsert = (lists: Array<WorkflowList>,
 }
 
 // Use someday
-export const isOnSameLevel = (lists: Array<WorkflowList>, list1Uuid: string, list2Uuid: string): boolean => {
-    if (lists.filter(list => (list.uuid == list1Uuid) || (list.uuid == list2Uuid)).length == 2) {
-        return true
-    } else {
-        lists.forEach(list => {
-            isOnSameLevel(list.children, list1Uuid, list2Uuid)
-        })
-    }
+export const isDirectChildOfParent = (lists: Array<WorkflowList>,
+                                      potentialChildUuid: string,
+                                      potentialParentUuid: string): boolean => {
+    let isChildOfParent = false;
+    lists.some(list => {
+        if (list.uuid == potentialParentUuid && list.children.length == 0) {
+            return;
+        } else if (list.uuid == potentialParentUuid && list.children.length > 0) {
+            isChildOfParent = contains(list.children, potentialChildUuid);
+            return;
+        } else {
+            isChildOfParent = isDirectChildOfParent(list.children, potentialChildUuid, potentialParentUuid);
+        }
+    })
+    return isChildOfParent
 }
 
 /**
@@ -95,9 +102,7 @@ export const recursiveIsChildOfParent = (lists: Array<WorkflowList>, potentialCh
         if (list.uuid == potentialParentUuid && list.children.length == 0) {
             return;
         } else if (list.uuid == potentialParentUuid && list.children.length > 0) {
-            const contains = recursiveContains(list.children, potentialChildUuid);
-            console.log("recursiveContains", contains);
-            isChildOfParent = contains;
+            isChildOfParent = recursiveContains(list.children, potentialChildUuid);
             return;
         } else {
             isChildOfParent = recursiveIsChildOfParent(list.children, potentialChildUuid, potentialParentUuid);
@@ -122,6 +127,19 @@ const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolea
             return;
         } else {
             contains = recursiveContains(list.children, listUuid)
+        }
+    })
+    return contains;
+}
+
+const contains = (lists: Array<WorkflowList>, listUuid: string): boolean => {
+    let contains = false;
+    lists.some(list => {
+        if (list.uuid == listUuid) {
+            contains = true;
+            return;
+        } else {
+            return
         }
     })
     return contains;

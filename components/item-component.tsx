@@ -37,6 +37,8 @@ const ItemComponent = ({
         setShowMoveModal(false);
     }
 
+    const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+
     return (
         <Draggable key={workflowList.uuid}
                    draggableId={workflowList.uuid}
@@ -45,7 +47,7 @@ const ItemComponent = ({
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
-                    <div className="bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1"
+                    <div className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1" + moveClassName}
                          {...provided.dragHandleProps}>
                         <div className="grid grid-cols-2">
                             <div className="font-bold m-1">{workflowList.title}</div>

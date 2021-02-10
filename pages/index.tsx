@@ -8,7 +8,7 @@ import {
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
-import {recursiveIsChildOfParent, recursiveMove, recursiveReorder} from "utils/list-util";
+import {isDirectChildOfParent, recursiveIsChildOfParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
     deleteWorkflowList,
     getWorkflowLists,
@@ -173,14 +173,19 @@ const Home: FunctionComponent = (): JSX.Element => {
         setElementUuidToMove(uuid);
     }
 
-    const showHideDropButtonStyle = (destinationUuidToDrop: string) => {
-        if (elementUuidToMove == destinationUuidToDrop) {
-            return {display: "none"};
-        }
-        if (elementUuidToMove && !recursiveIsChildOfParent(state, destinationUuidToDrop, elementUuidToMove)) {
-            return {display: "block"};
+    const showDropButton = (destinationUuidToDrop: string) => {
+        if (!elementUuidToMove) {
+            return false
         } else {
-            return {display: "none"};
+            const isChildOfParent = recursiveIsChildOfParent(state, destinationUuidToDrop, elementUuidToMove)
+            const directChildOfParent = isDirectChildOfParent(state, elementUuidToMove, destinationUuidToDrop)
+            const directChildOfRoot = destinationUuidToDrop == "ROOT" && state.some(list => list.uuid == elementUuidToMove)
+
+            if ((destinationUuidToDrop == elementUuidToMove) || isChildOfParent || directChildOfParent || directChildOfRoot) {
+                return false;
+            } else {
+                return true
+            }
         }
     }
 
@@ -219,7 +224,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         convertWorkflowList={convertWorkflowList}
                                                         moveWorkflowList={moveWorkflowList}
                                                         selectElementUuidToMove={selectElementUuidToMove}
-                                                        showHideDropButtonStyle={showHideDropButtonStyle}
+                                                        showDropButton={showDropButton}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -233,7 +238,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        convertWorkflowList={convertWorkflowList}
                                                        moveWorkflowList={moveWorkflowList}
                                                        selectElementUuidToMove={selectElementUuidToMove}
-                                                       showHideDropButtonStyle={showHideDropButtonStyle}
+                                                       showDropButton={showDropButton}
                                         />
                                     )
                                 } else {
@@ -250,7 +255,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                             })}
                             <DropButton workflowListUuid={"ROOT"}
                                         moveWorkflowList={moveWorkflowList}
-                                        showHideDropButtonStyle={showHideDropButtonStyle}/>
+                                        showDropButton={showDropButton}/>
                             {provided.placeholder}
                         </div>
                     )}
