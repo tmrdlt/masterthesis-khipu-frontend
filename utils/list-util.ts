@@ -75,10 +75,11 @@ const recursiveInsert = (lists: Array<WorkflowList>,
     })
 }
 
-export const isSameLevelOfSameParent = (lists: Array<WorkflowList>, parent?: WorkflowList, potentialChild?: WorkflowList): boolean => {
+// @ts-ignore
+export const isSameLevelOfSameParent = (lists: Array<WorkflowList>, parent?: WorkflowList, potentialChild: WorkflowList): boolean => {
     // We are on root
-    if (parent == null || potentialChild == null) {
-        return lists.includes(potentialChild)
+    if (parent == null) {
+        return lists.map(list => list.uuid).includes(potentialChild.uuid)
     } else {
         return parent.children.map(list => list.uuid).includes(potentialChild.uuid)
     }
