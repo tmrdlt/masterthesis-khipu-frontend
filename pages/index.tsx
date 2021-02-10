@@ -178,8 +178,9 @@ const Home: FunctionComponent = (): JSX.Element => {
     const showDropButton = (destinationToDropOn?: WorkflowList) => {
         // Move modal is not open do not show drop button
         if (!workflowListToMove) {
-            return false
-        } else { // Move Modal is Open
+            return false;
+        } else {
+            // Move Modal is Open
 
             // The following would be illegal moves or moves that doesn't make sense
             // Destination is already the list the element is in
@@ -189,12 +190,8 @@ const Home: FunctionComponent = (): JSX.Element => {
             // The destination would be exactly the element we want to move
             const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
 
-            // Show drop button
-            if (!destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove) {
-                return true;
-            } else { // Do not show drop button
-                return false;
-            }
+            // Show drop button only if all three are false
+            return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
         }
     }
 
