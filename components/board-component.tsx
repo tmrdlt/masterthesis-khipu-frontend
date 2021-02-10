@@ -1,7 +1,7 @@
-import {ConvertWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/models";
+import {WorkflowList, WorkflowListType} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 import ItemComponent from "components/item-component";
@@ -18,6 +18,7 @@ interface IBoardProps {
     removeWorkflowList
     convertWorkflowList
     moveWorkflowList
+    workflowListToMove
     selectWorkflowListToMove
     showDropButton
 }
@@ -30,6 +31,7 @@ const BoardComponent = ({
                             removeWorkflowList,
                             convertWorkflowList,
                             moveWorkflowList,
+                            workflowListToMove,
                             selectWorkflowListToMove,
                             showDropButton
                         }: IBoardProps): JSX.Element => {
@@ -57,6 +59,12 @@ const BoardComponent = ({
     const closeMoveModal = () => {
         setShowMoveModal(false);
     }
+
+    useEffect(() => {
+        if (!workflowListToMove) {
+            closeMoveModal();
+        }
+    }, [workflowListToMove])
 
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
 
@@ -101,6 +109,7 @@ const BoardComponent = ({
                                                                     removeWorkflowList={removeWorkflowList}
                                                                     convertWorkflowList={convertWorkflowList}
                                                                     moveWorkflowList={moveWorkflowList}
+                                                                    workflowListToMove={workflowListToMove}
                                                                     selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
                                                     />
@@ -115,6 +124,7 @@ const BoardComponent = ({
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    convertWorkflowList={convertWorkflowList}
                                                                    moveWorkflowList={moveWorkflowList}
+                                                                   workflowListToMove={workflowListToMove}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
                                                     />
@@ -126,6 +136,7 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
+                                                                   workflowListToMove={workflowListToMove}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}/>
                                                 )
                                             }

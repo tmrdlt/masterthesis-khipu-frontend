@@ -229,6 +229,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
                                                         moveWorkflowList={moveWorkflowList}
+                                                        workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
                                         />
@@ -243,6 +244,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
                                                        moveWorkflowList={moveWorkflowList}
+                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
                                         />
@@ -254,14 +256,13 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
+                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                         />
                                     )
                                 }
                             })}
-                            <DropButton workflowList={null}
-                                        moveWorkflowList={moveWorkflowList}
-                                        showDropButton={showDropButton}/>
+                            <DropButton moveWorkflowList={moveWorkflowList} showDropButton={showDropButton}/>
                             {provided.placeholder}
                         </div>
                     )}

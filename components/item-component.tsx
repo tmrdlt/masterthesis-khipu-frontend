@@ -1,5 +1,5 @@
 import {Draggable} from "react-beautiful-dnd";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {WorkflowList, WorkflowListType} from "utils/models";
 import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
 import MoveWorkflowListModal from "components/move-workflowlist-modal";
@@ -11,6 +11,7 @@ interface IItemProps {
     workflowList: WorkflowList
     modifyWorkflowList
     removeWorkflowList
+    workflowListToMove
     selectWorkflowListToMove
 }
 
@@ -19,6 +20,7 @@ const ItemComponent = ({
                            workflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
+                           workflowListToMove,
                            selectWorkflowListToMove
                        }: IItemProps): JSX.Element => {
 
@@ -37,6 +39,12 @@ const ItemComponent = ({
     const closeMoveModal = () => {
         setShowMoveModal(false);
     }
+
+    useEffect(() => {
+        if (!workflowListToMove) {
+            closeMoveModal();
+        }
+    }, [workflowListToMove])
 
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
 
