@@ -8,7 +8,7 @@ import {
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
-import {recursiveMove, recursiveReorder} from "utils/list-manipulation-util";
+import {recursiveIsChildOfParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
     deleteWorkflowList,
     getWorkflowLists,
@@ -24,11 +24,10 @@ import {getDroppableStyle} from "utils/style-elements";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
+    const initElementUuidToMove: string | null = null;
     const [state, setState] = useState(initialData);
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [elementUuidToMove, setElementUuidToMove] = useState(null);
-    const showHideDropButtonStyle = elementUuidToMove ? {display: "block"} : {display: "none"};
-
+    const [elementUuidToMove, setElementUuidToMove] = useState(initElementUuidToMove);
 
     useEffect(() => {
         init();
@@ -173,6 +172,17 @@ const Home: FunctionComponent = (): JSX.Element => {
         setElementUuidToMove(uuid);
     }
 
+    const showHideDropButtonStyle = (destinationUuidToDrop: string) => {
+        if (elementUuidToMove == destinationUuidToDrop) {
+            return {display: "none"};
+        }
+        if (elementUuidToMove && !recursiveIsChildOfParent(state, destinationUuidToDrop, elementUuidToMove)) {
+            return {display: "block"};
+        } else {
+            return {display: "none"};
+        }
+    }
+
     return (
         <div className="bg-gray-200 h-screen p-3">
             <button
@@ -206,7 +216,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
+                                                        moveWorkflowList={moveWorkflowList}
                                                         selectElementUuidToMove={selectElementUuidToMove}
+                                                        showHideDropButtonStyle={showHideDropButtonStyle}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -218,7 +230,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
+                                                       moveWorkflowList={moveWorkflowList}
                                                        selectElementUuidToMove={selectElementUuidToMove}
+                                                       showHideDropButtonStyle={showHideDropButtonStyle}
                                         />
                                     )
                                 } else {
@@ -233,7 +247,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                     )
                                 }
                             })}
-                            <div style={showHideDropButtonStyle}
+                            <div style={showHideDropButtonStyle("ROOT")}
                                  className="z-50 relative transition-all">
                                 <button
                                     type="button"
@@ -244,7 +258,8 @@ const Home: FunctionComponent = (): JSX.Element => {
                                 >
                                     <div className="flex items-center justify-center">
                                         <div className="w-8 h-8">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                             </svg>

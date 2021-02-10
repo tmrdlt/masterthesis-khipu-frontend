@@ -15,7 +15,9 @@ interface IListProps {
     modifyWorkflowList
     removeWorkflowList
     convertWorkflowList
+    moveWorkflowList
     selectElementUuidToMove
+    showHideDropButtonStyle
 }
 
 const ListComponent = ({
@@ -25,7 +27,9 @@ const ListComponent = ({
                            modifyWorkflowList,
                            removeWorkflowList,
                            convertWorkflowList,
-                           selectElementUuidToMove
+                           moveWorkflowList,
+                           selectElementUuidToMove,
+                           showHideDropButtonStyle
                        }: IListProps): JSX.Element => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -121,7 +125,8 @@ const ListComponent = ({
                                         onClick={() => {
                                             console.log("MOVE");
                                             selectElementUuidToMove(workflowList.uuid);
-                                            openMoveModal();                                        }}
+                                            openMoveModal();
+                                        }}
                                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -151,7 +156,9 @@ const ListComponent = ({
                                                             modifyWorkflowList={modifyWorkflowList}
                                                             removeWorkflowList={removeWorkflowList}
                                                             convertWorkflowList={convertWorkflowList}
+                                                            moveWorkflowList={moveWorkflowList}
                                                             selectElementUuidToMove={selectElementUuidToMove}
+                                                            showHideDropButtonStyle={showHideDropButtonStyle}
                                             />
                                         )
                                     } else if (wl.usageType == WorkflowListType.LIST) {
@@ -163,7 +170,9 @@ const ListComponent = ({
                                                            modifyWorkflowList={modifyWorkflowList}
                                                            removeWorkflowList={removeWorkflowList}
                                                            convertWorkflowList={convertWorkflowList}
+                                                           moveWorkflowList={moveWorkflowList}
                                                            selectElementUuidToMove={selectElementUuidToMove}
+                                                           showHideDropButtonStyle={showHideDropButtonStyle}
                                             />
                                         )
                                     } else {
@@ -177,6 +186,28 @@ const ListComponent = ({
                                         )
                                     }
                                 })}
+                                <div style={showHideDropButtonStyle(workflowList.uuid)}
+                                     className="z-50 relative transition-all">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            moveWorkflowList(workflowList.uuid);
+                                        }}
+                                        className="bg-transparent hover:bg-black text-black hover:text-white border border-black hover:border-transparent rounded mb-3 w-32 h-10"
+                                    >
+                                        <div className="flex items-center justify-center">
+                                            <div className="w-8 h-8">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                     viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                                          strokeWidth={2}
+                                                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                </svg>
+                                            </div>
+                                            <div> Drop here</div>
+                                        </div>
+                                    </button>
+                                </div>
                                 {provided.placeholder}
                             </div>
                         )}
