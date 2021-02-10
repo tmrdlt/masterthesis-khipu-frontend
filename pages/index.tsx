@@ -21,6 +21,7 @@ import CreateWorkflowListModal from "components/create-workflowlist-modal";
 import ListComponent from "components/list-component";
 import ItemComponent from "components/item-component";
 import {getDroppableStyle} from "utils/style-elements";
+import DropButton from "components/drop-button";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
@@ -247,27 +248,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                                     )
                                 }
                             })}
-                            <div style={showHideDropButtonStyle("ROOT")}
-                                 className="z-50 relative transition-all">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        moveWorkflowList("ROOT");
-                                    }}
-                                    className="bg-transparent hover:bg-black text-black hover:text-white border border-black hover:border-transparent rounded m-1 mb-3 w-32 h-10"
-                                >
-                                    <div className="flex items-center justify-center">
-                                        <div className="w-8 h-8">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                            </svg>
-                                        </div>
-                                        <div> Drop here</div>
-                                    </div>
-                                </button>
-                            </div>
+                            <DropButton workflowListUuid={"ROOT"}
+                                        moveWorkflowList={moveWorkflowList}
+                                        showHideDropButtonStyle={showHideDropButtonStyle}/>
                             {provided.placeholder}
                         </div>
                     )}
