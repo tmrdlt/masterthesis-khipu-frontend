@@ -1,6 +1,5 @@
 import {WorkflowList} from "utils/models";
 import {DraggableLocation} from "react-beautiful-dnd";
-import {element} from "prop-types";
 
 /**
  * Recursively reorder items inside a list.
@@ -74,4 +73,49 @@ const recursiveInsert = (lists: Array<WorkflowList>,
             recursiveInsert(list.children, droppableDestination, elementToMove)
         }
     })
+}
+
+// @ts-ignore
+export const isSameLevelOfSameParent = (lists: Array<WorkflowList>, parent?: WorkflowList, potentialChild: WorkflowList): boolean => {
+    // We are on root
+    if (parent == null) {
+        return lists.map(list => list.uuid).includes(potentialChild.uuid)
+    } else {
+        return parent.children.map(list => list.uuid).includes(potentialChild.uuid)
+    }
+}
+
+/**
+ * Function to determine if in an Array of WorkflowList a child list is really a child list of some parent list
+ */
+export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowList): boolean => {
+    // We are on root
+    if (parent == null || potentialChild == null) {
+        return false;
+    } else {
+        return recursiveContains(parent.children, potentialChild.uuid)
+
+    }
+}
+
+/**
+ * Helper function to check if an Array of WorkflowList contains a specific listUuid
+ * @param lists: Array in which to search for
+ * @param listUuid: Uuid to search for
+ */
+// TODO maybe write this nicer
+const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolean => {
+
+    let contains = false;
+    lists.some(list => {
+        if (list.uuid == listUuid) {
+            contains = true;
+            return;
+        } else if (list.children.length == 0) {
+            return;
+        } else {
+            contains = recursiveContains(list.children, listUuid)
+        }
+    })
+    return contains;
 }
