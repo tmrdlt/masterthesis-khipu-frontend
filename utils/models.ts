@@ -23,6 +23,7 @@ export type UpdateWorkflowListEntity = {
 
 export type MoveWorkflowListEntity = {
     newParentUuid?: string
+    newOrderIndex?: number
 }
 
 export type ConvertWorkflowListEntity = {

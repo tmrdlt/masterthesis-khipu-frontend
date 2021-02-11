@@ -81,7 +81,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             if (!(destinationDroppableId === "ROOT")) {
                 newParentUuid = destinationDroppableId;
             }
-            postWorkflowListMove(draggableId, {newParentUuid: newParentUuid}).then(res => {
+            postWorkflowListMove(draggableId, {newParentUuid: newParentUuid, newOrderIndex: destination.index}).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
