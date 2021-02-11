@@ -75,8 +75,9 @@ const BoardComponent = ({
             index={index}
         >
             {(provided, snapshot) => (
-                <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className={"bg-blue-300 border border-gray-500 rounded shadow mb-2 mr-2 p-1" + moveClassName}>
+                <div ref={provided.innerRef} {...provided.draggableProps}
+                className="mb-2 mr-2">
+                    <div className={"bg-blue-300 border border-gray-500 rounded shadow p-1" + moveClassName}>
                         <div className="grid grid-cols-2 hover:bg-blue-200"
                              {...provided.dragHandleProps}>
                             <div className="w-full font-bold m-1">{workflowList.title}</div>
