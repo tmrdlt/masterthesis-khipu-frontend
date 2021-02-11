@@ -6,6 +6,7 @@ export type WorkflowList = {
     usageType: WorkflowListType,
     children: Array<WorkflowList>,
     level: number
+    order: number
 }
 
 export type CreateWorkflowListEntity = {
@@ -26,6 +27,10 @@ export type MoveWorkflowListEntity = {
 
 export type ConvertWorkflowListEntity = {
     newUsageType: WorkflowListType
+}
+
+export type ReorderWorkflowListEntity = {
+    newOrderIndex: number
 }
 
 export enum WorkflowListType {

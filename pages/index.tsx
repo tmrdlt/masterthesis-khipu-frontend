@@ -15,7 +15,7 @@ import {
     getWorkflowLists,
     postWorkflowList,
     postWorkflowListConvert,
-    postWorkflowListMove,
+    postWorkflowListMove, postWorkflowListReorder,
     putWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/create-workflowlist-modal";
@@ -61,6 +61,16 @@ const Home: FunctionComponent = (): JSX.Element => {
             let newState = [...state]
             recursiveReorder(newState, sourceDroppableId, source.index, destination.index)
             setState(newState);
+
+            if (source.index != destination.index) {
+                postWorkflowListReorder(draggableId, {newOrderIndex: destination.index}).then(res => {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                })
+            }
         } else {
             // It's a MOVE action
             let newState = [...state]
