@@ -49,10 +49,39 @@ const CreateWorkflowListModal = ({
                         <div className="sm:flex sm:items-start">
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                                    Create {createType}
+                                    Create a...
                                 </h3>
                                 <div className="mt-2">
                                     <form action="/" method="post">
+                                        <div className="flex items-center mb-4">
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={WorkflowListType.BOARD}
+                                                       id="usageType"
+                                                       checked={state.usageType === WorkflowListType.BOARD}
+                                                       onChange={handleFormChange}
+                                                className="h-4 w-4"/>
+                                                <span className="ml-1">Board</span>
+                                            </label>
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={WorkflowListType.LIST}
+                                                       id="usageType"
+                                                       checked={state.usageType === WorkflowListType.LIST}
+                                                       onChange={handleFormChange}
+                                                       className="h-4 w-4"/>
+                                                <span className="ml-1">List</span>
+                                            </label>
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={WorkflowListType.ITEM}
+                                                       id="usageType"
+                                                       checked={state.usageType === WorkflowListType.ITEM}
+                                                       onChange={handleFormChange}
+                                                       className="h-4 w-4"/>
+                                                <span className="ml-1">Item</span>
+                                            </label>
+                                        </div>
                                         <div className="flex flex-col mb-4">
                                             <label>Title</label>
                                             <input className="border" type="text" value={state.title}
