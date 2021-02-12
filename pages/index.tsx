@@ -1,6 +1,5 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
-import {initialData} from "utils/initial-data";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
@@ -26,7 +25,8 @@ import DropButton from "components/drop-button";
 
 const Home: FunctionComponent = (): JSX.Element => {
 
-    const [state, setState] = useState(initialData);
+    const initState: Array<WorkflowList> = []
+    const [state, setState] = useState(initState);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const initWorkflowListToMove: WorkflowList | null = null;
     const [workflowListToMove, setWorkflowListToMove] = useState(initWorkflowListToMove);
