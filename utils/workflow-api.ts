@@ -8,7 +8,7 @@ import {
 } from "utils/models";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
-    return axios.get('http://localhost:5001/workflowList')
+    return axios.get('http://localhost:5001/workflowlist')
         .then(response => {
             const workflowLists: Array<WorkflowList> = response.data;
             console.log(workflowLists);
@@ -20,7 +20,7 @@ export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> =>
 }
 
 export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
-    return axios.post('http://localhost:5001/workflowList', createWorkflowListEntity)
+    return axios.post('http://localhost:5001/workflowlist', createWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -30,7 +30,7 @@ export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowL
 }
 
 export const putWorkflowList = async (uuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
-    return axios.put('http://localhost:5001/workflowList/' + uuid, updateWorkflowListEntity)
+    return axios.put('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -40,7 +40,7 @@ export const putWorkflowList = async (uuid: string, updateWorkflowListEntity: Up
 }
 
 export const deleteWorkflowList = async (uuid: string) => {
-    return axios.delete('http://localhost:5001/workflowList/' + uuid)
+    return axios.delete('http://localhost:5001/workflowlist/' + uuid)
         .then(response => {
             return response;
         }).catch(error => {
@@ -50,7 +50,7 @@ export const deleteWorkflowList = async (uuid: string) => {
 }
 
 export const postWorkflowListMove = async (uuid: string, moveWorkflowListEntity: MoveWorkflowListEntity) => {
-    return axios.post('http://localhost:5001/workflowList/' + uuid + '/move', moveWorkflowListEntity)
+    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/move', moveWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -60,7 +60,7 @@ export const postWorkflowListMove = async (uuid: string, moveWorkflowListEntity:
 }
 
 export const postWorkflowListConvert = async (uuid: string, convertWorkflowListEntity: ConvertWorkflowListEntity) => {
-    return axios.post('http://localhost:5001/workflowList/' + uuid + '/convert', convertWorkflowListEntity)
+    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/convert', convertWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -70,7 +70,7 @@ export const postWorkflowListConvert = async (uuid: string, convertWorkflowListE
 }
 
 export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListEntity: ReorderWorkflowListEntity) => {
-    return axios.post('http://localhost:5001/workflowList/' + uuid + '/reorder', reorderWorkflowListEntity)
+    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/reorder', reorderWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
