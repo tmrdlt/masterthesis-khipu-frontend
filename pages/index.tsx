@@ -63,7 +63,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             setState(newState);
 
             if (source.index != destination.index) {
-                postWorkflowListReorder(draggableId, {newOrderIndex: destination.index}).then(res => {
+                postWorkflowListReorder(draggableId, {newPosition: destination.index}).then(res => {
                     getWorkflowLists().then(workflowLists => {
                         if (workflowLists) {
                             setState(workflowLists)
@@ -81,7 +81,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             if (!(destinationDroppableId === "ROOT")) {
                 newParentUuid = destinationDroppableId;
             }
-            postWorkflowListMove(draggableId, {newParentUuid: newParentUuid, newOrderIndex: destination.index}).then(res => {
+            postWorkflowListMove(draggableId, {newParentApiId: newParentUuid, newPosition: destination.index}).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
@@ -164,7 +164,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             newParentUuid = destinationWorkflowList.uuid;
         }
         console.log("MOVING " + workflowListToMove.uuid + " to " + newParentUuid);
-        postWorkflowListMove(workflowListToMove.uuid, {newParentUuid: newParentUuid}).then(res => {
+        postWorkflowListMove(workflowListToMove.uuid, {newParentApiId: newParentUuid}).then(res => {
             getWorkflowLists().then(workflowLists => {
                 if (workflowLists) {
                     setState(workflowLists)

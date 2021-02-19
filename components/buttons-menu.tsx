@@ -64,7 +64,7 @@ const ButtonsMenu = ({
                 {workflowList.usageType == "BOARD" &&
                 <button type="button"
                         onClick={() => {
-                            const cwle: ConvertWorkflowListEntity = {newUsageType: WorkflowListType.LIST}
+                            const cwle: ConvertWorkflowListEntity = {newListType: WorkflowListType.LIST}
                             convertWorkflowList(workflowList.uuid, cwle)
                         }}
                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
@@ -79,7 +79,7 @@ const ButtonsMenu = ({
                 {workflowList.usageType == "LIST" &&
                 <button type="button"
                         onClick={() => {
-                            const cwle: ConvertWorkflowListEntity = {newUsageType: WorkflowListType.BOARD}
+                            const cwle: ConvertWorkflowListEntity = {newListType: WorkflowListType.BOARD}
                             convertWorkflowList(workflowList.uuid, cwle)
                         }}
                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"

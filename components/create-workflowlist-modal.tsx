@@ -20,8 +20,8 @@ const CreateWorkflowListModal = ({
 
     const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
         title: "",
-        usageType: createType,
-        parentUuid: parentUuid,
+        listType: createType,
+        parentApiId: parentUuid,
         description: ""
     }
     const showHideStyle = show ? {display: "block"} : {display: "none"};
@@ -58,7 +58,7 @@ const CreateWorkflowListModal = ({
                                                 <input type="radio"
                                                        value={WorkflowListType.BOARD}
                                                        id="usageType"
-                                                       checked={state.usageType === WorkflowListType.BOARD}
+                                                       checked={state.listType === WorkflowListType.BOARD}
                                                        onChange={handleFormChange}
                                                 className="h-4 w-4"/>
                                                 <span className="ml-1">Board</span>
@@ -67,7 +67,7 @@ const CreateWorkflowListModal = ({
                                                 <input type="radio"
                                                        value={WorkflowListType.LIST}
                                                        id="usageType"
-                                                       checked={state.usageType === WorkflowListType.LIST}
+                                                       checked={state.listType === WorkflowListType.LIST}
                                                        onChange={handleFormChange}
                                                        className="h-4 w-4"/>
                                                 <span className="ml-1">List</span>
@@ -76,7 +76,7 @@ const CreateWorkflowListModal = ({
                                                 <input type="radio"
                                                        value={WorkflowListType.ITEM}
                                                        id="usageType"
-                                                       checked={state.usageType === WorkflowListType.ITEM}
+                                                       checked={state.listType === WorkflowListType.ITEM}
                                                        onChange={handleFormChange}
                                                        className="h-4 w-4"/>
                                                 <span className="ml-1">Item</span>
