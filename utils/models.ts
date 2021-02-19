@@ -12,8 +12,8 @@ export type WorkflowList = {
 export type CreateWorkflowListEntity = {
     title: string,
     description?: string,
-    usageType: WorkflowListType
-    parentUuid?: string
+    listType: WorkflowListType
+    parentApiId?: string
 }
 
 export type UpdateWorkflowListEntity = {
@@ -22,16 +22,16 @@ export type UpdateWorkflowListEntity = {
 }
 
 export type MoveWorkflowListEntity = {
-    newParentUuid?: string
-    newOrderIndex?: number
+    newParentApiId?: string
+    newPosition?: number
 }
 
 export type ConvertWorkflowListEntity = {
-    newUsageType: WorkflowListType
+    newListType: WorkflowListType
 }
 
 export type ReorderWorkflowListEntity = {
-    newOrderIndex: number
+    newPosition: number
 }
 
 export enum WorkflowListType {
