@@ -104,7 +104,19 @@ const ButtonsMenu = ({
                               d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
                 </button>
-
+                {workflowList.usageType == "BOARD" &&
+                <button type="button"
+                        onClick={() => {
+                            console.log("ACTIVATE / DEACTIVATE TEMPORAL CONSTRAINT")
+                        }}
+                        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </button>
+                }
                 <button type="button"
                         onClick={() => {
                             removeWorkflowList(workflowList.uuid)

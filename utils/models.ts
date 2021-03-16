@@ -6,7 +6,9 @@ export type WorkflowList = {
     usageType: WorkflowListType,
     children: Array<WorkflowList>,
     level: number
-    order: number
+    position: number,
+    isTemporalConstraintBoard?: boolean,
+    temporalConstraint?: TemporalConstraintType
 }
 
 export type CreateWorkflowListEntity = {
@@ -36,4 +38,8 @@ export type ReorderWorkflowListEntity = {
 
 export enum WorkflowListType {
     BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
+}
+
+export enum TemporalConstraintType {
+    projectDueDate = "projectDueDate", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
 }
