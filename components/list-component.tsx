@@ -2,11 +2,11 @@ import {Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
 import {ConvertWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
-import CreateWorkflowListModal from "components/create-workflowlist-modal";
-import ModifyWorkflowListModal from "components/modify-workflowlist-modal";
+import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
+import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
 import BoardComponent from "components/board-component";
 import {getDroppableStyle} from "utils/style-elements";
-import MoveWorkflowListModal from "components/move-workflowlist-modal";
+import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
 

@@ -17,7 +17,7 @@ import {
     postWorkflowListMove, postWorkflowListReorder,
     putWorkflowList
 } from "utils/workflow-api";
-import CreateWorkflowListModal from "components/create-workflowlist-modal";
+import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ListComponent from "components/list-component";
 import ItemComponent from "components/item-component";
 import {getDroppableStyle} from "utils/style-elements";
