@@ -36,7 +36,7 @@ const CreateWorkflowListModal = ({
     return (
         <div style={showHideStyle}
              className="fixed z-10 inset-0 overflow-y-auto">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 text-sm">
+            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div className="fixed inset-0 transition-opacity" aria-hidden="true">
                     <div className="absolute inset-0 bg-gray-500 opacity-75"/>
                 </div>
@@ -46,55 +46,61 @@ const CreateWorkflowListModal = ({
                 <div
                     className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
                     role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div className="sm:flex sm:items-start">
-                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                                    Create a...
-                                </h3>
-                                <div className="mt-2">
-                                    <form action="/" method="post">
-                                        <div className="flex items-center mb-4">
-                                            <label className="inline-flex items-center mr-3">
-                                                <input type="radio"
-                                                       value={WorkflowListType.BOARD}
-                                                       id="listType"
-                                                       checked={state.listType === WorkflowListType.BOARD}
-                                                       onChange={handleFormChange}
-                                                className="h-4 w-4"/>
-                                                <span className="ml-1">Board</span>
-                                            </label>
-                                            <label className="inline-flex items-center mr-3">
-                                                <input type="radio"
-                                                       value={WorkflowListType.LIST}
-                                                       id="listType"
-                                                       checked={state.listType === WorkflowListType.LIST}
-                                                       onChange={handleFormChange}
-                                                       className="h-4 w-4"/>
-                                                <span className="ml-1">List</span>
-                                            </label>
-                                            <label className="inline-flex items-center mr-3">
-                                                <input type="radio"
-                                                       value={WorkflowListType.ITEM}
-                                                       id="listType"
-                                                       checked={state.listType === WorkflowListType.ITEM}
-                                                       onChange={handleFormChange}
-                                                       className="h-4 w-4"/>
-                                                <span className="ml-1">Item</span>
-                                            </label>
-                                        </div>
-                                        <div className="flex flex-col mb-4">
-                                            <label>Title</label>
-                                            <input className="border" type="text" value={state.title}
-                                                   onChange={handleFormChange} id="title"/>
-                                        </div>
-                                        <div className="flex flex-col mb-4">
-                                            <label>Description</label>
-                                            <input className="border" type="text" value={state.description}
-                                                   onChange={handleFormChange} id="description"/>
-                                        </div>
-                                    </form>
+
+                    { /* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
+                    <div className="m-5">
+                        <h3 className="font-bold">Create a...</h3>
+                        <div className="mt-4 w-full text-sm">
+                            <div className="grid grid-cols-1 gap-4">
+                                <div className="flex items-center">
+                                    <label className="inline-flex items-center mr-3">
+                                        <input type="radio"
+                                               value={WorkflowListType.BOARD}
+                                               id="listType"
+                                               checked={state.listType === WorkflowListType.BOARD}
+                                               onChange={handleFormChange}
+                                               className="h-4 w-4"/>
+                                        <span className="ml-1">Board</span>
+                                    </label>
+                                    <label className="inline-flex items-center mr-3">
+                                        <input type="radio"
+                                               value={WorkflowListType.LIST}
+                                               id="listType"
+                                               checked={state.listType === WorkflowListType.LIST}
+                                               onChange={handleFormChange}
+                                               className="h-4 w-4"/>
+                                        <span className="ml-1">List</span>
+                                    </label>
+                                    <label className="inline-flex items-center mr-3">
+                                        <input type="radio"
+                                               value={WorkflowListType.ITEM}
+                                               id="listType"
+                                               checked={state.listType === WorkflowListType.ITEM}
+                                               onChange={handleFormChange}
+                                               className="h-4 w-4"/>
+                                        <span className="ml-1">Item</span>
+                                    </label>
                                 </div>
+                                <label className="block">
+                                    <span className="text-gray-700">Title</span>
+                                    <input
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                        value={state.title}
+                                        onChange={handleFormChange}
+                                        id="title"
+                                    />
+                                </label>
+                                <label className="block">
+                                    <span className="text-gray-700">Description</span>
+                                    <textarea
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                        rows={3}
+                                        value={state.description}
+                                        onChange={handleFormChange}
+                                        id="description"
+                                    />
+                                </label>
                             </div>
                         </div>
                     </div>

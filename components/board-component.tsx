@@ -10,6 +10,7 @@ import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
+import ConfigBoardTempConstraintModal from "components/modals/config-board-temp-constraint-modal";
 
 interface IBoardProps {
     index: number
@@ -61,6 +62,14 @@ const BoardComponent = ({
         setShowMoveModal(false);
     }
 
+    const [showTimeModal, setShowTimeModal] = useState(false)
+    const openTimeModal = () => {
+        setShowTimeModal(true);
+    }
+    const closeTimeModal = () => {
+        setShowTimeModal(false);
+    }
+
     useEffect(() => {
         if (!workflowListToMove) {
             closeMoveModal();
@@ -88,7 +97,8 @@ const BoardComponent = ({
                                          selectWorkflowListToMove={selectWorkflowListToMove}
                                          openCreateModal={openCreateModal}
                                          openModifyModal={openModifyModal}
-                                         openMoveModal={openMoveModal}/>
+                                         openMoveModal={openMoveModal}
+                                         openTimeModal={openTimeModal}/>
                         </div>
                         <div className="flex place-content-between">
                             <div className="m-1 text-sm">{workflowList.description}</div>
@@ -171,6 +181,10 @@ const BoardComponent = ({
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
                                            selectWorkflowListToMove={selectWorkflowListToMove}/>
+                    <ConfigBoardTempConstraintModal show={showTimeModal}
+                                                    closeModal={closeTimeModal}
+                                                    isTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
+                                                    dueDate={workflowList.temporalConstraint.dueDate}/>
                 </div>
             )}
         </Draggable>

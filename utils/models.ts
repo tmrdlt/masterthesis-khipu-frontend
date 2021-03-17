@@ -7,7 +7,7 @@ export type WorkflowList = {
     children: Array<WorkflowList>,
     level: number
     position: number,
-    isTemporalConstraintBoard?: boolean,
+    isTemporalConstraintBoard: boolean,
     temporalConstraint?: TemporalConstraint
 }
 

@@ -9,6 +9,7 @@ interface IButtonsMenuProps {
     openMoveModal
     convertWorkflowList?
     openCreateModal?
+    openTimeModal?
 }
 
 const ButtonsMenu = ({
@@ -18,7 +19,8 @@ const ButtonsMenu = ({
                          selectWorkflowListToMove,
                          openCreateModal,
                          openModifyModal,
-                         openMoveModal
+                         openMoveModal,
+                         openTimeModal
                      }: IButtonsMenuProps): JSX.Element => {
 
     let bgColorClassName = ""
@@ -107,7 +109,7 @@ const ButtonsMenu = ({
                 {workflowList.usageType == "BOARD" &&
                 <button type="button"
                         onClick={() => {
-                            console.log("ACTIVATE / DEACTIVATE TEMPORAL CONSTRAINT")
+                            openTimeModal();
                         }}
                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded m-1 p-1 w-6 h-6"
                 >
