@@ -9,6 +9,7 @@ import {getDroppableStyle} from "utils/style-elements";
 import MoveWorkflowListModal from "components/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
+import {formatDate} from "utils/date-util";
 
 interface IBoardProps {
     index: number
@@ -76,7 +77,7 @@ const BoardComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}
-                className="mb-2 mr-2">
+                     className="mb-2 mr-2">
                     <div className={"bg-blue-300 border border-gray-500 rounded shadow p-1" + moveClassName}>
                         <div className="grid grid-cols-2 hover:bg-blue-200"
                              {...provided.dragHandleProps}>
@@ -89,8 +90,14 @@ const BoardComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
+                        <div className="flex place-content-between">
+                            <div className="m-1 text-sm">{workflowList.description}</div>
+                            <div
+                                className="m-1 text-sm">{workflowList.temporalConstraint.dueDate ? "Board due on: "
+                                + formatDate(workflowList.temporalConstraint.dueDate) :
+                                "No due date for board configured"}</div>
+                        </div>
 
-                        <div className="m-1">{workflowList.description}</div>
 
                         <Droppable droppableId={workflowList.uuid} direction="horizontal" type={workflowList.level}>
                             {(provided, snapshot) => (

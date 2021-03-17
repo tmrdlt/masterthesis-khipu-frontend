@@ -8,7 +8,7 @@ export type WorkflowList = {
     level: number
     position: number,
     isTemporalConstraintBoard?: boolean,
-    temporalConstraint?: TemporalConstraintType
+    temporalConstraint?: TemporalConstraint
 }
 
 export type CreateWorkflowListEntity = {
@@ -34,6 +34,12 @@ export type ConvertWorkflowListEntity = {
 
 export type ReorderWorkflowListEntity = {
     newPosition: number
+}
+
+export type TemporalConstraint = {
+    temporalConstraintType: TemporalConstraintType,
+    dueDate?: Date,
+    connectedWorkflowListId?: number
 }
 
 export enum WorkflowListType {

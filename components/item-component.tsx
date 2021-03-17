@@ -66,7 +66,7 @@ const ItemComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        <div className="m-1">{workflowList.description}</div>
+                        <div className="m-1 text-sm">{workflowList.description}</div>
                     </div>
                     <ModifyWorkflowListModal show={showModifyModal}
                                              closeModal={closeModifyModal}

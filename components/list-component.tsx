@@ -90,7 +90,7 @@ const ListComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        <div className="m-1">{workflowList.description}</div>
+                        <div className="m-1 text-sm">{workflowList.description}</div>
                         <Droppable droppableId={workflowList.uuid} type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
