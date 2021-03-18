@@ -10,7 +10,6 @@ import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
-import ConfigBoardTempConstraintModal from "components/modals/config-board-temp-constraint-modal";
 
 interface IBoardProps {
     index: number
@@ -23,6 +22,7 @@ interface IBoardProps {
     workflowListToMove
     selectWorkflowListToMove
     showDropButton
+    setTemporalConstraint
 }
 
 const BoardComponent = ({
@@ -35,7 +35,8 @@ const BoardComponent = ({
                             moveWorkflowList,
                             workflowListToMove,
                             selectWorkflowListToMove,
-                            showDropButton
+                            showDropButton,
+                            setTemporalConstraint
                         }: IBoardProps): JSX.Element => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -60,14 +61,6 @@ const BoardComponent = ({
     }
     const closeMoveModal = () => {
         setShowMoveModal(false);
-    }
-
-    const [showTimeModal, setShowTimeModal] = useState(false)
-    const openTimeModal = () => {
-        setShowTimeModal(true);
-    }
-    const closeTimeModal = () => {
-        setShowTimeModal(false);
     }
 
     useEffect(() => {
@@ -98,16 +91,17 @@ const BoardComponent = ({
                                          openCreateModal={openCreateModal}
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}
-                                         openTimeModal={openTimeModal}/>
+                            />
                         </div>
                         <div className="flex place-content-between">
                             <div className="m-1 text-sm">{workflowList.description}</div>
+                            {workflowList.isTemporalConstraintBoard &&
                             <div
-                                className="m-1 text-sm">{workflowList.temporalConstraint.dueDate ? "Board due on: "
-                                + formatDate(workflowList.temporalConstraint.dueDate) :
+                                className="m-1 text-sm">{workflowList.temporalConstraint
+                            && workflowList.temporalConstraint.dueDate ? "Board due on: " + formatDate(workflowList.temporalConstraint.dueDate) :
                                 "No due date for board configured"}</div>
+                            }
                         </div>
-
 
                         <Droppable droppableId={workflowList.uuid} direction="horizontal" type={workflowList.level}>
                             {(provided, snapshot) => (
@@ -130,6 +124,7 @@ const BoardComponent = ({
                                                                     workflowListToMove={workflowListToMove}
                                                                     selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
+                                                                    setTemporalConstraint={setTemporalConstraint}
                                                     />
                                                 )
                                             } else if (wl.usageType == WorkflowListType.LIST) {
@@ -145,6 +140,7 @@ const BoardComponent = ({
                                                                    workflowListToMove={workflowListToMove}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
+                                                                   setTemporalConstraint={setTemporalConstraint}
                                                     />
                                                 )
                                             } else {
@@ -155,7 +151,8 @@ const BoardComponent = ({
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    workflowListToMove={workflowListToMove}
-                                                                   selectWorkflowListToMove={selectWorkflowListToMove}/>
+                                                                   selectWorkflowListToMove={selectWorkflowListToMove}
+                                                                   setTemporalConstraint={setTemporalConstraint}/>
                                                 )
                                             }
                                         })}
@@ -172,19 +169,19 @@ const BoardComponent = ({
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.LIST}
                                              parentUuid={workflowList.uuid}
-                                             createWorkflowList={createWorkflowList}/>
+                                             createWorkflowList={createWorkflowList}
+                    />
                     <ModifyWorkflowListModal show={showModifyModal}
                                              closeModal={closeModifyModal}
                                              modifyType={WorkflowListType.BOARD}
                                              workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}/>
+                                             modifyWorkflowList={modifyWorkflowList}
+                                             setTemporalConstraint={setTemporalConstraint}
+                    />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
-                                           selectWorkflowListToMove={selectWorkflowListToMove}/>
-                    <ConfigBoardTempConstraintModal show={showTimeModal}
-                                                    closeModal={closeTimeModal}
-                                                    isTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
-                                                    dueDate={workflowList.temporalConstraint.dueDate}/>
+                                           selectWorkflowListToMove={selectWorkflowListToMove}
+                    />
                 </div>
             )}
         </Draggable>

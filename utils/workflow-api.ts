@@ -2,7 +2,9 @@ import axios from "axios";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    MoveWorkflowListEntity, ReorderWorkflowListEntity,
+    MoveWorkflowListEntity,
+    ReorderWorkflowListEntity,
+    TemporalConstraint,
     UpdateWorkflowListEntity,
     WorkflowList
 } from "utils/models";
@@ -71,6 +73,16 @@ export const postWorkflowListConvert = async (uuid: string, convertWorkflowListE
 
 export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListEntity: ReorderWorkflowListEntity) => {
     return axios.post('http://localhost:5001/workflowlist/' + uuid + '/reorder', reorderWorkflowListEntity)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
+    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/tempconstraint', temporalConstraint)
         .then(response => {
             return response;
         }).catch(error => {

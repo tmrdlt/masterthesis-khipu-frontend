@@ -20,7 +20,8 @@ export type CreateWorkflowListEntity = {
 
 export type UpdateWorkflowListEntity = {
     newTitle: string,
-    newDescription?: string
+    newDescription?: string,
+    isTemporalConstraintBoard?: boolean,
 }
 
 export type MoveWorkflowListEntity = {

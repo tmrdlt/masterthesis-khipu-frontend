@@ -1,5 +1,12 @@
 import React, {useState} from "react";
-import {UpdateWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/models";
+import {
+    TemporalConstraint,
+    TemporalConstraintType,
+    UpdateWorkflowListEntity,
+    WorkflowList,
+    WorkflowListType
+} from "utils/models";
+import {formatDateInput} from "utils/date-util";
 
 
 interface ModifyWorkflowListModalProps {
@@ -8,6 +15,7 @@ interface ModifyWorkflowListModalProps {
     modifyType: WorkflowListType
     workflowList: WorkflowList
     modifyWorkflowList
+    setTemporalConstraint
 }
 
 const ModifyWorkflowListModal = ({
@@ -15,21 +23,43 @@ const ModifyWorkflowListModal = ({
                                      closeModal,
                                      modifyType,
                                      workflowList,
-                                     modifyWorkflowList
+                                     modifyWorkflowList,
+                                     setTemporalConstraint
                                  }: ModifyWorkflowListModalProps): JSX.Element => {
+    console.log(workflowList)
+
+    const showHideStyle = show ? {display: "block"} : {display: "none"};
 
     const initUpdateWorkflowListEntity: UpdateWorkflowListEntity = {
         newTitle: workflowList.title,
-        newDescription: workflowList.description ? workflowList.description : ""
+        newDescription: workflowList.description ? workflowList.description : "",
+        isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
-    const showHideStyle = show ? {display: "block"} : {display: "none"};
 
     const [state, setState] = useState(initUpdateWorkflowListEntity)
 
+    const toggleChange = () => {
+        const newState = {...state, isTemporalConstraintBoard: !state.isTemporalConstraintBoard}
+        setState(newState)
+    }
     const handleFormChange = (event) => {
         const newState = {...state, [event.target.id]: event.target.value}
         setState(newState)
     }
+    const opacityStyle = !state.isTemporalConstraintBoard ? " opacity-40 cursor-not-allowed" : ""
+
+    const initDueDate = {
+        dueDate: workflowList.temporalConstraint ? formatDateInput(workflowList.temporalConstraint.dueDate) : null,
+    }
+
+    const [tempConstraint, setTempConstraint] = useState(initDueDate)
+
+    const handleTempConstraintChange = (event) => {
+        const newTempConstraint = {...tempConstraint, [event.target.id]: event.target.value}
+        setTempConstraint(newTempConstraint)
+    }
+
+
     return (
         <div style={showHideStyle}
              className="fixed z-10 inset-0 overflow-y-auto">
@@ -70,14 +100,53 @@ const ModifyWorkflowListModal = ({
                                         id="newDescription"
                                     />
                                 </label>
+                                {workflowList.usageType == WorkflowListType.BOARD &&
+                                <div className="block">
+                                    <div className="mt-2">
+                                        <div>
+                                            <label className="inline-flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                    id="isTemporalConstraintBoard"
+                                                    checked={state.isTemporalConstraintBoard ? state.isTemporalConstraintBoard : false}
+                                                    onChange={toggleChange}
+                                                />
+                                                <span className="ml-2">Is temporal constraint board</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                                {workflowList.usageType == WorkflowListType.BOARD &&
+                                <label className="block">
+                                    <span className={"text-gray-700" + opacityStyle}>Set due date for board</span>
+                                    <input
+                                        disabled={!state.isTemporalConstraintBoard}
+                                        type="date"
+                                        className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                        id="dueDate"
+                                        value={tempConstraint.dueDate}
+                                        onChange={handleTempConstraintChange}
+                                    />
+                                </label>
+                                }
                             </div>
                         </div>
                     </div>
                     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                         <button type="button"
-                                disabled={state.newTitle === workflowList.title && state.newDescription === workflowList.description}
+                                disabled={state.newTitle === workflowList.title
+                                && state.newDescription === workflowList.description
+                                && state.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
+                                && tempConstraint.dueDate == (workflowList.temporalConstraint ? formatDateInput(workflowList.temporalConstraint.dueDate) : "")}
                                 onClick={() => {
-                                    modifyWorkflowList(workflowList.uuid, state).then(res => {
+                                    modifyWorkflowList(workflowList.uuid, state)
+                                    const entity: TemporalConstraint = {
+                                        temporalConstraintType: TemporalConstraintType.projectDueDate,
+                                        dueDate: new Date(tempConstraint.dueDate)
+                                    }
+                                    setTemporalConstraint(workflowList.uuid, entity).then(res => {
                                         closeModal()
                                     })
                                 }}

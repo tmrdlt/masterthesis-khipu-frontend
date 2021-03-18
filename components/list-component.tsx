@@ -1,6 +1,6 @@
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {ConvertWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/models";
+import {WorkflowList, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
@@ -21,6 +21,7 @@ interface IListProps {
     workflowListToMove
     selectWorkflowListToMove
     showDropButton
+    setTemporalConstraint
 }
 
 const ListComponent = ({
@@ -33,7 +34,8 @@ const ListComponent = ({
                            moveWorkflowList,
                            workflowListToMove,
                            selectWorkflowListToMove,
-                           showDropButton
+                           showDropButton,
+                           setTemporalConstraint
                        }: IListProps): JSX.Element => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -76,7 +78,7 @@ const ListComponent = ({
         >
             {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.draggableProps}
-                className="mb-2 mr-2">
+                     className="mb-2 mr-2">
                     <div
                         className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max p-1" + moveClassName}>
                         <div className="grid grid-cols-2 hover:bg-red-200"
@@ -112,6 +114,7 @@ const ListComponent = ({
                                                                 workflowListToMove={workflowListToMove}
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
+                                                                setTemporalConstraint={setTemporalConstraint}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -127,6 +130,7 @@ const ListComponent = ({
                                                                workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
+                                                               setTemporalConstraint={setTemporalConstraint}
                                                 />
                                             )
                                         } else {
@@ -137,7 +141,9 @@ const ListComponent = ({
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}
-                                                               selectWorkflowListToMove={selectWorkflowListToMove}/>
+                                                               selectWorkflowListToMove={selectWorkflowListToMove}
+                                                               setTemporalConstraint={setTemporalConstraint}
+                                                />
                                             )
                                         }
                                     })}
@@ -158,7 +164,9 @@ const ListComponent = ({
                                              closeModal={closeModifyModal}
                                              modifyType={WorkflowListType.LIST}
                                              workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}/>
+                                             modifyWorkflowList={modifyWorkflowList}
+                                             setTemporalConstraint={setTemporalConstraint}
+                    />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
                                            selectWorkflowListToMove={selectWorkflowListToMove}/>

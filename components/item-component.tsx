@@ -13,6 +13,7 @@ interface IItemProps {
     removeWorkflowList
     workflowListToMove
     selectWorkflowListToMove
+    setTemporalConstraint
 }
 
 const ItemComponent = ({
@@ -21,7 +22,8 @@ const ItemComponent = ({
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
-                           selectWorkflowListToMove
+                           selectWorkflowListToMove,
+                           setTemporalConstraint
                        }: IItemProps): JSX.Element => {
 
     const [showModifyModal, setShowModifyModal] = useState(false)
@@ -56,8 +58,9 @@ const ItemComponent = ({
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
-                    <div className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1" + moveClassName}
-                         {...provided.dragHandleProps}>
+                    <div
+                        className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1" + moveClassName}
+                        {...provided.dragHandleProps}>
                         <div className="grid grid-cols-2">
                             <div className="font-bold m-1">{workflowList.title}</div>
                             <ButtonsMenu workflowList={workflowList}
@@ -72,7 +75,9 @@ const ItemComponent = ({
                                              closeModal={closeModifyModal}
                                              modifyType={WorkflowListType.ITEM}
                                              workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}/>
+                                             modifyWorkflowList={modifyWorkflowList}
+                                             setTemporalConstraint={setTemporalConstraint}
+                    />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
                                            selectWorkflowListToMove={selectWorkflowListToMove}/>

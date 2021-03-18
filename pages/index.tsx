@@ -3,6 +3,7 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
+    TemporalConstraint,
     UpdateWorkflowListEntity,
     WorkflowList,
     WorkflowListType
@@ -12,9 +13,11 @@ import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder
 import {
     deleteWorkflowList,
     getWorkflowLists,
+    postTemporalConstraint,
     postWorkflowList,
     postWorkflowListConvert,
-    postWorkflowListMove, postWorkflowListReorder,
+    postWorkflowListMove,
+    postWorkflowListReorder,
     putWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
@@ -81,7 +84,10 @@ const Home: FunctionComponent = (): JSX.Element => {
             if (!(destinationDroppableId === "ROOT")) {
                 newParentUuid = destinationDroppableId;
             }
-            postWorkflowListMove(draggableId, {newParentApiId: newParentUuid, newPosition: destination.index}).then(res => {
+            postWorkflowListMove(draggableId, {
+                newParentApiId: newParentUuid,
+                newPosition: destination.index
+            }).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
@@ -99,6 +105,20 @@ const Home: FunctionComponent = (): JSX.Element => {
             newCreateWorkflowListEntity = createWorkflowListEntity
         }
         postWorkflowList(newCreateWorkflowListEntity)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+                return res
+            });
+    }
+
+    const setTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
+        postTemporalConstraint(uuid, temporalConstraint)
             .then(res => {
                 if (res) {
                     getWorkflowLists().then(workflowLists => {
@@ -242,6 +262,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
+                                                        setTemporalConstraint={setTemporalConstraint}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -257,6 +278,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
+                                                       setTemporalConstraint={setTemporalConstraint}
                                         />
                                     )
                                 } else {
@@ -268,6 +290,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
+                                                       setTemporalConstraint={setTemporalConstraint}
                                         />
                                     )
                                 }
