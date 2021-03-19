@@ -18,13 +18,14 @@ const CreateWorkflowListModal = ({
                                      createWorkflowList
                                  }: CreateWorkflowListModalProps): JSX.Element => {
 
+    const showHideClass = show ? "" : "hidden";
+
     const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
         title: "",
         listType: createType,
         parentApiId: parentUuid,
         description: ""
     }
-    const showHideStyle = show ? {display: "block"} : {display: "none"};
 
     const [state, setState] = useState(initCreateWorkflowListEntity)
 
@@ -34,18 +35,12 @@ const CreateWorkflowListModal = ({
         setState(newState)
     }
     return (
-        <div style={showHideStyle}
-             className="fixed z-10 inset-0 overflow-y-auto">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div className="absolute inset-0 bg-gray-500 opacity-75"/>
-                </div>
-
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
+        <div className={showHideClass}>
+            {/* https://tailwindcomponents.com/component/modal-1 */}
+            <div
+                className="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
                 <div
-                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                    role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 
                     { /* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
                     <div className="m-5">
@@ -104,7 +99,7 @@ const CreateWorkflowListModal = ({
                             </div>
                         </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
                                 disabled={state.title === ""}
                                 onClick={() => {
@@ -127,7 +122,6 @@ const CreateWorkflowListModal = ({
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     )

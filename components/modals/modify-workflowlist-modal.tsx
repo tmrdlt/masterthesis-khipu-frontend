@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     TemporalConstraint,
     TemporalConstraintType,
@@ -6,8 +6,9 @@ import {
     WorkflowList,
     WorkflowListType
 } from "utils/models";
-import {formatDateInput} from "utils/date-util";
+import DatePicker from "react-datepicker";
 
+import "react-datepicker/dist/react-datepicker.css";
 
 interface ModifyWorkflowListModalProps {
     show
@@ -26,9 +27,8 @@ const ModifyWorkflowListModal = ({
                                      modifyWorkflowList,
                                      setTemporalConstraint
                                  }: ModifyWorkflowListModalProps): JSX.Element => {
-    console.log(workflowList)
 
-    const showHideStyle = show ? {display: "block"} : {display: "none"};
+    const showHideClass = show ? "" : "hidden";
 
     const initUpdateWorkflowListEntity: UpdateWorkflowListEntity = {
         newTitle: workflowList.title,
@@ -48,32 +48,21 @@ const ModifyWorkflowListModal = ({
     }
     const opacityStyle = !state.isTemporalConstraintBoard ? " opacity-40 cursor-not-allowed" : ""
 
-    const initDueDate = {
-        dueDate: workflowList.temporalConstraint ? formatDateInput(workflowList.temporalConstraint.dueDate) : null,
-    }
+    const [dueDate, setDueDate] = useState(null)
 
-    const [tempConstraint, setTempConstraint] = useState(initDueDate)
-
-    const handleTempConstraintChange = (event) => {
-        const newTempConstraint = {...tempConstraint, [event.target.id]: event.target.value}
-        setTempConstraint(newTempConstraint)
-    }
-
+    useEffect(() => {
+        if (workflowList.temporalConstraint && workflowList.temporalConstraint.dueDate) {
+            setDueDate(new Date(workflowList.temporalConstraint.dueDate))
+        }
+    }, [workflowList])
 
     return (
-        <div style={showHideStyle}
-             className="fixed z-10 inset-0 overflow-y-auto">
+        <div className={showHideClass}>
+            {/* https://tailwindcomponents.com/component/modal-1 */}
             <div
-                className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div className="absolute inset-0 bg-gray-500 opacity-75"/>
-                </div>
-
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
+                className="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
                 <div
-                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                    role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 
                     { /* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
                     <div className="m-5">
@@ -119,32 +108,45 @@ const ModifyWorkflowListModal = ({
                                 </div>
                                 }
                                 {workflowList.usageType == WorkflowListType.BOARD &&
-                                <label className="block">
-                                    <span className={"text-gray-700" + opacityStyle}>Set due date for board</span>
-                                    <input
-                                        disabled={!state.isTemporalConstraintBoard}
-                                        type="date"
+                                <div className="grid">
+                                    <div className="flex place-content-between">
+                                        <span className={"text-gray-700" + opacityStyle}>Set due date for board</span>
+                                        <button className={"text-gray-700" + opacityStyle}
+                                                onClick={() => {
+                                            setDueDate(null);
+                                        }}>
+                                            &#x2715; Clear date
+                                        </button>
+
+                                    </div>
+                                    <DatePicker
                                         className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                        id="dueDate"
-                                        value={tempConstraint.dueDate}
-                                        onChange={handleTempConstraintChange}
+                                        selected={dueDate}
+                                        onChange={date => setDueDate(date)}
+                                        disabled={!state.isTemporalConstraintBoard}
+                                        placeholderText="No due date set"
+                                        showTimeSelect
+                                        timeIntervals={15}
+                                        timeCaption="Time"
+                                        timeFormat="HH:mm"
+                                        dateFormat="dd.MM.yyyy, HH:mm"
                                     />
-                                </label>
+                                </div>
                                 }
                             </div>
                         </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
                                 disabled={state.newTitle === workflowList.title
                                 && state.newDescription === workflowList.description
                                 && state.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
-                                && tempConstraint.dueDate == (workflowList.temporalConstraint ? formatDateInput(workflowList.temporalConstraint.dueDate) : "")}
+                                && dueDate == (workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null)}
                                 onClick={() => {
                                     modifyWorkflowList(workflowList.uuid, state)
                                     const entity: TemporalConstraint = {
                                         temporalConstraintType: TemporalConstraintType.projectDueDate,
-                                        dueDate: new Date(tempConstraint.dueDate)
+                                        dueDate: dueDate
                                     }
                                     setTemporalConstraint(workflowList.uuid, entity).then(res => {
                                         closeModal()
@@ -164,7 +166,6 @@ const ModifyWorkflowListModal = ({
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     )

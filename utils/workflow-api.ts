@@ -8,6 +8,7 @@ import {
     UpdateWorkflowListEntity,
     WorkflowList
 } from "utils/models";
+import {toLocalDateTimeString} from "utils/date-util";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
     return axios.get('http://localhost:5001/workflowlist')
@@ -82,7 +83,11 @@ export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListE
 }
 
 export const postTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
-    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/tempconstraint', temporalConstraint)
+    console.log(temporalConstraint)
+    return axios.post(
+        'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
+        {...temporalConstraint, dueDate: toLocalDateTimeString(temporalConstraint.dueDate)}
+    )
         .then(response => {
             return response;
         }).catch(error => {
