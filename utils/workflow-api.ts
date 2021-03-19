@@ -11,9 +11,18 @@ import {
 import {toLocalDateTimeString} from "utils/date-util";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
-    return axios.get('http://localhost:5001/workflowlist')
+    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist')
         .then(response => {
-            const workflowLists: Array<WorkflowList> = response.data;
+            const workflowLists = response.data.map(wl => {
+                if (wl.temporalConstraint && wl.temporalConstraint.dueDate) {
+                    return {
+                        ...wl,
+                        temporalConstraint: {...wl.temporalConstraint, dueDate: new Date(wl.temporalConstraint.dueDate)}
+                    }
+                } else {
+                    return wl
+                }
+            })
             console.log(workflowLists);
             return workflowLists;
         }).catch(error => {

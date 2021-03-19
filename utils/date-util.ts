@@ -16,3 +16,11 @@ export const toLocalDateTimeString = (date?: Date): string | null => {
         return null
     }
 }
+
+export const compareDateOptions = (date1?: Date, date2?: Date): boolean => {
+    console.log(date1, date2)
+    if (date1 && date2) {
+        return date1.getTime() === date2.getTime();
+    } else return !date1 && !date2;
+
+}

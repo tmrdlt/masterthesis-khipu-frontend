@@ -9,6 +9,7 @@ import {
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import {compareDateOptions} from "utils/date-util";
 
 interface ModifyWorkflowListModalProps {
     show
@@ -48,14 +49,26 @@ const ModifyWorkflowListModal = ({
     }
     const opacityStyle = !state.isTemporalConstraintBoard ? " opacity-40 cursor-not-allowed" : ""
 
-    const initDueDate = workflowList.temporalConstraint ? new Date(workflowList.temporalConstraint.dueDate) : null
+    const initDueDate = workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null
     const [dueDate, setDueDate] = useState(initDueDate)
 
     useEffect(() => {
         if (workflowList.temporalConstraint && workflowList.temporalConstraint.dueDate) {
-            setDueDate(new Date(workflowList.temporalConstraint.dueDate))
+            setDueDate(workflowList.temporalConstraint.dueDate)
         }
     }, [workflowList])
+
+    const isSafeButtonDisabled = (): boolean => {
+        if (workflowList.usageType == WorkflowListType.BOARD) {
+            return state.newTitle === workflowList.title
+                && state.newDescription === workflowList.description
+                && state.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
+                && compareDateOptions(dueDate,workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null)
+        } else {
+            return state.newTitle === workflowList.title
+                && state.newDescription === workflowList.description
+        }
+    }
 
     return (
         <div className={showHideClass}>
@@ -114,8 +127,8 @@ const ModifyWorkflowListModal = ({
                                         <span className={"text-gray-700" + opacityStyle}>Set due date for board</span>
                                         <button className={"text-gray-700" + opacityStyle}
                                                 onClick={() => {
-                                            setDueDate(null);
-                                        }}>
+                                                    setDueDate(null);
+                                                }}>
                                             &#x2715; Clear date
                                         </button>
 
@@ -139,19 +152,18 @@ const ModifyWorkflowListModal = ({
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
-                                disabled={state.newTitle === workflowList.title
-                                && state.newDescription === workflowList.description
-                                && state.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
-                                && dueDate == (workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null)}
+                                disabled={isSafeButtonDisabled()}
                                 onClick={() => {
-                                    modifyWorkflowList(workflowList.uuid, state)
-                                    const entity: TemporalConstraint = {
-                                        temporalConstraintType: TemporalConstraintType.projectDueDate,
-                                        dueDate: dueDate
-                                    }
-                                    setTemporalConstraint(workflowList.uuid, entity).then(res => {
+                                    modifyWorkflowList(workflowList.uuid, state).then(res => {
                                         closeModal()
                                     })
+                                    if (workflowList.usageType == WorkflowListType.BOARD) {
+                                        const entity: TemporalConstraint = {
+                                            temporalConstraintType: TemporalConstraintType.projectDueDate,
+                                            dueDate: dueDate
+                                        }
+                                        setTemporalConstraint(workflowList.uuid, entity)
+                                    }
                                 }}
                                 className="disabled:opacity-50 disabled:cursor-not-allowed w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                             Save
