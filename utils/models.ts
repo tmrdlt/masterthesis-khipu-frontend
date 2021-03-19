@@ -11,6 +11,11 @@ export type WorkflowList = {
     temporalConstraint?: TemporalConstraint
 }
 
+export type WorkflowListSimple = {
+    apiId: string,
+    title: string
+}
+
 export type CreateWorkflowListEntity = {
     title: string,
     description?: string,
@@ -40,7 +45,7 @@ export type ReorderWorkflowListEntity = {
 export type TemporalConstraint = {
     temporalConstraintType: TemporalConstraintType,
     dueDate?: Date,
-    connectedWorkflowListId?: number
+    connectedWorkflowList?: WorkflowListSimple
 }
 
 export enum WorkflowListType {
