@@ -1,14 +1,16 @@
 import {Draggable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {WorkflowList, WorkflowListType} from "utils/models";
+import {TemporalConstraintType, WorkflowList, WorkflowListType} from "utils/models";
 import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
+import {formatDate} from "utils/date-util";
 
 
 interface IItemProps {
     index: number
     workflowList: WorkflowList
+    isInsideTemporalConstraintBoard: boolean
     modifyWorkflowList
     removeWorkflowList
     workflowListToMove
@@ -19,6 +21,7 @@ interface IItemProps {
 const ItemComponent = ({
                            index,
                            workflowList,
+                           isInsideTemporalConstraintBoard,
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
@@ -50,6 +53,19 @@ const ItemComponent = ({
 
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
 
+    const getTemporalConstraintText = (): string => {
+        if (!workflowList.temporalConstraint) {
+            return "No temporal constraint configured"
+        } else {
+            const temp = workflowList.temporalConstraint
+            if (temp.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
+                return "Should be in'" + temp.connectedWorkflowList.title + "' at " + formatDate(temp.dueDate);
+            } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
+                return "Depends on '" + temp.connectedWorkflowList.title + "'"
+            }
+        }
+    }
+
     return (
         <Draggable key={workflowList.uuid}
                    draggableId={workflowList.uuid}
@@ -59,7 +75,7 @@ const ItemComponent = ({
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
                     <div
-                        className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow w-60 p-1" + moveClassName}
+                        className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}
                         {...provided.dragHandleProps}>
                         <div className="grid grid-cols-2">
                             <div className="font-bold m-1">{workflowList.title}</div>
@@ -69,6 +85,11 @@ const ItemComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
+                        {isInsideTemporalConstraintBoard &&
+                        <div className="m-1 text-sm">
+                            {getTemporalConstraintText()}
+                        </div>
+                        }
                         <div className="m-1 text-sm">{workflowList.description}</div>
                     </div>
                     <ModifyWorkflowListModal show={showModifyModal}

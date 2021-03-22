@@ -270,6 +270,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                         <ListComponent key={index}
                                                        index={index}
                                                        workflowList={wl}
+                                                       isInsideTemporalConstraintBoard={false}
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
@@ -286,6 +287,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                         <ItemComponent key={index}
                                                        index={index}
                                                        workflowList={wl}
+                                                       isInsideTemporalConstraintBoard={false}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}

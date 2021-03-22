@@ -13,6 +13,7 @@ import ButtonsMenu from "components/buttons-menu";
 interface IListProps {
     index: number
     workflowList: WorkflowList
+    isInsideTemporalConstraintBoard: boolean
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -27,6 +28,7 @@ interface IListProps {
 const ListComponent = ({
                            index,
                            workflowList,
+                           isInsideTemporalConstraintBoard,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
@@ -80,7 +82,7 @@ const ListComponent = ({
                 <div ref={provided.innerRef} {...provided.draggableProps}
                      className="mb-2 mr-2">
                     <div
-                        className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-max p-1" + moveClassName}>
+                        className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-sm p-1" + moveClassName}>
                         <div className="grid grid-cols-2 hover:bg-red-200"
                              {...provided.dragHandleProps}>
                             <div className="w-full font-bold m-1">{workflowList.title}</div>
@@ -122,6 +124,7 @@ const ListComponent = ({
                                                 <ListComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
@@ -138,6 +141,7 @@ const ListComponent = ({
                                                 <ItemComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}
