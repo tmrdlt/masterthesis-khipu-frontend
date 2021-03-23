@@ -27,7 +27,7 @@ import {getDroppableStyle} from "utils/style-elements";
 import DropButton from "components/drop-button";
 
 const Home: FunctionComponent = (): JSX.Element => {
-
+    // STATE
     const initState: Array<WorkflowList> = []
     const [state, setState] = useState(initState);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -38,6 +38,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         init();
     }, []);
 
+    // FUNCTIONS
     const init = () => {
         getWorkflowLists().then(workflowLists => {
             if (workflowLists) {
@@ -46,7 +47,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         })
     }
 
-    function onDragEnd(result: DropResult) {
+    const onDragEnd = (result: DropResult) => {
         const {destination, source, draggableId} = result;
 
         console.log("OnDragEnd", result);
@@ -94,6 +95,37 @@ const Home: FunctionComponent = (): JSX.Element => {
                     }
                 })
             })
+        }
+    }
+
+    const openModal = () => {
+        setShowCreateModal(true);
+    }
+    const closeModal = () => {
+        setShowCreateModal(false);
+    }
+
+    const selectWorkflowListToMove = (wl: WorkflowList) => {
+        setWorkflowListToMove(wl);
+    }
+
+    const showDropButton = (destinationToDropOn?: WorkflowList) => {
+        // Move modal is not open do not show drop button
+        if (!workflowListToMove) {
+            return false;
+        } else {
+            // Move Modal is Open
+
+            // The following would be illegal moves or moves that doesn't make sense
+            // Destination is already the list the element is in
+            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(state, destinationToDropOn, workflowListToMove)
+            // The destination would be inside the element we want to move
+            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
+            // The destination would be exactly the element we want to move
+            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
+
+            // Show drop button only if all three are false
+            return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
         }
     }
 
@@ -192,37 +224,6 @@ const Home: FunctionComponent = (): JSX.Element => {
                 }
             })
         })
-    }
-
-    const openModal = () => {
-        setShowCreateModal(true);
-    }
-    const closeModal = () => {
-        setShowCreateModal(false);
-    }
-
-    const selectWorkflowListToMove = (wl: WorkflowList) => {
-        setWorkflowListToMove(wl);
-    }
-
-    const showDropButton = (destinationToDropOn?: WorkflowList) => {
-        // Move modal is not open do not show drop button
-        if (!workflowListToMove) {
-            return false;
-        } else {
-            // Move Modal is Open
-
-            // The following would be illegal moves or moves that doesn't make sense
-            // Destination is already the list the element is in
-            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(state, destinationToDropOn, workflowListToMove)
-            // The destination would be inside the element we want to move
-            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
-            // The destination would be exactly the element we want to move
-            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
-
-            // Show drop button only if all three are false
-            return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
-        }
     }
 
     return (

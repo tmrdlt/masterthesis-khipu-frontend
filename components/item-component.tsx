@@ -32,22 +32,9 @@ const ItemComponent = ({
                            selectWorkflowListToMove,
                            setTemporalConstraint
                        }: IItemProps): JSX.Element => {
-
-    const [showModifyModal, setShowModifyModal] = useState(false)
-    const openModifyModal = () => {
-        setShowModifyModal(true);
-    }
-    const closeModifyModal = () => {
-        setShowModifyModal(false);
-    }
-
-    const [showMoveModal, setShowMoveModal] = useState(false)
-    const openMoveModal = () => {
-        setShowMoveModal(true);
-    }
-    const closeMoveModal = () => {
-        setShowMoveModal(false);
-    }
+    // STATE
+    const [showModifyModal, setShowModifyModal] = useState(false);
+    const [showMoveModal, setShowMoveModal] = useState(false);
 
     useEffect(() => {
         if (!workflowListToMove) {
@@ -55,7 +42,22 @@ const ItemComponent = ({
         }
     }, [workflowListToMove])
 
+    // DYNAMIC CLASSES
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+
+    // FUNCTIONS
+    const openModifyModal = () => {
+        setShowModifyModal(true);
+    }
+    const closeModifyModal = () => {
+        setShowModifyModal(false);
+    }
+    const openMoveModal = () => {
+        setShowMoveModal(true);
+    }
+    const closeMoveModal = () => {
+        setShowMoveModal(false);
+    }
 
     const getTemporalConstraintText = (): string => {
         if (!workflowList.temporalConstraint || workflowList.temporalConstraint.temporalConstraintType == TemporalConstraintType.noConstraint) {

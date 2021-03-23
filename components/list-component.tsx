@@ -43,30 +43,10 @@ const ListComponent = ({
                            showDropButton,
                            setTemporalConstraint
                        }: IListProps): JSX.Element => {
-
+    // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const openCreateModal = () => {
-        setShowCreateModal(true);
-    }
-    const closeCreateModal = () => {
-        setShowCreateModal(false);
-    }
-
-    const [showModifyModal, setShowModifyModal] = useState(false)
-    const openModifyModal = () => {
-        setShowModifyModal(true);
-    }
-    const closeModifyModal = () => {
-        setShowModifyModal(false);
-    }
-
-    const [showMoveModal, setShowMoveModal] = useState(false)
-    const openMoveModal = () => {
-        setShowMoveModal(true);
-    }
-    const closeMoveModal = () => {
-        setShowMoveModal(false);
-    }
+    const [showModifyModal, setShowModifyModal] = useState(false);
+    const [showMoveModal, setShowMoveModal] = useState(false);
 
     useEffect(() => {
         if (!workflowListToMove) {
@@ -74,7 +54,28 @@ const ListComponent = ({
         }
     }, [workflowListToMove])
 
+    // DYNAMIC CLASSES
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+
+    // FUNCTIONS
+    const openCreateModal = () => {
+        setShowCreateModal(true);
+    }
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
+    }
+    const openModifyModal = () => {
+        setShowModifyModal(true);
+    }
+    const closeModifyModal = () => {
+        setShowModifyModal(false);
+    }
+    const openMoveModal = () => {
+        setShowMoveModal(true);
+    }
+    const closeMoveModal = () => {
+        setShowMoveModal(false);
+    }
 
     return (
         <Draggable

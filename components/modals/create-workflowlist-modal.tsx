@@ -17,18 +17,19 @@ const CreateWorkflowListModal = ({
                                      parentUuid,
                                      createWorkflowList
                                  }: CreateWorkflowListModalProps): JSX.Element => {
-
-    const showHideClass = show ? "" : "hidden";
-
+    // STATE
     const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
         title: "",
         listType: createType,
         parentApiId: parentUuid,
         description: ""
     }
-
     const [state, setState] = useState(initCreateWorkflowListEntity)
 
+    // DYNAMIC CLASSES
+    const showHideClass = show ? "" : "hidden";
+
+    // FUNCTIONS
     const handleFormChange = (event) => {
         console.log(event)
         const newState = {...state, [event.target.id]: event.target.value}
