@@ -58,7 +58,7 @@ const ItemComponent = ({
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
 
     const getTemporalConstraintText = (): string => {
-        if (!workflowList.temporalConstraint) {
+        if (!workflowList.temporalConstraint || workflowList.temporalConstraint.temporalConstraintType == TemporalConstraintType.noConstraint) {
             return "No temporal constraint configured"
         } else {
             const temp = workflowList.temporalConstraint
