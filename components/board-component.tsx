@@ -1,15 +1,15 @@
-import {WorkflowList, WorkflowListType} from "utils/models";
+import {WorkflowList, workflowListToWorkflowListSimple, WorkflowListType} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React, {useEffect, useState} from "react";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
-import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
 import ItemComponent from "components/item-component";
 import {getDroppableStyle} from "utils/style-elements";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
+import ModifyBoardModal from "components/modals/modify-board-modal";
 
 interface IBoardProps {
     index: number
@@ -70,6 +70,8 @@ const BoardComponent = ({
     }, [workflowListToMove])
 
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+
+    const simpleChildLists = workflowList.children.filter(wl => wl.usageType == WorkflowListType.LIST).map(wl => workflowListToWorkflowListSimple(wl))
 
     return (
         <Draggable
@@ -133,6 +135,7 @@ const BoardComponent = ({
                                                                    index={index}
                                                                    workflowList={wl}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
+                                                                   boardSimpleLists={simpleChildLists}
                                                                    createWorkflowList={createWorkflowList}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
@@ -150,6 +153,7 @@ const BoardComponent = ({
                                                                    index={index}
                                                                    workflowList={wl}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
+                                                                   boardSimpleLists={simpleChildLists}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    workflowListToMove={workflowListToMove}
@@ -173,12 +177,11 @@ const BoardComponent = ({
                                              parentUuid={workflowList.uuid}
                                              createWorkflowList={createWorkflowList}
                     />
-                    <ModifyWorkflowListModal show={showModifyModal}
-                                             closeModal={closeModifyModal}
-                                             modifyType={WorkflowListType.BOARD}
-                                             workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}
-                                             setTemporalConstraint={setTemporalConstraint}
+                    <ModifyBoardModal show={showModifyModal}
+                                      closeModal={closeModifyModal}
+                                      workflowList={workflowList}
+                                      modifyWorkflowList={modifyWorkflowList}
+                                      setTemporalConstraint={setTemporalConstraint}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

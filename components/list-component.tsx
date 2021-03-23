@@ -1,9 +1,9 @@
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {WorkflowList, WorkflowListType} from "utils/models";
+import {WorkflowList, WorkflowListSimple, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
-import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
+import ModifyListModal from "components/modals/modify-list-modal";
 import BoardComponent from "components/board-component";
 import {getDroppableStyle} from "utils/style-elements";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
@@ -14,6 +14,7 @@ interface IListProps {
     index: number
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
+    boardSimpleLists: Array<WorkflowListSimple>
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -29,6 +30,7 @@ const ListComponent = ({
                            index,
                            workflowList,
                            isInsideTemporalConstraintBoard,
+                           boardSimpleLists,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
@@ -125,6 +127,7 @@ const ListComponent = ({
                                                                index={index}
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
+                                                               boardSimpleLists={boardSimpleLists}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
@@ -142,6 +145,7 @@ const ListComponent = ({
                                                                index={index}
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
+                                                               boardSimpleLists={boardSimpleLists}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}
@@ -164,12 +168,10 @@ const ListComponent = ({
                                              createType={WorkflowListType.ITEM}
                                              parentUuid={workflowList.uuid}
                                              createWorkflowList={createWorkflowList}/>
-                    <ModifyWorkflowListModal show={showModifyModal}
-                                             closeModal={closeModifyModal}
-                                             modifyType={WorkflowListType.LIST}
-                                             workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}
-                                             setTemporalConstraint={setTemporalConstraint}
+                    <ModifyListModal show={showModifyModal}
+                                     closeModal={closeModifyModal}
+                                     workflowList={workflowList}
+                                     modifyWorkflowList={modifyWorkflowList}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

@@ -11,6 +11,13 @@ export type WorkflowList = {
     temporalConstraint?: TemporalConstraint
 }
 
+export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowListSimple => {
+    return {
+        apiId: wl.uuid,
+        title: wl.title
+    }
+}
+
 export type WorkflowListSimple = {
     apiId: string,
     title: string
@@ -45,7 +52,7 @@ export type ReorderWorkflowListEntity = {
 export type TemporalConstraint = {
     temporalConstraintType: TemporalConstraintType,
     dueDate?: Date,
-    connectedWorkflowList?: WorkflowListSimple
+    connectedWorkflowListApiId?: string
 }
 
 export enum WorkflowListType {
@@ -53,5 +60,5 @@ export enum WorkflowListType {
 }
 
 export enum TemporalConstraintType {
-    projectDueDate = "projectDueDate", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
+    noConstraint= "noConstraint", projectDueDate = "projectDueDate", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
 }

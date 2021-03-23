@@ -1,16 +1,17 @@
 import {Draggable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {TemporalConstraintType, WorkflowList, WorkflowListType} from "utils/models";
-import ModifyWorkflowListModal from "components/modals/modify-workflowlist-modal";
+import {TemporalConstraintType, WorkflowList, WorkflowListSimple} from "utils/models";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
+import ModifyItemModal from "components/modals/modify-item-modal";
 
 
 interface IItemProps {
     index: number
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
+    boardSimpleLists: Array<WorkflowListSimple>
     modifyWorkflowList
     removeWorkflowList
     workflowListToMove
@@ -22,6 +23,7 @@ const ItemComponent = ({
                            index,
                            workflowList,
                            isInsideTemporalConstraintBoard,
+                           boardSimpleLists,
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
@@ -58,10 +60,11 @@ const ItemComponent = ({
             return "No temporal constraint configured"
         } else {
             const temp = workflowList.temporalConstraint
+            const connectedList = boardSimpleLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
             if (temp.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
-                return "Should be in'" + temp.connectedWorkflowList.title + "' at " + formatDate(temp.dueDate);
+                return "Should be in '" + connectedList.title + "' at " + formatDate(temp.dueDate);
             } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
-                return "Depends on '" + temp.connectedWorkflowList.title + "'"
+                return "Depends on '" + connectedList.title + "'"
             }
         }
     }
@@ -92,12 +95,12 @@ const ItemComponent = ({
                         }
                         <div className="m-1 text-sm">{workflowList.description}</div>
                     </div>
-                    <ModifyWorkflowListModal show={showModifyModal}
-                                             closeModal={closeModifyModal}
-                                             modifyType={WorkflowListType.ITEM}
-                                             workflowList={workflowList}
-                                             modifyWorkflowList={modifyWorkflowList}
-                                             setTemporalConstraint={setTemporalConstraint}
+                    <ModifyItemModal show={showModifyModal}
+                                     closeModal={closeModifyModal}
+                                     workflowList={workflowList}
+                                     boardSimpleLists={boardSimpleLists}
+                                     modifyWorkflowList={modifyWorkflowList}
+                                     setTemporalConstraint={setTemporalConstraint}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
