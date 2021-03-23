@@ -14,7 +14,8 @@ interface IListProps {
     index: number
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
-    boardSimpleLists: Array<WorkflowListSimple>
+    boardChildLists: Array<WorkflowListSimple>
+    boardChildItems: Array<WorkflowListSimple>
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -30,7 +31,8 @@ const ListComponent = ({
                            index,
                            workflowList,
                            isInsideTemporalConstraintBoard,
-                           boardSimpleLists,
+                           boardChildLists,
+                           boardChildItems,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
@@ -127,7 +129,8 @@ const ListComponent = ({
                                                                index={index}
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardSimpleLists={boardSimpleLists}
+                                                               boardChildLists={boardChildLists}
+                                                               boardChildItems={boardChildItems}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
@@ -145,7 +148,8 @@ const ListComponent = ({
                                                                index={index}
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardSimpleLists={boardSimpleLists}
+                                                               boardChildLists={boardChildLists}
+                                                               boardChildItems={boardChildItems}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}

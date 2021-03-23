@@ -11,7 +11,8 @@ interface IItemProps {
     index: number
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
-    boardSimpleLists: Array<WorkflowListSimple>
+    boardChildLists: Array<WorkflowListSimple>
+    boardChildItems: Array<WorkflowListSimple>
     modifyWorkflowList
     removeWorkflowList
     workflowListToMove
@@ -23,7 +24,8 @@ const ItemComponent = ({
                            index,
                            workflowList,
                            isInsideTemporalConstraintBoard,
-                           boardSimpleLists,
+                           boardChildLists,
+                           boardChildItems,
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
@@ -60,11 +62,12 @@ const ItemComponent = ({
             return "No temporal constraint configured"
         } else {
             const temp = workflowList.temporalConstraint
-            const connectedList = boardSimpleLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
             if (temp.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
+                const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
                 return "Should be in '" + connectedList.title + "' at " + formatDate(temp.dueDate);
             } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
-                return "Depends on '" + connectedList.title + "'"
+                const connectedItem = boardChildItems.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
+                return "Depends on '" + connectedItem.title + "'"
             }
         }
     }
@@ -98,7 +101,9 @@ const ItemComponent = ({
                     <ModifyItemModal show={showModifyModal}
                                      closeModal={closeModifyModal}
                                      workflowList={workflowList}
-                                     boardSimpleLists={boardSimpleLists}
+                                     isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
+                                     boardChildLists={boardChildLists}
+                                     boardChildItems={boardChildItems}
                                      modifyWorkflowList={modifyWorkflowList}
                                      setTemporalConstraint={setTemporalConstraint}
                     />

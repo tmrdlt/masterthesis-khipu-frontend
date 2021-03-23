@@ -9,12 +9,15 @@ import {
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import {compareDateOptions} from "utils/date-util";
 
 interface ModifyItemModalProps {
     show
     closeModal
     workflowList: WorkflowList
-    boardSimpleLists: Array<WorkflowListSimple>
+    isInsideTemporalConstraintBoard: boolean
+    boardChildLists: Array<WorkflowListSimple>
+    boardChildItems: Array<WorkflowListSimple>
     modifyWorkflowList
     setTemporalConstraint
 }
@@ -23,7 +26,9 @@ const ModifyItemModal = ({
                              show,
                              closeModal,
                              workflowList,
-                             boardSimpleLists,
+                             isInsideTemporalConstraintBoard,
+                             boardChildLists,
+                             boardChildItems,
                              modifyWorkflowList,
                              setTemporalConstraint
                          }: ModifyItemModalProps): JSX.Element => {
@@ -36,7 +41,7 @@ const ModifyItemModal = ({
     const initTempConstraint: TemporalConstraint = workflowList.temporalConstraint ? workflowList.temporalConstraint : {
         temporalConstraintType: TemporalConstraintType.noConstraint,
         dueDate: null,
-        connectedWorkflowListApiId: null
+        connectedWorkflowListApiId: ""
     }
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
@@ -67,7 +72,7 @@ const ModifyItemModal = ({
 
     const handleSelectionChange = (event) => {
         if (event.target.value == "0") {
-            const newState = {...tempConstraint, connectedWorkflowListApiId: null}
+            const newState = {...tempConstraint, connectedWorkflowListApiId: ""}
             setTempConstraint(newState)
         } else {
             const newState = {...tempConstraint, connectedWorkflowListApiId: event.target.value}
@@ -89,7 +94,9 @@ const ModifyItemModal = ({
         if (tempConstraint.temporalConstraintType === TemporalConstraintType.noConstraint) {
             return workflowList.temporalConstraint == null
         } else {
-            return tempConstraint == workflowList.temporalConstraint
+            return (tempConstraint.temporalConstraintType === workflowList.temporalConstraint.temporalConstraintType
+                && compareDateOptions(tempConstraint.dueDate, workflowList.temporalConstraint.dueDate)
+                && tempConstraint.connectedWorkflowListApiId == workflowList.temporalConstraint.connectedWorkflowListApiId)
         }
     }
 
@@ -137,97 +144,103 @@ const ModifyItemModal = ({
                                         id="newDescription"
                                     />
                                 </label>
-                                <div className="flex items-center">
-                                    <label className="inline-flex items-center mr-3">
-                                        <input type="radio"
-                                               value={TemporalConstraintType.noConstraint}
-                                               id="temporalConstraintType"
-                                               checked={tempConstraint.temporalConstraintType === TemporalConstraintType.noConstraint}
-                                               onChange={handleRadioButtonChange}
-                                               className="h-4 w-4"/>
-                                        <span className="ml-1">No constraint</span>
-                                    </label>
-                                    <label className="inline-flex items-center mr-3">
-                                        <input type="radio"
-                                               value={TemporalConstraintType.itemToBeInList}
-                                               id="temporalConstraintType"
-                                               checked={tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList}
-                                               onChange={handleRadioButtonChange}
-                                               className="h-4 w-4"/>
-                                        <span className="ml-1">Due date</span>
-                                    </label>
-                                    <label className="inline-flex items-center mr-3">
-                                        <input type="radio"
-                                               value={TemporalConstraintType.dependsOn}
-                                               id="temporalConstraintType"
-                                               checked={tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn}
-                                               onChange={handleRadioButtonChange}
-                                               className="h-4 w-4"/>
-                                        <span className="ml-1">Depends On</span>
-                                    </label>
-                                </div>
-                                {tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList &&
-                                <div className="grid grid-cols-1 gap-4">
-                                    <label className="block">
-                                        <span className="text-gray-700">Should be in List</span>
-                                        <select
-                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                            value={tempConstraint.connectedWorkflowListApiId}
-                                            onChange={handleSelectionChange}
-                                        >
-                                            <option className="opacity-40" key={0} value={"0"}>No list selected</option>
-                                            {
-                                                boardSimpleLists.map(simpleList =>
-                                                    <option key={simpleList.apiId}
-                                                            value={simpleList.apiId}>{simpleList.title}</option>
-                                                )
-                                            }
-                                        </select>
-                                    </label>
-                                    <div className="grid">
-                                        <div className="flex place-content-between">
+                                {isInsideTemporalConstraintBoard &&
+                                    <div className="grid grid-cols-1 gap-4">
+                                        <div className="flex items-center">
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={TemporalConstraintType.noConstraint}
+                                                       id="temporalConstraintType"
+                                                       checked={tempConstraint.temporalConstraintType === TemporalConstraintType.noConstraint}
+                                                       onChange={handleRadioButtonChange}
+                                                       className="h-4 w-4"/>
+                                                <span className="ml-1">No constraint</span>
+                                            </label>
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={TemporalConstraintType.itemToBeInList}
+                                                       id="temporalConstraintType"
+                                                       checked={tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList}
+                                                       onChange={handleRadioButtonChange}
+                                                       className="h-4 w-4"/>
+                                                <span className="ml-1">Due date</span>
+                                            </label>
+                                            <label className="inline-flex items-center mr-3">
+                                                <input type="radio"
+                                                       value={TemporalConstraintType.dependsOn}
+                                                       id="temporalConstraintType"
+                                                       checked={tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn}
+                                                       onChange={handleRadioButtonChange}
+                                                       className="h-4 w-4"/>
+                                                <span className="ml-1">Depends On</span>
+                                            </label>
+                                        </div>
+                                        {tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList &&
+                                        <div className="grid grid-cols-1 gap-4">
+                                            <label className="block">
+                                                <span className="text-gray-700">Should be in List</span>
+                                                <select
+                                                    className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                    value={tempConstraint.connectedWorkflowListApiId}
+                                                    onChange={handleSelectionChange}
+                                                >
+                                                    <option className="opacity-40" key={0} value={"0"}>No list selected</option>
+                                                    {
+                                                        boardChildLists.map(simpleList =>
+                                                            <option key={simpleList.apiId}
+                                                                    value={simpleList.apiId}>{simpleList.title}</option>
+                                                        )
+                                                    }
+                                                </select>
+                                            </label>
+                                            <div className="grid">
+                                                <div className="flex place-content-between">
                                             <span
                                                 className="text-gray-700">at due date</span>
-                                            <button className="text-gray-700"
-                                                    onClick={() => {
-                                                        handleDatePickerChange(null);
-                                                    }}>
-                                                &#x2715; Clear date
-                                            </button>
+                                                    <button className="text-gray-700"
+                                                            onClick={() => {
+                                                                handleDatePickerChange(null);
+                                                            }}>
+                                                        &#x2715; Clear date
+                                                    </button>
+                                                </div>
+                                                <DatePicker
+                                                    className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                    selected={tempConstraint ? tempConstraint.dueDate : null}
+                                                    onChange={date => handleDatePickerChange(date)}
+                                                    disabled={!tempConstraint}
+                                                    placeholderText="No due date set"
+                                                    showTimeSelect
+                                                    timeIntervals={15}
+                                                    timeCaption="Time"
+                                                    timeFormat="HH:mm"
+                                                    dateFormat="dd.MM.yyyy, HH:mm"
+                                                />
+                                            </div>
                                         </div>
-                                        <DatePicker
-                                            className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                            selected={tempConstraint ? tempConstraint.dueDate : null}
-                                            onChange={date => handleDatePickerChange(date)}
-                                            disabled={!tempConstraint}
-                                            placeholderText="No due date set"
-                                            showTimeSelect
-                                            timeIntervals={15}
-                                            timeCaption="Time"
-                                            timeFormat="HH:mm"
-                                            dateFormat="dd.MM.yyyy, HH:mm"
-                                        />
-                                    </div>
-                                </div>
-                                }
-                                {tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn &&
-                                <label className="block">
-                                    <span className="text-gray-700">Cannot be finished before item</span>
-                                    <select
-                                        className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                        onChange={handleSelectionChange}
-                                    >
-                                        <option key={0} value={"0"}>No item selected</option>
-                                        {
-                                            boardSimpleLists.map(simpleList =>
-                                                <option key={simpleList.apiId + 1}
-                                                        value={simpleList.apiId}>{simpleList.title}</option>
-                                            )
                                         }
-                                    </select>
-                                </label>
-                                }
+                                        {tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn &&
+                                        <label className="block">
+                                            <span className="text-gray-700">Cannot be finished before item</span>
+                                            <select
+                                                className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                value={tempConstraint.connectedWorkflowListApiId}
+                                                onChange={handleSelectionChange}
+                                            >
+                                                <option key={0} value={"0"}>No item selected</option>
+                                                {
+                                                    boardChildItems.map(simpleItem =>
+                                                        <option key={simpleItem.apiId + 1}
+                                                                value={simpleItem.apiId}>{simpleItem.title}</option>
+                                                    )
+                                                }
+                                            </select>
+                                        </label>
+                                        }
 
+                                    </div>
+
+                                }
                             </div>
                         </div>
                     </div>
