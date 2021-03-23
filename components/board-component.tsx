@@ -72,6 +72,12 @@ const BoardComponent = ({
         setShowMoveModal(false);
     }
 
+    const getTemporalConstraintText = (): string => {
+        return workflowList.temporalConstraint
+        && workflowList.temporalConstraint.dueDate ? "Board due on: " + formatDate(workflowList.temporalConstraint.dueDate) :
+            "No due date configured"
+    }
+
     const simpleChildLists: Array<WorkflowListSimple> = workflowList.children
         .filter(wl => wl.usageType == WorkflowListType.LIST)
         .map(wl => workflowListToWorkflowListSimple(wl))
@@ -79,7 +85,7 @@ const BoardComponent = ({
     const simpleChildItems: Array<WorkflowListSimple> = workflowList.children
         .filter(wl => wl.usageType == WorkflowListType.LIST)
         .map(wl => wl.children
-            .filter(wl=> wl.usageType == WorkflowListType.ITEM)
+            .filter(wl => wl.usageType == WorkflowListType.ITEM)
             .map(wl => workflowListToWorkflowListSimple(wl))
         ).flat()
 
@@ -93,9 +99,24 @@ const BoardComponent = ({
                 <div ref={provided.innerRef} {...provided.draggableProps}
                      className="mb-2 mr-2">
                     <div className={"bg-blue-300 border border-gray-500 rounded shadow p-1" + moveClassName}>
-                        <div className="grid grid-cols-2 hover:bg-blue-200"
-                             {...provided.dragHandleProps}>
-                            <div className="w-full font-bold m-1">{workflowList.title}</div>
+                        <div className="flex place-content-between">
+                            <div className="grid w-full m-1 hover:bg-blue-200"
+                                 {...provided.dragHandleProps}
+                            >
+                                <span className="font-bold">{workflowList.title} </span>
+                                {workflowList.isTemporalConstraintBoard &&
+                                <div className="inline-flex items-center text-xs">
+                                    <div className="w-3 h-3 mr-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    {getTemporalConstraintText()}
+                                </div>
+                                }
+                            </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}
                                          convertWorkflowList={convertWorkflowList}
@@ -105,14 +126,9 @@ const BoardComponent = ({
                                          openMoveModal={openMoveModal}
                             />
                         </div>
-                        <div className="flex place-content-between">
-                            <div className="m-1 text-sm">{workflowList.description}</div>
-                            {workflowList.isTemporalConstraintBoard &&
-                            <div
-                                className="m-1 text-sm">{workflowList.temporalConstraint
-                            && workflowList.temporalConstraint.dueDate ? "Board due on: " + formatDate(workflowList.temporalConstraint.dueDate) :
-                                "No due date for board configured"}</div>
-                            }
+
+                        <div className="m-1 text-sm whitespace-pre">
+                            {workflowList.description}
                         </div>
 
                         <Droppable droppableId={workflowList.uuid} direction="horizontal" type={workflowList.level}>

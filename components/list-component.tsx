@@ -88,9 +88,11 @@ const ListComponent = ({
                      className="mb-2 mr-2">
                     <div
                         className={"bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-sm p-1" + moveClassName}>
-                        <div className="grid grid-cols-2 hover:bg-red-200"
-                             {...provided.dragHandleProps}>
-                            <div className="w-full font-bold m-1">{workflowList.title}</div>
+                        <div className="flex place-content-between">
+                            <div className="w-full font-bold m-1 hover:bg-red-200"
+                                 {...provided.dragHandleProps}>
+                                {workflowList.title}
+                            </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}
                                          convertWorkflowList={convertWorkflowList}
@@ -99,7 +101,11 @@ const ListComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        <div className="m-1 text-sm">{workflowList.description}</div>
+
+                        <div className="m-1 text-sm whitespace-pre">
+                            {workflowList.description}
+                        </div>
+
                         <Droppable droppableId={workflowList.uuid} type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}

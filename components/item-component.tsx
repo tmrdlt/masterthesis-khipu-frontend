@@ -6,7 +6,6 @@ import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
 
-
 interface IItemProps {
     index: number
     workflowList: WorkflowList
@@ -61,12 +60,12 @@ const ItemComponent = ({
 
     const getTemporalConstraintText = (): string => {
         if (!workflowList.temporalConstraint || workflowList.temporalConstraint.temporalConstraintType == TemporalConstraintType.noConstraint) {
-            return "No temporal constraint configured"
+            return "No constraint configured"
         } else {
             const temp = workflowList.temporalConstraint
             if (temp.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
                 const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                return "Should be in '" + connectedList.title + "' at " + formatDate(temp.dueDate);
+                return "'" + connectedList.title + "' at " + formatDate(temp.dueDate);
             } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
                 const connectedItem = boardChildItems.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
                 return "Depends on '" + connectedItem.title + "'"
@@ -82,23 +81,34 @@ const ItemComponent = ({
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
-                    <div
-                        className={"bg-white hover:bg-gray-200 border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}
-                        {...provided.dragHandleProps}>
-                        <div className="grid grid-cols-2">
-                            <div className="font-bold m-1">{workflowList.title}</div>
+                    <div className={"bg-white border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}>
+                        <div className="flex place-content-between">
+                            <div className="grid w-full m-1 hover:bg-gray-200"
+                                 {...provided.dragHandleProps}
+                            >
+                                <span className="font-bold">{workflowList.title} </span>
+                                {isInsideTemporalConstraintBoard &&
+                                <div className="inline-flex items-center text-xs">
+                                    <div className="w-3 h-3 mr-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    {getTemporalConstraintText()}
+                                </div>
+                                }
+                            </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}
                                          selectWorkflowListToMove={selectWorkflowListToMove}
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        {isInsideTemporalConstraintBoard &&
-                        <div className="m-1 text-sm">
-                            {getTemporalConstraintText()}
+                        <div className="m-1 text-sm whitespace-pre bg-gray-50 rounded p-1">
+                            {workflowList.description}
                         </div>
-                        }
-                        <div className="m-1 text-sm">{workflowList.description}</div>
                     </div>
                     <ModifyItemModal show={showModifyModal}
                                      closeModal={closeModifyModal}
