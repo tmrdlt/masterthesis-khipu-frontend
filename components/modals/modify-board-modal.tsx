@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions} from "utils/date-util";
+import {getOptionalString} from "utils/optional-util";
 
 interface ModifyBoardModalProps {
     show
@@ -54,7 +55,7 @@ const ModifyBoardModal = ({
 
     const workflowListUnchanged = (): boolean => {
         return updateBoardEntity.newTitle === workflowList.title
-            && updateBoardEntity.newDescription === workflowList.description
+            && updateBoardEntity.newDescription === getOptionalString(workflowList.description)
             && updateBoardEntity.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
     }
 

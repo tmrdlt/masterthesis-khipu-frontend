@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {UpdateWorkflowListEntity, WorkflowList} from "utils/models";
 
 import "react-datepicker/dist/react-datepicker.css";
+import {getOptionalString} from "utils/optional-util";
 
 interface ModifyListModalProps {
     show
@@ -72,7 +73,7 @@ const ModifyListModal = ({
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
                                 disabled={state.newTitle === workflowList.title
-                                && state.newDescription === workflowList.description}
+                                && state.newDescription === getOptionalString(workflowList.description)}
                                 onClick={() => {
                                     modifyWorkflowList(workflowList.uuid, state).then(res => {
                                         closeModal()
