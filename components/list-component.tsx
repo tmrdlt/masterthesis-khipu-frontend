@@ -24,7 +24,7 @@ interface IListProps {
     workflowListToMove
     selectWorkflowListToMove
     showDropButton
-    setTemporalConstraint
+    modifyTemporalConstraint
 }
 
 const ListComponent = ({
@@ -41,7 +41,7 @@ const ListComponent = ({
                            workflowListToMove,
                            selectWorkflowListToMove,
                            showDropButton,
-                           setTemporalConstraint
+                           modifyTemporalConstraint
                        }: IListProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -127,7 +127,7 @@ const ListComponent = ({
                                                                 workflowListToMove={workflowListToMove}
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
-                                                                setTemporalConstraint={setTemporalConstraint}
+                                                                modifyTemporalConstraint={modifyTemporalConstraint}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -146,7 +146,7 @@ const ListComponent = ({
                                                                workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
-                                                               setTemporalConstraint={setTemporalConstraint}
+                                                               modifyTemporalConstraint={modifyTemporalConstraint}
                                                 />
                                             )
                                         } else {
@@ -161,7 +161,7 @@ const ListComponent = ({
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
-                                                               setTemporalConstraint={setTemporalConstraint}
+                                                               modifyTemporalConstraint={modifyTemporalConstraint}
                                                 />
                                             )
                                         }

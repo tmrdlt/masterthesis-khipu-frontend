@@ -20,7 +20,7 @@ interface ModifyItemModalProps {
     boardChildLists: Array<WorkflowListSimple>
     boardChildItems: Array<WorkflowListSimple>
     modifyWorkflowList
-    setTemporalConstraint
+    modifyTemporalConstraint
 }
 
 const ModifyItemModal = ({
@@ -31,7 +31,7 @@ const ModifyItemModal = ({
                              boardChildLists,
                              boardChildItems,
                              modifyWorkflowList,
-                             setTemporalConstraint
+                             modifyTemporalConstraint
                          }: ModifyItemModalProps): JSX.Element => {
     // STATE
     const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -168,7 +168,7 @@ const ModifyItemModal = ({
                                                    checked={tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn}
                                                    onChange={handleRadioButtonChange}
                                                    className="h-4 w-4"/>
-                                            <span className="ml-1">Depends On</span>
+                                            <span className="ml-1">Blocked by</span>
                                         </label>
                                     </div>
                                     {tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList &&
@@ -218,7 +218,7 @@ const ModifyItemModal = ({
                                     }
                                     {tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn &&
                                     <label className="block">
-                                        <span className="text-gray-700">Cannot be finished before item</span>
+                                        <span className="text-gray-700">Can not be finished before item:</span>
                                         <select
                                             className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                             value={tempConstraint.connectedWorkflowListApiId}
@@ -249,7 +249,11 @@ const ModifyItemModal = ({
                                         })
                                     }
                                     if (!temporalConstraintUnchanged()) {
-                                        setTemporalConstraint(workflowList.uuid, tempConstraint).then(res => {
+
+                                        const entity = tempConstraint.connectedWorkflowListApiId == "" ? {
+                                            ...tempConstraint, connectedWorkflowListApiId: null
+                                        } : tempConstraint
+                                        modifyTemporalConstraint(workflowList.uuid, entity).then(res => {
                                             closeModal()
                                         })
                                     }

@@ -149,7 +149,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
-    const setTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
+    const modifyTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
         postTemporalConstraint(uuid, temporalConstraint)
             .then(res => {
                 if (res) {
@@ -263,7 +263,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
-                                                        setTemporalConstraint={setTemporalConstraint}
+                                                        modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -282,7 +282,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
-                                                       setTemporalConstraint={setTemporalConstraint}
+                                                       modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 } else {
@@ -297,7 +297,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
-                                                       setTemporalConstraint={setTemporalConstraint}
+                                                       modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 }

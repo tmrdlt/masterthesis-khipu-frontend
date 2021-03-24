@@ -22,7 +22,7 @@ interface IBoardProps {
     workflowListToMove
     selectWorkflowListToMove
     showDropButton
-    setTemporalConstraint
+    modifyTemporalConstraint
 }
 
 const BoardComponent = ({
@@ -36,7 +36,7 @@ const BoardComponent = ({
                             workflowListToMove,
                             selectWorkflowListToMove,
                             showDropButton,
-                            setTemporalConstraint
+                            modifyTemporalConstraint
                         }: IBoardProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -152,7 +152,7 @@ const BoardComponent = ({
                                                                     workflowListToMove={workflowListToMove}
                                                                     selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
-                                                                    setTemporalConstraint={setTemporalConstraint}
+                                                                    modifyTemporalConstraint={modifyTemporalConstraint}
                                                     />
                                                 )
                                             } else if (wl.usageType == WorkflowListType.LIST) {
@@ -171,7 +171,7 @@ const BoardComponent = ({
                                                                    workflowListToMove={workflowListToMove}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
-                                                                   setTemporalConstraint={setTemporalConstraint}
+                                                                   modifyTemporalConstraint={modifyTemporalConstraint}
                                                     />
                                                 )
                                             } else {
@@ -186,7 +186,7 @@ const BoardComponent = ({
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    workflowListToMove={workflowListToMove}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
-                                                                   setTemporalConstraint={setTemporalConstraint}/>
+                                                                   modifyTemporalConstraint={modifyTemporalConstraint}/>
                                                 )
                                             }
                                         })}
@@ -209,7 +209,7 @@ const BoardComponent = ({
                                       closeModal={closeModifyModal}
                                       workflowList={workflowList}
                                       modifyWorkflowList={modifyWorkflowList}
-                                      setTemporalConstraint={setTemporalConstraint}
+                                      setTemporalConstraint={modifyTemporalConstraint}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

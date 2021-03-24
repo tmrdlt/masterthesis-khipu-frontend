@@ -16,7 +16,7 @@ interface IItemProps {
     removeWorkflowList
     workflowListToMove
     selectWorkflowListToMove
-    setTemporalConstraint
+    modifyTemporalConstraint
 }
 
 const ItemComponent = ({
@@ -29,7 +29,7 @@ const ItemComponent = ({
                            removeWorkflowList,
                            workflowListToMove,
                            selectWorkflowListToMove,
-                           setTemporalConstraint
+                           modifyTemporalConstraint
                        }: IItemProps): JSX.Element => {
     // STATE
     const [showModifyModal, setShowModifyModal] = useState(false);
@@ -68,7 +68,7 @@ const ItemComponent = ({
                 return "'" + connectedList.title + "' at " + formatDate(temp.dueDate);
             } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
                 const connectedItem = boardChildItems.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                return "Depends on '" + connectedItem.title + "'"
+                return "Blocked by '" + connectedItem.title + "'"
             }
         }
     }
@@ -117,7 +117,7 @@ const ItemComponent = ({
                                      boardChildLists={boardChildLists}
                                      boardChildItems={boardChildItems}
                                      modifyWorkflowList={modifyWorkflowList}
-                                     setTemporalConstraint={setTemporalConstraint}
+                                     modifyTemporalConstraint={modifyTemporalConstraint}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
