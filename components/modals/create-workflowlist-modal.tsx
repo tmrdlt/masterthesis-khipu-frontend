@@ -31,7 +31,6 @@ const CreateWorkflowListModal = ({
 
     // FUNCTIONS
     const handleFormChange = (event) => {
-        console.log(event)
         const newState = {...state, [event.target.id]: event.target.value}
         setState(newState)
     }
