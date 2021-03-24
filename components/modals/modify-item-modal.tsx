@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     TemporalConstraint,
     TemporalConstraintType,
@@ -90,10 +90,13 @@ const ModifyItemModal = ({
     }
 
     const temporalConstraintUnchanged = (): boolean => {
-        return workflowList.temporalConstraint == null
-            || (tempConstraint.temporalConstraintType == workflowList.temporalConstraint.temporalConstraintType
+        if (workflowList.temporalConstraint == null) {
+            return tempConstraint.temporalConstraintType == TemporalConstraintType.noConstraint
+        } else {
+            return (tempConstraint.temporalConstraintType == workflowList.temporalConstraint.temporalConstraintType
                 && compareDateOptions(tempConstraint.dueDate, workflowList.temporalConstraint.dueDate)
                 && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId))
+        }
     }
 
     const temporalConstraintFormInvalid = (): boolean => {
