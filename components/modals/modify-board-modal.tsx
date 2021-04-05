@@ -28,14 +28,14 @@ const ModifyBoardModal = ({
         isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
     const initDueDate: Date | null =
-        workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null
+        workflowList.temporalConstraint ? workflowList.temporalConstraint.endDate : null
 
     const [updateBoardEntity, setUpdateBoardEntity] = useState(initUpdateBoardEntity)
     const [dueDate, setDueDate] = useState(initDueDate)
 
     useEffect(() => {
-        if (workflowList.temporalConstraint && workflowList.temporalConstraint.dueDate) {
-            setDueDate(workflowList.temporalConstraint.dueDate)
+        if (workflowList.temporalConstraint && workflowList.temporalConstraint.endDate) {
+            setDueDate(workflowList.temporalConstraint.endDate)
         }
     }, [workflowList])
 
@@ -60,7 +60,7 @@ const ModifyBoardModal = ({
     }
 
     const temporalConstraintUnchanged = (): boolean => {
-        return compareDateOptions(dueDate, workflowList.temporalConstraint ? workflowList.temporalConstraint.dueDate : null)
+        return compareDateOptions(dueDate, workflowList.temporalConstraint ? workflowList.temporalConstraint.endDate : null)
 
     }
 
@@ -151,8 +151,7 @@ const ModifyBoardModal = ({
                                     }
                                     if (!temporalConstraintUnchanged()) {
                                         const entity: TemporalConstraint = {
-                                            temporalConstraintType: TemporalConstraintType.projectDueDate,
-                                            dueDate: dueDate
+                                            endDate: dueDate
                                         }
                                         setTemporalConstraint(workflowList.uuid, entity).then(res => {
                                             closeModal()

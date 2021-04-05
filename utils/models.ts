@@ -1,3 +1,15 @@
+// FRONTEND ONLY
+export enum TemporalConstraintType {
+    noConstraint= "noConstraint", constraint = "constraint", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
+}
+
+
+export type WorkflowListSimple = {
+    apiId: string,
+    title: string
+}
+
+// FROM BACKEND
 export type WorkflowList = {
     id: number,
     uuid: string,
@@ -16,11 +28,6 @@ export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowList
         apiId: wl.uuid,
         title: wl.title
     }
-}
-
-export type WorkflowListSimple = {
-    apiId: string,
-    title: string
 }
 
 export type CreateWorkflowListEntity = {
@@ -50,15 +57,12 @@ export type ReorderWorkflowListEntity = {
 }
 
 export type TemporalConstraint = {
-    temporalConstraintType: TemporalConstraintType,
-    dueDate?: Date,
+    startDate?: Date,
+    endDate?: Date,
+    durationInMinutes?: number,
     connectedWorkflowListApiId?: string
 }
 
 export enum WorkflowListType {
     BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
-}
-
-export enum TemporalConstraintType {
-    noConstraint= "noConstraint", projectDueDate = "projectDueDate", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
 }

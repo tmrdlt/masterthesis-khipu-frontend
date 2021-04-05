@@ -11,6 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions} from "utils/date-util";
 import {getOptionalString} from "utils/optional-util";
+import {isNoConstraint} from "utils/temp-constraint-util";
 
 interface ModifyItemModalProps {
     show
@@ -40,13 +41,15 @@ const ModifyItemModal = ({
         isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
     const initTempConstraint: TemporalConstraint = workflowList.temporalConstraint ? {
-        temporalConstraintType: workflowList.temporalConstraint.temporalConstraintType,
-        dueDate: workflowList.temporalConstraint.dueDate,
+        startDate: workflowList.temporalConstraint.startDate,
+        endDate: workflowList.temporalConstraint.endDate,
+        durationInMinutes: null,
         connectedWorkflowListApiId: getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId)
     } : {
-        temporalConstraintType: TemporalConstraintType.noConstraint,
-        dueDate: null,
-        connectedWorkflowListApiId: ""
+        startDate: null,
+        endDate: null,
+        durationInMinutes: null,
+        connectedWorkflowListApiId: null
     }
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
@@ -62,11 +65,31 @@ const ModifyItemModal = ({
     }
     const handleRadioButtonChange = (event) => {
         const tempConstraintType: TemporalConstraintType = event.target.value
-        setTempConstraint({
-            temporalConstraintType: tempConstraintType,
-            dueDate: null,
-            connectedWorkflowListApiId: ""
-        })
+        if (tempConstraintType == TemporalConstraintType.noConstraint) {
+            setTempConstraint({
+                startDate: null,
+                endDate: null,
+                durationInMinutes: null,
+                connectedWorkflowListApiId: null
+            })
+        } else {
+            setTempConstraint({
+                startDate: null,
+                endDate: null,
+                durationInMinutes: 0,
+                connectedWorkflowListApiId: ""
+            })
+        }
+    }
+
+    const handleDatePickerChange = (date, key) => {
+        const newState = {...tempConstraint, [key]: date}
+        setTempConstraint(newState)
+    }
+
+    const handleDurationFieldChange = (event) => {
+        const newState = {...tempConstraint, durationInMinutes: event.target.value}
+        setTempConstraint(newState)
     }
 
     const handleSelectionChange = (event) => {
@@ -79,11 +102,6 @@ const ModifyItemModal = ({
         }
     }
 
-    const handleDatePickerChange = (date) => {
-        const newState = {...tempConstraint, dueDate: date}
-        setTempConstraint(newState)
-    }
-
     const workflowListUnchanged = (): boolean => {
         return updateItemEntity.newTitle == workflowList.title
             && updateItemEntity.newDescription == getOptionalString(workflowList.description)
@@ -91,20 +109,17 @@ const ModifyItemModal = ({
 
     const temporalConstraintUnchanged = (): boolean => {
         if (workflowList.temporalConstraint == null) {
-            return tempConstraint.temporalConstraintType == TemporalConstraintType.noConstraint
+            return isNoConstraint(tempConstraint)
         } else {
-            return (tempConstraint.temporalConstraintType == workflowList.temporalConstraint.temporalConstraintType
-                && compareDateOptions(tempConstraint.dueDate, workflowList.temporalConstraint.dueDate)
-                && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId))
+            return (compareDateOptions(tempConstraint.startDate, workflowList.temporalConstraint.startDate)
+                && compareDateOptions(tempConstraint.endDate, workflowList.temporalConstraint.endDate)
+                && tempConstraint.connectedWorkflowListApiId === workflowList.temporalConstraint.connectedWorkflowListApiId)
         }
     }
 
     const temporalConstraintFormInvalid = (): boolean => {
-        if (tempConstraint.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
-            return !tempConstraint.dueDate
-                || !tempConstraint.connectedWorkflowListApiId
-        } else if (tempConstraint.temporalConstraintType == TemporalConstraintType.dependsOn) {
-            return !tempConstraint.connectedWorkflowListApiId
+        if (!isNoConstraint(tempConstraint)) {
+            return !tempConstraint.startDate && !tempConstraint.endDate && !tempConstraint.connectedWorkflowListApiId && !tempConstraint.durationInMinutes
         } else {
             return false
         }
@@ -150,32 +165,89 @@ const ModifyItemModal = ({
                                             <input type="radio"
                                                    value={TemporalConstraintType.noConstraint}
                                                    id="temporalConstraintType"
-                                                   checked={tempConstraint.temporalConstraintType === TemporalConstraintType.noConstraint}
+                                                   checked={isNoConstraint(tempConstraint)}
                                                    onChange={handleRadioButtonChange}
                                                    className="h-4 w-4"/>
                                             <span className="ml-1">No constraint</span>
                                         </label>
                                         <label className="inline-flex items-center mr-3">
                                             <input type="radio"
-                                                   value={TemporalConstraintType.itemToBeInList}
+                                                   value={TemporalConstraintType.constraint}
                                                    id="temporalConstraintType"
-                                                   checked={tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList}
+                                                   checked={!isNoConstraint(tempConstraint)}
                                                    onChange={handleRadioButtonChange}
                                                    className="h-4 w-4"/>
-                                            <span className="ml-1">Due date</span>
-                                        </label>
-                                        <label className="inline-flex items-center mr-3">
-                                            <input type="radio"
-                                                   value={TemporalConstraintType.dependsOn}
-                                                   id="temporalConstraintType"
-                                                   checked={tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn}
-                                                   onChange={handleRadioButtonChange}
-                                                   className="h-4 w-4"/>
-                                            <span className="ml-1">Blocked by</span>
+                                            <span className="ml-1">Temporal constraint</span>
                                         </label>
                                     </div>
-                                    {tempConstraint.temporalConstraintType === TemporalConstraintType.itemToBeInList &&
+                                    {!isNoConstraint(tempConstraint) &&
                                     <div className="grid grid-cols-1 gap-4">
+                                        <div className="grid">
+                                            <div className="flex place-content-between">
+                                            <span
+                                                className="text-gray-700">Start date</span>
+                                                <button className="text-gray-700"
+                                                        onClick={() => {
+                                                            handleDatePickerChange(null, "startDate");
+                                                        }}>
+                                                    &#x2715; Clear date
+                                                </button>
+                                            </div>
+                                            <DatePicker
+                                                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                selected={tempConstraint ? tempConstraint.startDate : null}
+                                                onChange={date => handleDatePickerChange(date, "startDate")}
+                                                selectsStart
+                                                startDate={tempConstraint.startDate}
+                                                endDate={tempConstraint.endDate}
+                                                maxDate={tempConstraint.endDate}
+                                                disabled={!tempConstraint}
+                                                placeholderText="No start date set"
+                                                showTimeSelect
+                                                timeIntervals={15}
+                                                timeCaption="Time"
+                                                timeFormat="HH:mm"
+                                                dateFormat="dd.MM.yyyy, HH:mm"
+                                            />
+                                        </div>
+                                        <div className="grid">
+                                            <div className="flex place-content-between">
+                                            <span
+                                                className="text-gray-700">End date</span>
+                                                <button className="text-gray-700"
+                                                        onClick={() => {
+                                                            handleDatePickerChange(null, "endDate");
+                                                        }}>
+                                                    &#x2715; Clear date
+                                                </button>
+                                            </div>
+                                            <DatePicker
+                                                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                selected={tempConstraint ? tempConstraint.endDate : null}
+                                                onChange={date => handleDatePickerChange(date, "endDate")}
+                                                selectsEnd
+                                                startDate={tempConstraint.startDate}
+                                                endDate={tempConstraint.endDate}
+                                                minDate={tempConstraint.startDate}
+                                                disabled={!tempConstraint}
+                                                placeholderText="No end date set"
+                                                showTimeSelect
+                                                timeIntervals={15}
+                                                timeCaption="Time"
+                                                timeFormat="HH:mm"
+                                                dateFormat="dd.MM.yyyy, HH:mm"
+                                            />
+                                        </div>
+                                        <label className="block">
+                                            <span className="text-gray-700">Duration in Minutes</span>
+                                            <input
+                                                type="number"
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                value={tempConstraint.durationInMinutes}
+                                                onChange={handleDurationFieldChange}
+                                                id="durationInMinutes"
+                                            />
+                                        </label>
                                         <label className="block">
                                             <span className="text-gray-700">Should be in List</span>
                                             <select
@@ -193,49 +265,7 @@ const ModifyItemModal = ({
                                                 }
                                             </select>
                                         </label>
-                                        <div className="grid">
-                                            <div className="flex place-content-between">
-                                            <span
-                                                className="text-gray-700">at due date</span>
-                                                <button className="text-gray-700"
-                                                        onClick={() => {
-                                                            handleDatePickerChange(null);
-                                                        }}>
-                                                    &#x2715; Clear date
-                                                </button>
-                                            </div>
-                                            <DatePicker
-                                                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                selected={tempConstraint ? tempConstraint.dueDate : null}
-                                                onChange={date => handleDatePickerChange(date)}
-                                                disabled={!tempConstraint}
-                                                placeholderText="No due date set"
-                                                showTimeSelect
-                                                timeIntervals={15}
-                                                timeCaption="Time"
-                                                timeFormat="HH:mm"
-                                                dateFormat="dd.MM.yyyy, HH:mm"
-                                            />
-                                        </div>
                                     </div>
-                                    }
-                                    {tempConstraint.temporalConstraintType === TemporalConstraintType.dependsOn &&
-                                    <label className="block">
-                                        <span className="text-gray-700">Can not be finished before item:</span>
-                                        <select
-                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                            value={tempConstraint.connectedWorkflowListApiId}
-                                            onChange={handleSelectionChange}
-                                        >
-                                            <option key={0} value={"0"}>No item selected</option>
-                                            {
-                                                boardChildItems.map(simpleItem =>
-                                                    <option key={simpleItem.apiId + 1}
-                                                            value={simpleItem.apiId}>{simpleItem.title}</option>
-                                                )
-                                            }
-                                        </select>
-                                    </label>
                                     }
                                 </div>
                                 }

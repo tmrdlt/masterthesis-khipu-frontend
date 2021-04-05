@@ -74,7 +74,7 @@ const BoardComponent = ({
 
     const getTemporalConstraintText = (): string => {
         return workflowList.temporalConstraint
-        && workflowList.temporalConstraint.dueDate ? "Board due on: " + formatDate(workflowList.temporalConstraint.dueDate) :
+        && workflowList.temporalConstraint.endDate ? "Board due on: " + formatDate(workflowList.temporalConstraint.endDate) :
             "No due date configured"
     }
 

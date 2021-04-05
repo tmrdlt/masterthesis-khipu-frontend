@@ -5,6 +5,7 @@ import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
+import {isNoConstraint} from "utils/temp-constraint-util";
 
 interface IItemProps {
     index: number
@@ -59,17 +60,28 @@ const ItemComponent = ({
     }
 
     const getTemporalConstraintText = (): string => {
-        if (!workflowList.temporalConstraint || workflowList.temporalConstraint.temporalConstraintType == TemporalConstraintType.noConstraint) {
+        if (isNoConstraint(workflowList.temporalConstraint)) {
             return "No constraint configured"
         } else {
             const temp = workflowList.temporalConstraint
-            if (temp.temporalConstraintType == TemporalConstraintType.itemToBeInList) {
-                const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                return "'" + connectedList.title + "' at " + formatDate(temp.dueDate);
-            } else if (temp.temporalConstraintType == TemporalConstraintType.dependsOn) {
-                const connectedItem = boardChildItems.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                return "Blocked by '" + connectedItem.title + "'"
+            let startText = ""
+            let endText = ""
+            let durationText = ""
+            let shouldBeInText = ""
+            if (temp.startDate) {
+                startText = "Should not be started before "+ formatDate(temp.startDate) + "\n"
             }
+            if (temp.endDate) {
+                endText = "Should be finished at "+ formatDate(temp.endDate) + "\n"
+            }
+            if (temp.durationInMinutes) {
+                durationText = "Takes " + temp.durationInMinutes + " minutes\n"
+            }
+            if (temp.connectedWorkflowListApiId) {
+                const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
+                shouldBeInText = "Connected List: '" + connectedList.title + "'"
+            }
+            return startText + endText + durationText + shouldBeInText
         }
     }
 
