@@ -19,7 +19,6 @@ interface ModifyItemModalProps {
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
-    boardChildItems: Array<WorkflowListSimple>
     modifyWorkflowList
     modifyTemporalConstraint
 }
@@ -30,7 +29,6 @@ const ModifyItemModal = ({
                              workflowList,
                              isInsideTemporalConstraintBoard,
                              boardChildLists,
-                             boardChildItems,
                              modifyWorkflowList,
                              modifyTemporalConstraint
                          }: ModifyItemModalProps): JSX.Element => {
@@ -43,7 +41,7 @@ const ModifyItemModal = ({
     const initTempConstraint: TemporalConstraint = workflowList.temporalConstraint ? {
         startDate: workflowList.temporalConstraint.startDate,
         endDate: workflowList.temporalConstraint.endDate,
-        durationInMinutes: null,
+        durationInMinutes: getOptionalString(workflowList.temporalConstraint.durationInMinutes),
         connectedWorkflowListApiId: getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId)
     } : {
         startDate: null,
@@ -76,7 +74,7 @@ const ModifyItemModal = ({
             setTempConstraint({
                 startDate: null,
                 endDate: null,
-                durationInMinutes: 0,
+                durationInMinutes: "",
                 connectedWorkflowListApiId: ""
             })
         }
@@ -88,8 +86,12 @@ const ModifyItemModal = ({
     }
 
     const handleDurationFieldChange = (event) => {
-        const newState = {...tempConstraint, durationInMinutes: event.target.value}
-        setTempConstraint(newState)
+        const regex = /^[0-9\b]+$/
+        const number = event.target.value
+        if (number === "" || regex.test(number)) {
+            const newState = {...tempConstraint, durationInMinutes: number}
+            setTempConstraint(newState)
+        }
     }
 
     const handleSelectionChange = (event) => {
@@ -113,7 +115,8 @@ const ModifyItemModal = ({
         } else {
             return (compareDateOptions(tempConstraint.startDate, workflowList.temporalConstraint.startDate)
                 && compareDateOptions(tempConstraint.endDate, workflowList.temporalConstraint.endDate)
-                && tempConstraint.connectedWorkflowListApiId === workflowList.temporalConstraint.connectedWorkflowListApiId)
+                && tempConstraint.durationInMinutes == getOptionalString(workflowList.temporalConstraint.durationInMinutes)
+                && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId))
         }
     }
 
@@ -241,11 +244,12 @@ const ModifyItemModal = ({
                                         <label className="block">
                                             <span className="text-gray-700">Duration in Minutes</span>
                                             <input
-                                                type="number"
+                                                type="tel"
                                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                                 value={tempConstraint.durationInMinutes}
                                                 onChange={handleDurationFieldChange}
                                                 id="durationInMinutes"
+                                                placeholder = "No duration set"
                                             />
                                         </label>
                                         <label className="block">
@@ -283,9 +287,11 @@ const ModifyItemModal = ({
                                     }
                                     if (!temporalConstraintUnchanged()) {
 
-                                        const entity = tempConstraint.connectedWorkflowListApiId == "" ? {
-                                            ...tempConstraint, connectedWorkflowListApiId: null
-                                        } : tempConstraint
+                                        const entity = {
+                                            ...tempConstraint,
+                                            durationInMinutes: tempConstraint.durationInMinutes === "" ? null : parseInt(tempConstraint.durationInMinutes),
+                                            connectedWorkflowListApiId: tempConstraint.connectedWorkflowListApiId === "" ? null : tempConstraint.connectedWorkflowListApiId
+                                        }
                                         modifyTemporalConstraint(workflowList.uuid, entity).then(res => {
                                             closeModal()
                                         })

@@ -12,7 +12,6 @@ interface IItemProps {
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
-    boardChildItems: Array<WorkflowListSimple>
     modifyWorkflowList
     removeWorkflowList
     workflowListToMove
@@ -25,7 +24,6 @@ const ItemComponent = ({
                            workflowList,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
-                           boardChildItems,
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
@@ -59,30 +57,47 @@ const ItemComponent = ({
         setShowMoveModal(false);
     }
 
-    const getTemporalConstraintText = (): string => {
-        if (isNoConstraint(workflowList.temporalConstraint)) {
-            return "No constraint configured"
-        } else {
+    const getTemporalConstraintText = (): JSX.Element => {
+        let texts: Array<string> = []
+        if (!isNoConstraint(workflowList.temporalConstraint)) {
             const temp = workflowList.temporalConstraint
-            let startText = ""
-            let endText = ""
-            let durationText = ""
-            let shouldBeInText = ""
             if (temp.startDate) {
-                startText = "Should not be started before "+ formatDate(temp.startDate) + "\n"
+                texts.push("Should not be started before " + formatDate(temp.startDate))
             }
             if (temp.endDate) {
-                endText = "Should be finished at "+ formatDate(temp.endDate) + "\n"
+                texts.push("Should be finished at " + formatDate(temp.endDate))
             }
             if (temp.durationInMinutes) {
-                durationText = "Takes " + temp.durationInMinutes + " minutes\n"
+                texts.push("Takes " + temp.durationInMinutes + " minutes")
             }
             if (temp.connectedWorkflowListApiId) {
                 const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                shouldBeInText = "Connected List: '" + connectedList.title + "'"
+                texts.push("Connected List: '" + connectedList.title + "'")
             }
-            return startText + endText + durationText + shouldBeInText
         }
+        return (
+            <div className="grid text-xs">
+                {isNoConstraint(workflowList.temporalConstraint) &&
+                "No constraint configured"
+                }
+                {!isNoConstraint(workflowList.temporalConstraint) &&
+                texts.map(text => {
+                    return (
+                        <div className="inline-flex items-center">
+                            <div className="w-3 h-3 mr-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            {text}
+                        </div>
+                    )
+                })
+                }
+            </div>
+        )
     }
 
     return (
@@ -100,16 +115,7 @@ const ItemComponent = ({
                             >
                                 <span className="font-bold">{workflowList.title} </span>
                                 {isInsideTemporalConstraintBoard &&
-                                <div className="inline-flex items-center text-xs">
-                                    <div className="w-3 h-3 mr-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                    </div>
-                                    {getTemporalConstraintText()}
-                                </div>
+                                getTemporalConstraintText()
                                 }
                             </div>
                             <ButtonsMenu workflowList={workflowList}
@@ -127,7 +133,6 @@ const ItemComponent = ({
                                      workflowList={workflowList}
                                      isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                      boardChildLists={boardChildLists}
-                                     boardChildItems={boardChildItems}
                                      modifyWorkflowList={modifyWorkflowList}
                                      modifyTemporalConstraint={modifyTemporalConstraint}
                     />

@@ -59,7 +59,7 @@ export type ReorderWorkflowListEntity = {
 export type TemporalConstraint = {
     startDate?: Date,
     endDate?: Date,
-    durationInMinutes?: number,
+    durationInMinutes?: string,
     connectedWorkflowListApiId?: string
 }
 

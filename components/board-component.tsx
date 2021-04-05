@@ -82,12 +82,13 @@ const BoardComponent = ({
         .filter(wl => wl.usageType == WorkflowListType.LIST)
         .map(wl => workflowListToWorkflowListSimple(wl))
 
-    const simpleChildItems: Array<WorkflowListSimple> = workflowList.children
-        .filter(wl => wl.usageType == WorkflowListType.LIST)
-        .map(wl => wl.children
-            .filter(wl => wl.usageType == WorkflowListType.ITEM)
-            .map(wl => workflowListToWorkflowListSimple(wl))
-        ).flat()
+    // TODO maybe use in the future for blocked by
+    // const simpleChildItems: Array<WorkflowListSimple> = workflowList.children
+    //     .filter(wl => wl.usageType == WorkflowListType.LIST)
+    //     .map(wl => wl.children
+    //         .filter(wl => wl.usageType == WorkflowListType.ITEM)
+    //         .map(wl => workflowListToWorkflowListSimple(wl))
+    //     ).flat()
 
     return (
         <Draggable
@@ -162,7 +163,6 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
-                                                                   boardChildItems={simpleChildItems}
                                                                    createWorkflowList={createWorkflowList}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
@@ -181,7 +181,6 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
-                                                                   boardChildItems={simpleChildItems}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    workflowListToMove={workflowListToMove}

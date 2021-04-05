@@ -1,3 +1,3 @@
-export const getOptionalString = (string?: string) => {
+export const getOptionalString = (string?: string): string => {
     return string ? string : ""
 }

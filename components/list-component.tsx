@@ -15,7 +15,6 @@ interface IListProps {
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
-    boardChildItems: Array<WorkflowListSimple>
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -32,7 +31,6 @@ const ListComponent = ({
                            workflowList,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
-                           boardChildItems,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
@@ -137,7 +135,6 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
-                                                               boardChildItems={boardChildItems}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
@@ -156,7 +153,6 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
-                                                               boardChildItems={boardChildItems}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}
