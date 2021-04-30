@@ -88,7 +88,7 @@ export const postTemporalConstraint = async (uuid: string, temporalConstraint: T
     console.log(temporalConstraint)
     return axios.post(
         'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
-        {...temporalConstraint, dueDate: toLocalDateTimeString(temporalConstraint.endDate)}
+        {...temporalConstraint, startDate: toLocalDateTimeString(temporalConstraint.startDate), endDate: toLocalDateTimeString(temporalConstraint.endDate)}
     )
         .then(response => {
             return response;

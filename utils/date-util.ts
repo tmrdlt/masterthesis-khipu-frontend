@@ -1,4 +1,6 @@
 const moment = require('moment');
+const momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
 
 export const formatDate = (date: Date): string => {
     return (moment(date)).format('DD.MM.YYYY, HH:mm')
@@ -21,5 +23,8 @@ export const compareDateOptions = (date1?: Date, date2?: Date): boolean => {
     if (date1 && date2) {
         return date1.getTime() === date2.getTime();
     } else return !date1 && !date2;
+}
 
+export const formatDuration = (minutes: string): string =>{
+    return moment.duration(Number(minutes), "minutes").format("h [hours], m [minutes]", {trim: "both"})
 }

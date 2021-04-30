@@ -1,9 +1,9 @@
 import {Draggable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {TemporalConstraintType, WorkflowList, WorkflowListSimple} from "utils/models";
+import {WorkflowList, WorkflowListSimple} from "utils/models";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
-import {formatDate} from "utils/date-util";
+import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
 import {isNoConstraint} from "utils/temp-constraint-util";
 
@@ -18,6 +18,7 @@ interface IItemProps {
     selectWorkflowListToMove
     modifyTemporalConstraint
 }
+
 
 const ItemComponent = ({
                            index,
@@ -68,7 +69,7 @@ const ItemComponent = ({
                 texts.push("Should be finished at " + formatDate(temp.endDate))
             }
             if (temp.durationInMinutes) {
-                texts.push("Takes " + temp.durationInMinutes + " minutes")
+                texts.push("Takes " + formatDuration(temp.durationInMinutes))
             }
             if (temp.connectedWorkflowListApiId) {
                 const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)

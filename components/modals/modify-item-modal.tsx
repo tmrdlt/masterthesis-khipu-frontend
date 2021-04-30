@@ -7,11 +7,12 @@ import {
     WorkflowListSimple
 } from "utils/models";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
-import {compareDateOptions} from "utils/date-util";
+import {compareDateOptions, formatDuration} from "utils/date-util";
 import {getOptionalString} from "utils/optional-util";
 import {isNoConstraint} from "utils/temp-constraint-util";
+import timeDurationsInMinutes from "utils/globals";
+
 
 interface ModifyItemModalProps {
     show
@@ -85,11 +86,12 @@ const ModifyItemModal = ({
         setTempConstraint(newState)
     }
 
-    const handleDurationFieldChange = (event) => {
-        const regex = /^[0-9\b]+$/
-        const number = event.target.value
-        if (number === "" || regex.test(number)) {
-            const newState = {...tempConstraint, durationInMinutes: number}
+    const handleTimeRequiredSelectionChange = (event) => {
+        if (event.target.value == "0") {
+            const newState = {...tempConstraint, durationInMinutes: ""}
+            setTempConstraint(newState)
+        } else {
+            const newState = {...tempConstraint, durationInMinutes: event.target.value}
             setTempConstraint(newState)
         }
     }
@@ -242,15 +244,20 @@ const ModifyItemModal = ({
                                             />
                                         </div>
                                         <label className="block">
-                                            <span className="text-gray-700">Duration in Minutes</span>
-                                            <input
-                                                type="tel"
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                value={tempConstraint.durationInMinutes}
-                                                onChange={handleDurationFieldChange}
-                                                id="durationInMinutes"
-                                                placeholder = "No duration set"
-                                            />
+                                            <span className="text-gray-700">Time required</span><select
+                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                            value={tempConstraint.durationInMinutes}
+                                            onChange={handleTimeRequiredSelectionChange}
+                                        >
+                                            <option className="opacity-40" key={0} value={"0"}>None
+                                            </option>
+                                            {
+                                                timeDurationsInMinutes.map(durationInMinutes =>
+                                                    <option key={durationInMinutes}
+                                                            value={durationInMinutes}>{formatDuration(durationInMinutes.toString())}</option>
+                                                )
+                                            }
+                                        </select>
                                         </label>
                                         <label className="block">
                                             <span className="text-gray-700">Should be in List</span>
