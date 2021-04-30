@@ -218,7 +218,7 @@ const ModifyItemModal = ({
                                         <div className="grid">
                                             <div className="flex place-content-between">
                                             <span
-                                                className="text-gray-700">End date</span>
+                                                className="text-gray-700">Due date</span>
                                                 <button className="text-gray-700"
                                                         onClick={() => {
                                                             handleDatePickerChange(null, "endDate");
@@ -235,7 +235,7 @@ const ModifyItemModal = ({
                                                 endDate={tempConstraint.endDate}
                                                 minDate={tempConstraint.startDate}
                                                 disabled={!tempConstraint}
-                                                placeholderText="No end date set"
+                                                placeholderText="No due date set"
                                                 showTimeSelect
                                                 timeIntervals={15}
                                                 timeCaption="Time"
