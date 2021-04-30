@@ -59,21 +59,66 @@ const ItemComponent = ({
     }
 
     const getTemporalConstraintText = (): JSX.Element => {
-        let texts: Array<string> = []
+        let elements: Array<JSX.Element> = []
         if (!isNoConstraint(workflowList.temporalConstraint)) {
             const temp = workflowList.temporalConstraint
             if (temp.startDate) {
-                texts.push("Should not be started before " + formatDate(temp.startDate))
+                elements.push(
+                    <div className="inline-flex items-center">
+                        <div className="w-3 h-3 mr-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        {"Start date: " + formatDate(temp.startDate)}
+                    </div>
+                )
             }
             if (temp.endDate) {
-                texts.push("Should be finished at " + formatDate(temp.endDate))
+                elements.push(
+                    <div className="inline-flex items-center">
+                        <div className="w-3 h-3 mr-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
+                            </svg>
+                        </div>
+                        {"Due date: " + formatDate(temp.endDate)}
+                    </div>
+                )
             }
             if (temp.durationInMinutes) {
-                texts.push("Takes " + formatDuration(temp.durationInMinutes))
+                elements.push(
+                    <div className="inline-flex items-center">
+                        <div className="w-3 h-3 mr-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        {"Takes " + formatDuration(temp.durationInMinutes)}
+                    </div>
+                )
+                elements.push()
             }
             if (temp.connectedWorkflowListApiId) {
                 const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                texts.push("Connected List: '" + connectedList.title + "'")
+                elements.push(
+                    <div className="inline-flex items-center">
+                        <div className="w-3 h-3 mr-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                            </svg>
+                        </div>
+                        {"Connected List: '" + connectedList.title + "'"}
+                    </div>
+                )
             }
         }
         return (
@@ -82,19 +127,8 @@ const ItemComponent = ({
                 "No constraint configured"
                 }
                 {!isNoConstraint(workflowList.temporalConstraint) &&
-                texts.map(text => {
-                    return (
-                        <div className="inline-flex items-center">
-                            <div className="w-3 h-3 mr-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            {text}
-                        </div>
-                    )
+                elements.map(element => {
+                    return (element)
                 })
                 }
             </div>
