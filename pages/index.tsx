@@ -3,6 +3,7 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
+    TemporalConstraint,
     UpdateWorkflowListEntity,
     WorkflowList,
     WorkflowListType
@@ -12,19 +13,21 @@ import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder
 import {
     deleteWorkflowList,
     getWorkflowLists,
+    postTemporalConstraint,
     postWorkflowList,
     postWorkflowListConvert,
-    postWorkflowListMove, postWorkflowListReorder,
+    postWorkflowListMove,
+    postWorkflowListReorder,
     putWorkflowList
 } from "utils/workflow-api";
-import CreateWorkflowListModal from "components/create-workflowlist-modal";
+import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ListComponent from "components/list-component";
 import ItemComponent from "components/item-component";
 import {getDroppableStyle} from "utils/style-elements";
 import DropButton from "components/drop-button";
 
 const Home: FunctionComponent = (): JSX.Element => {
-
+    // STATE
     const initState: Array<WorkflowList> = []
     const [state, setState] = useState(initState);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -35,6 +38,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         init();
     }, []);
 
+    // FUNCTIONS
     const init = () => {
         getWorkflowLists().then(workflowLists => {
             if (workflowLists) {
@@ -43,7 +47,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         })
     }
 
-    function onDragEnd(result: DropResult) {
+    const onDragEnd = (result: DropResult) => {
         const {destination, source, draggableId} = result;
 
         console.log("OnDragEnd", result);
@@ -81,13 +85,47 @@ const Home: FunctionComponent = (): JSX.Element => {
             if (!(destinationDroppableId === "ROOT")) {
                 newParentUuid = destinationDroppableId;
             }
-            postWorkflowListMove(draggableId, {newParentApiId: newParentUuid, newPosition: destination.index}).then(res => {
+            postWorkflowListMove(draggableId, {
+                newParentApiId: newParentUuid,
+                newPosition: destination.index
+            }).then(res => {
                 getWorkflowLists().then(workflowLists => {
                     if (workflowLists) {
                         setState(workflowLists)
                     }
                 })
             })
+        }
+    }
+
+    const openModal = () => {
+        setShowCreateModal(true);
+    }
+    const closeModal = () => {
+        setShowCreateModal(false);
+    }
+
+    const selectWorkflowListToMove = (wl: WorkflowList) => {
+        setWorkflowListToMove(wl);
+    }
+
+    const showDropButton = (destinationToDropOn?: WorkflowList) => {
+        // Move modal is not open do not show drop button
+        if (!workflowListToMove) {
+            return false;
+        } else {
+            // Move Modal is Open
+
+            // The following would be illegal moves or moves that doesn't make sense
+            // Destination is already the list the element is in
+            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(state, destinationToDropOn, workflowListToMove)
+            // The destination would be inside the element we want to move
+            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
+            // The destination would be exactly the element we want to move
+            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
+
+            // Show drop button only if all three are false
+            return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
         }
     }
 
@@ -99,6 +137,20 @@ const Home: FunctionComponent = (): JSX.Element => {
             newCreateWorkflowListEntity = createWorkflowListEntity
         }
         postWorkflowList(newCreateWorkflowListEntity)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists().then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+                return res
+            });
+    }
+
+    const modifyTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
+        postTemporalConstraint(uuid, temporalConstraint)
             .then(res => {
                 if (res) {
                     getWorkflowLists().then(workflowLists => {
@@ -174,37 +226,6 @@ const Home: FunctionComponent = (): JSX.Element => {
         })
     }
 
-    const openModal = () => {
-        setShowCreateModal(true);
-    }
-    const closeModal = () => {
-        setShowCreateModal(false);
-    }
-
-    const selectWorkflowListToMove = (wl: WorkflowList) => {
-        setWorkflowListToMove(wl);
-    }
-
-    const showDropButton = (destinationToDropOn?: WorkflowList) => {
-        // Move modal is not open do not show drop button
-        if (!workflowListToMove) {
-            return false;
-        } else {
-            // Move Modal is Open
-
-            // The following would be illegal moves or moves that doesn't make sense
-            // Destination is already the list the element is in
-            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(state, destinationToDropOn, workflowListToMove)
-            // The destination would be inside the element we want to move
-            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
-            // The destination would be exactly the element we want to move
-            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
-
-            // Show drop button only if all three are false
-            return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
-        }
-    }
-
     return (
         <div className="bg-gray-200 h-screen p-3">
             <button
@@ -242,6 +263,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
+                                                        modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -249,6 +271,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                                         <ListComponent key={index}
                                                        index={index}
                                                        workflowList={wl}
+                                                       isInsideTemporalConstraintBoard={false}
+                                                       boardChildLists={[]} // TODO maybe make optional
+                                                       boardChildItems={[]}
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
@@ -257,6 +282,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
+                                                       modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 } else {
@@ -264,10 +290,14 @@ const Home: FunctionComponent = (): JSX.Element => {
                                         <ItemComponent key={index}
                                                        index={index}
                                                        workflowList={wl}
+                                                       isInsideTemporalConstraintBoard={false}
+                                                       boardChildLists={[]} // TODO maybe make optional
+                                                       boardChildItems={[]}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
+                                                       modifyTemporalConstraint={modifyTemporalConstraint}
                                         />
                                     )
                                 }

@@ -119,3 +119,22 @@ const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolea
     })
     return contains;
 }
+
+/**
+ * Recursively parses the due date to a Javascript Date() as this is not done by axios JSON.parse()
+ */
+export const recursiveParseDate = (lists: Array<WorkflowList>) => {
+    lists.forEach(wl => {
+        if (wl.temporalConstraint) {
+            if (wl.temporalConstraint.startDate) {
+                wl.temporalConstraint.startDate = new Date(wl.temporalConstraint.startDate)
+            }
+            if (wl.temporalConstraint.endDate) {
+                wl.temporalConstraint.endDate = new Date(wl.temporalConstraint.endDate)
+            }
+        }
+        if (wl.children.length > 0) {
+            recursiveParseDate(wl.children)
+        }
+    })
+};

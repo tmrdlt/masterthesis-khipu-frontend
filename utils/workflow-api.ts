@@ -2,15 +2,20 @@ import axios from "axios";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    MoveWorkflowListEntity, ReorderWorkflowListEntity,
+    MoveWorkflowListEntity,
+    ReorderWorkflowListEntity,
+    TemporalConstraint,
     UpdateWorkflowListEntity,
     WorkflowList
 } from "utils/models";
+import {toLocalDateTimeString} from "utils/date-util";
+import {recursiveParseDate} from "utils/list-util";
 
 export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
-    return axios.get('http://localhost:5001/workflowlist')
+    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist')
         .then(response => {
-            const workflowLists: Array<WorkflowList> = response.data;
+            const workflowLists = response.data
+            recursiveParseDate(workflowLists)
             console.log(workflowLists);
             return workflowLists;
         }).catch(error => {
@@ -71,6 +76,20 @@ export const postWorkflowListConvert = async (uuid: string, convertWorkflowListE
 
 export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListEntity: ReorderWorkflowListEntity) => {
     return axios.post('http://localhost:5001/workflowlist/' + uuid + '/reorder', reorderWorkflowListEntity)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
+    console.log(temporalConstraint)
+    return axios.post(
+        'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
+        {...temporalConstraint, startDate: toLocalDateTimeString(temporalConstraint.startDate), endDate: toLocalDateTimeString(temporalConstraint.endDate)}
+    )
         .then(response => {
             return response;
         }).catch(error => {
