@@ -6,6 +6,7 @@ import {
     ReorderWorkflowListEntity,
     TemporalConstraint,
     UpdateWorkflowListEntity,
+    User,
     WorkflowList
 } from "utils/models";
 import {toLocalDateTimeString} from "utils/date-util";
@@ -92,6 +93,16 @@ export const postTemporalConstraint = async (uuid: string, temporalConstraint: T
     )
         .then(response => {
             return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const getUsers = async (): Promise<Array<User> | null> => {
+    return axios.get<Array<User>>('http://localhost:5001/user')
+        .then(response => {
+            return response.data;
         }).catch(error => {
             console.error(error);
             return null

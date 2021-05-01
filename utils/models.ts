@@ -1,6 +1,6 @@
 // FRONTEND ONLY
 export enum TemporalConstraintType {
-    noConstraint= "noConstraint", constraint = "constraint", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
+    noConstraint = "noConstraint", constraint = "constraint", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
 }
 
 
@@ -65,4 +65,12 @@ export type TemporalConstraint = {
 
 export enum WorkflowListType {
     BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
+}
+
+export type User = {
+    id: number,
+    apiId: string,
+    username: string,
+    createdAt: Date,
+    endDate: Date,
 }
