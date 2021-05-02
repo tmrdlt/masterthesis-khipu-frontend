@@ -1,6 +1,6 @@
 import axios from "axios";
 import {
-    ConvertWorkflowListEntity,
+    ConvertWorkflowListEntity, CreateUserEntity,
     CreateWorkflowListEntity,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
@@ -103,6 +103,16 @@ export const getUsers = async (): Promise<Array<User> | null> => {
     return axios.get<Array<User>>('http://localhost:5001/user')
         .then(response => {
             return response.data;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postUser = async (createUserEntity: CreateUserEntity) => {
+    return axios.post('http://localhost:5001/user', createUserEntity)
+        .then(response => {
+            return response;
         }).catch(error => {
             console.error(error);
             return null

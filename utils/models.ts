@@ -74,3 +74,7 @@ export type User = {
     createdAt: Date,
     endDate: Date,
 }
+
+export type CreateUserEntity = {
+    username: string
+}
