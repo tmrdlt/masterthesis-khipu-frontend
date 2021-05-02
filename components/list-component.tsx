@@ -13,6 +13,7 @@ import ButtonsMenu from "components/buttons-menu";
 interface IListProps {
     index: number
     workflowList: WorkflowList
+    username: string
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
     createWorkflowList
@@ -29,6 +30,7 @@ interface IListProps {
 const ListComponent = ({
                            index,
                            workflowList,
+                           username,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
                            createWorkflowList,
@@ -117,6 +119,7 @@ const ListComponent = ({
                                                 <BoardComponent key={index}
                                                                 index={index}
                                                                 workflowList={wl}
+                                                                username={username}
                                                                 createWorkflowList={createWorkflowList}
                                                                 modifyWorkflowList={modifyWorkflowList}
                                                                 removeWorkflowList={removeWorkflowList}
@@ -133,6 +136,7 @@ const ListComponent = ({
                                                 <ListComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               username={username}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
                                                                createWorkflowList={createWorkflowList}
@@ -151,6 +155,7 @@ const ListComponent = ({
                                                 <ItemComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               username={username}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
                                                                modifyWorkflowList={modifyWorkflowList}
@@ -174,6 +179,7 @@ const ListComponent = ({
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.ITEM}
                                              parentUuid={workflowList.uuid}
+                                             username={username}
                                              createWorkflowList={createWorkflowList}/>
                     <ModifyListModal show={showModifyModal}
                                      closeModal={closeModifyModal}

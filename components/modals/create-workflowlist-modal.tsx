@@ -7,6 +7,7 @@ interface CreateWorkflowListModalProps {
     closeModal
     createType: WorkflowListType
     parentUuid: string
+    username: string
     createWorkflowList
 }
 
@@ -15,6 +16,7 @@ const CreateWorkflowListModal = ({
                                      closeModal,
                                      createType,
                                      parentUuid,
+                                     username,
                                      createWorkflowList
                                  }: CreateWorkflowListModalProps): JSX.Element => {
     // STATE
@@ -22,7 +24,8 @@ const CreateWorkflowListModal = ({
         title: "",
         listType: createType,
         parentApiId: parentUuid,
-        description: ""
+        description: "",
+        username: username
     }
     const [state, setState] = useState(initCreateWorkflowListEntity)
 

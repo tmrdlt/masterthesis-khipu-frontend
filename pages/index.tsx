@@ -64,13 +64,12 @@ const Start: FunctionComponent = (): JSX.Element => {
                 {state.map((user, index) => {
                     return (
                         <li key={index}>
-                            <div
-                                className="grid items-center justify-center bg-blue-300 hover:bg-blue-200 cursor-pointer border border-gray-500 rounded shadow p-1 w-80 h-10 mt-2">
-
-                                <Link href={"/" + user.username + "/home"}>
-                                    <a>{user.username}</a>
-                                </Link>
-                            </div>
+                            <Link href={"/" + user.username}>
+                                <div
+                                    className="grid items-center justify-center bg-blue-300 hover:bg-blue-200 cursor-pointer border border-gray-500 rounded shadow p-1 w-80 h-10 mt-2">
+                                    {user.username}
+                                </div>
+                            </Link>
                         </li>
                     )
                 })}

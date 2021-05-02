@@ -10,6 +10,7 @@ import {isNoConstraint} from "utils/temp-constraint-util";
 interface IItemProps {
     index: number
     workflowList: WorkflowList
+    username: string
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
@@ -23,6 +24,7 @@ interface IItemProps {
 const ItemComponent = ({
                            index,
                            workflowList,
+                           username,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
                            modifyWorkflowList,
@@ -64,7 +66,7 @@ const ItemComponent = ({
             const temp = workflowList.temporalConstraint
             if (temp.startDate) {
                 elements.push(
-                    <div className="inline-flex items-center">
+                    <div key={0} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -78,7 +80,7 @@ const ItemComponent = ({
             }
             if (temp.endDate) {
                 elements.push(
-                    <div className="inline-flex items-center">
+                    <div key={1} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -92,7 +94,7 @@ const ItemComponent = ({
             }
             if (temp.durationInMinutes) {
                 elements.push(
-                    <div className="inline-flex items-center">
+                    <div key={2} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -108,7 +110,7 @@ const ItemComponent = ({
             if (temp.connectedWorkflowListApiId) {
                 const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
                 elements.push(
-                    <div className="inline-flex items-center">
+                    <div key={3} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">

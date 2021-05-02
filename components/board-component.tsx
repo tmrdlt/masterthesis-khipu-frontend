@@ -14,6 +14,7 @@ import ModifyBoardModal from "components/modals/modify-board-modal";
 interface IBoardProps {
     index: number
     workflowList: WorkflowList
+    username: string
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -28,6 +29,7 @@ interface IBoardProps {
 const BoardComponent = ({
                             index,
                             workflowList,
+                            username,
                             createWorkflowList,
                             modifyWorkflowList,
                             removeWorkflowList,
@@ -145,6 +147,7 @@ const BoardComponent = ({
                                                     <BoardComponent key={index}
                                                                     index={index}
                                                                     workflowList={wl}
+                                                                    username={username}
                                                                     createWorkflowList={createWorkflowList}
                                                                     modifyWorkflowList={modifyWorkflowList}
                                                                     removeWorkflowList={removeWorkflowList}
@@ -161,6 +164,7 @@ const BoardComponent = ({
                                                     <ListComponent key={index}
                                                                    index={index}
                                                                    workflowList={wl}
+                                                                   username={username}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
                                                                    createWorkflowList={createWorkflowList}
@@ -179,6 +183,7 @@ const BoardComponent = ({
                                                     <ItemComponent key={index}
                                                                    index={index}
                                                                    workflowList={wl}
+                                                                   username={username}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
                                                                    modifyWorkflowList={modifyWorkflowList}
@@ -202,6 +207,7 @@ const BoardComponent = ({
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.LIST}
                                              parentUuid={workflowList.uuid}
+                                             username={username}
                                              createWorkflowList={createWorkflowList}
                     />
                     <ModifyBoardModal show={showModifyModal}
