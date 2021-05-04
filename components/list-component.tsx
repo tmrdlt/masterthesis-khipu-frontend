@@ -13,6 +13,7 @@ import ButtonsMenu from "components/buttons-menu";
 interface IListProps {
     index: number
     workflowList: WorkflowList
+    userApiId: string
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
     createWorkflowList
@@ -29,6 +30,7 @@ interface IListProps {
 const ListComponent = ({
                            index,
                            workflowList,
+                           userApiId,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
                            createWorkflowList,
@@ -77,8 +79,8 @@ const ListComponent = ({
 
     return (
         <Draggable
-            key={workflowList.uuid}
-            draggableId={workflowList.uuid}
+            key={workflowList.apiId}
+            draggableId={workflowList.apiId}
             index={index}
         >
             {(provided, snapshot) => (
@@ -104,7 +106,7 @@ const ListComponent = ({
                             {workflowList.description}
                         </div>
 
-                        <Droppable droppableId={workflowList.uuid} type={workflowList.level}>
+                        <Droppable droppableId={workflowList.apiId} type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      style={getDroppableStyle(snapshot.isDraggingOver)}
@@ -117,6 +119,7 @@ const ListComponent = ({
                                                 <BoardComponent key={index}
                                                                 index={index}
                                                                 workflowList={wl}
+                                                                userApiId={userApiId}
                                                                 createWorkflowList={createWorkflowList}
                                                                 modifyWorkflowList={modifyWorkflowList}
                                                                 removeWorkflowList={removeWorkflowList}
@@ -133,6 +136,7 @@ const ListComponent = ({
                                                 <ListComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
                                                                createWorkflowList={createWorkflowList}
@@ -151,6 +155,7 @@ const ListComponent = ({
                                                 <ItemComponent key={index}
                                                                index={index}
                                                                workflowList={wl}
+                                                               userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                                                boardChildLists={boardChildLists}
                                                                modifyWorkflowList={modifyWorkflowList}
@@ -173,7 +178,8 @@ const ListComponent = ({
                     <CreateWorkflowListModal show={showCreateModal}
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.ITEM}
-                                             parentUuid={workflowList.uuid}
+                                             parentUuid={workflowList.apiId}
+                                             userApiId={userApiId}
                                              createWorkflowList={createWorkflowList}/>
                     <ModifyListModal show={showModifyModal}
                                      closeModal={closeModifyModal}

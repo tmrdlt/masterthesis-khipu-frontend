@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {CreateWorkflowListEntity, WorkflowListType} from "utils/models";
 
 
@@ -7,6 +7,7 @@ interface CreateWorkflowListModalProps {
     closeModal
     createType: WorkflowListType
     parentUuid: string
+    userApiId: string
     createWorkflowList
 }
 
@@ -15,6 +16,7 @@ const CreateWorkflowListModal = ({
                                      closeModal,
                                      createType,
                                      parentUuid,
+                                     userApiId,
                                      createWorkflowList
                                  }: CreateWorkflowListModalProps): JSX.Element => {
     // STATE
@@ -22,9 +24,16 @@ const CreateWorkflowListModal = ({
         title: "",
         listType: createType,
         parentApiId: parentUuid,
-        description: ""
+        description: "",
+        userApiId: userApiId
     }
     const [state, setState] = useState(initCreateWorkflowListEntity)
+
+    // needed because userApiId gets set asynchronously in parent component
+    useEffect(() => {
+        const newState = {...state, userApiId: userApiId}
+        setState(newState)
+    }, [userApiId]);
 
     // DYNAMIC CLASSES
     const showHideClass = show ? "" : "hidden";

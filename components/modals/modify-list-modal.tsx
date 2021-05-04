@@ -75,7 +75,7 @@ const ModifyListModal = ({
                                 disabled={state.newTitle === workflowList.title
                                 && state.newDescription === getOptionalString(workflowList.description)}
                                 onClick={() => {
-                                    modifyWorkflowList(workflowList.uuid, state).then(res => {
+                                    modifyWorkflowList(workflowList.apiId, state).then(res => {
                                         closeModal()
                                     })
                                 }}

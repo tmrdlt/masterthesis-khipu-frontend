@@ -13,7 +13,7 @@ export const recursiveReorder = (lists: Array<WorkflowList>,
         lists.splice(endIndex, 0, removed);
     } else {
         lists.forEach(list => {
-            if (list.uuid == listUUidToReorder) {
+            if (list.apiId == listUUidToReorder) {
                 const [removed] = list.children.splice(startIndex, 1);
                 list.children.splice(endIndex, 0, removed);
             } else {
@@ -49,7 +49,7 @@ export const recursiveMove = (lists: Array<WorkflowList>,
 const recursiveRemove = (lists: Array<WorkflowList>,
                          droppableSource: DraggableLocation): WorkflowList => {
     for (let i = 0; i < lists.length; i++) {
-        if (lists[i].uuid == droppableSource.droppableId) {
+        if (lists[i].apiId == droppableSource.droppableId) {
             const [elementToMove] = lists[i].children.splice(droppableSource.index, 1);
             return elementToMove
         }
@@ -67,7 +67,7 @@ const recursiveInsert = (lists: Array<WorkflowList>,
                          droppableDestination: DraggableLocation,
                          elementToMove: WorkflowList) => {
     lists.forEach(list => {
-        if (list.uuid == droppableDestination.droppableId) {
+        if (list.apiId == droppableDestination.droppableId) {
             list.children.splice(droppableDestination.index, 0, elementToMove);
         } else {
             recursiveInsert(list.children, droppableDestination, elementToMove)
@@ -79,9 +79,9 @@ const recursiveInsert = (lists: Array<WorkflowList>,
 export const isSameLevelOfSameParent = (lists: Array<WorkflowList>, parent?: WorkflowList, potentialChild: WorkflowList): boolean => {
     // We are on root
     if (parent == null) {
-        return lists.map(list => list.uuid).includes(potentialChild.uuid)
+        return lists.map(list => list.apiId).includes(potentialChild.apiId)
     } else {
-        return parent.children.map(list => list.uuid).includes(potentialChild.uuid)
+        return parent.children.map(list => list.apiId).includes(potentialChild.apiId)
     }
 }
 
@@ -93,7 +93,7 @@ export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowL
     if (parent == null || potentialChild == null) {
         return false;
     } else {
-        return recursiveContains(parent.children, potentialChild.uuid)
+        return recursiveContains(parent.children, potentialChild.apiId)
 
     }
 }
@@ -108,7 +108,7 @@ const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolea
 
     let contains = false;
     lists.some(list => {
-        if (list.uuid == listUuid) {
+        if (list.apiId == listUuid) {
             contains = true;
             return;
         } else if (list.children.length == 0) {

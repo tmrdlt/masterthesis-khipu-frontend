@@ -14,6 +14,7 @@ import ModifyBoardModal from "components/modals/modify-board-modal";
 interface IBoardProps {
     index: number
     workflowList: WorkflowList
+    userApiId: string
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -28,6 +29,7 @@ interface IBoardProps {
 const BoardComponent = ({
                             index,
                             workflowList,
+                            userApiId,
                             createWorkflowList,
                             modifyWorkflowList,
                             removeWorkflowList,
@@ -92,8 +94,8 @@ const BoardComponent = ({
 
     return (
         <Draggable
-            key={workflowList.uuid}
-            draggableId={workflowList.uuid}
+            key={workflowList.apiId}
+            draggableId={workflowList.apiId}
             index={index}
         >
             {(provided, snapshot) => (
@@ -132,7 +134,7 @@ const BoardComponent = ({
                             {workflowList.description}
                         </div>
 
-                        <Droppable droppableId={workflowList.uuid} direction="horizontal" type={workflowList.level}>
+                        <Droppable droppableId={workflowList.apiId} direction="horizontal" type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      style={getDroppableStyle(snapshot.isDraggingOver)}
@@ -145,6 +147,7 @@ const BoardComponent = ({
                                                     <BoardComponent key={index}
                                                                     index={index}
                                                                     workflowList={wl}
+                                                                    userApiId={userApiId}
                                                                     createWorkflowList={createWorkflowList}
                                                                     modifyWorkflowList={modifyWorkflowList}
                                                                     removeWorkflowList={removeWorkflowList}
@@ -161,6 +164,7 @@ const BoardComponent = ({
                                                     <ListComponent key={index}
                                                                    index={index}
                                                                    workflowList={wl}
+                                                                   userApiId={userApiId}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
                                                                    createWorkflowList={createWorkflowList}
@@ -179,6 +183,7 @@ const BoardComponent = ({
                                                     <ItemComponent key={index}
                                                                    index={index}
                                                                    workflowList={wl}
+                                                                   userApiId={userApiId}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                                                                    boardChildLists={simpleChildLists}
                                                                    modifyWorkflowList={modifyWorkflowList}
@@ -201,7 +206,8 @@ const BoardComponent = ({
                     <CreateWorkflowListModal show={showCreateModal}
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.LIST}
-                                             parentUuid={workflowList.uuid}
+                                             parentUuid={workflowList.apiId}
+                                             userApiId={userApiId}
                                              createWorkflowList={createWorkflowList}
                     />
                     <ModifyBoardModal show={showModifyModal}

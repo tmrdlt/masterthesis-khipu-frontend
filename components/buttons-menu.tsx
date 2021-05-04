@@ -72,7 +72,7 @@ const ButtonsMenu = ({
                         {workflowList.usageType == WorkflowListType.BOARD &&
                         <MenuItem onSelect={() => {
                             const cwle: ConvertWorkflowListEntity = {newListType: WorkflowListType.LIST}
-                            convertWorkflowList(workflowList.uuid, cwle)
+                            convertWorkflowList(workflowList.apiId, cwle)
                         }}>
                             Convert to list
                         </MenuItem>
@@ -80,13 +80,13 @@ const ButtonsMenu = ({
                         {workflowList.usageType == WorkflowListType.LIST &&
                         <MenuItem onSelect={() => {
                             const cwle: ConvertWorkflowListEntity = {newListType: WorkflowListType.BOARD}
-                            convertWorkflowList(workflowList.uuid, cwle)
+                            convertWorkflowList(workflowList.apiId, cwle)
                         }}>
                             Convert to board
                         </MenuItem>
                         }
                         <MenuItem onSelect={() => {
-                            removeWorkflowList(workflowList.uuid)
+                            removeWorkflowList(workflowList.apiId)
                         }}>
                             Delete
                         </MenuItem>

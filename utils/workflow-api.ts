@@ -1,18 +1,19 @@
 import axios from "axios";
 import {
-    ConvertWorkflowListEntity,
+    ConvertWorkflowListEntity, CreateUserEntity,
     CreateWorkflowListEntity,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
     TemporalConstraint,
     UpdateWorkflowListEntity,
+    User,
     WorkflowList
 } from "utils/models";
 import {toLocalDateTimeString} from "utils/date-util";
 import {recursiveParseDate} from "utils/list-util";
 
-export const getWorkflowLists = async (): Promise<Array<WorkflowList> | null> => {
-    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist')
+export const getWorkflowLists = async (userApiId: string): Promise<Array<WorkflowList> | null> => {
+    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist?userApiId=' + userApiId)
         .then(response => {
             const workflowLists = response.data
             recursiveParseDate(workflowLists)
@@ -90,6 +91,36 @@ export const postTemporalConstraint = async (uuid: string, temporalConstraint: T
         'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
         {...temporalConstraint, startDate: toLocalDateTimeString(temporalConstraint.startDate), endDate: toLocalDateTimeString(temporalConstraint.endDate)}
     )
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const getUsers = async (): Promise<Array<User> | null> => {
+    return axios.get<Array<User>>('http://localhost:5001/user')
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const getUser = async (userApiId): Promise<User | null> => {
+    return axios.get<Array<User>>('http://localhost:5001/user/' + userApiId)
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postUser = async (createUserEntity: CreateUserEntity) => {
+    return axios.post('http://localhost:5001/user', createUserEntity)
         .then(response => {
             return response;
         }).catch(error => {
