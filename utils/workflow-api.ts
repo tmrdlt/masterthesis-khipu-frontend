@@ -12,8 +12,8 @@ import {
 import {toLocalDateTimeString} from "utils/date-util";
 import {recursiveParseDate} from "utils/list-util";
 
-export const getWorkflowLists = async (username: string): Promise<Array<WorkflowList> | null> => {
-    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist?username=' + username)
+export const getWorkflowLists = async (userApiId: string): Promise<Array<WorkflowList> | null> => {
+    return axios.get<Array<WorkflowList>>('http://localhost:5001/workflowlist?userApiId=' + userApiId)
         .then(response => {
             const workflowLists = response.data
             recursiveParseDate(workflowLists)

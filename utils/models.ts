@@ -35,7 +35,7 @@ export type CreateWorkflowListEntity = {
     description?: string,
     listType: WorkflowListType
     parentApiId?: string
-    username: string
+    userApiId: string
 }
 
 export type UpdateWorkflowListEntity = {
@@ -47,7 +47,7 @@ export type UpdateWorkflowListEntity = {
 export type MoveWorkflowListEntity = {
     newParentApiId?: string
     newPosition?: number
-    username: string
+    userApiId: string
 }
 
 export type ConvertWorkflowListEntity = {

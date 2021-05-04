@@ -10,7 +10,7 @@ import {isNoConstraint} from "utils/temp-constraint-util";
 interface IItemProps {
     index: number
     workflowList: WorkflowList
-    username: string
+    userApiId: string
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
@@ -24,7 +24,7 @@ interface IItemProps {
 const ItemComponent = ({
                            index,
                            workflowList,
-                           username,
+                           userApiId,
                            isInsideTemporalConstraintBoard,
                            boardChildLists,
                            modifyWorkflowList,
