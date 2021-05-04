@@ -11,7 +11,7 @@ import {
 import BoardComponent from "components/board-component";
 import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
-    deleteWorkflowList,
+    deleteWorkflowList, getUser,
     getWorkflowLists,
     postTemporalConstraint,
     postWorkflowList,
@@ -48,9 +48,13 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     // FUNCTIONS
     const init = (userApiId: string) => {
-        getWorkflowLists(userApiId).then(workflowLists => {
-            if (workflowLists) {
-                setState(workflowLists)
+        getUser(userApiId).then(user => {
+            if (user) {
+                getWorkflowLists(userApiId).then(workflowLists => {
+                    if (workflowLists) {
+                        setState(workflowLists)
+                    }
+                })
             }
         })
     }

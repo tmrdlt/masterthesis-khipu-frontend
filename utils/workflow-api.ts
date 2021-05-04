@@ -109,6 +109,16 @@ export const getUsers = async (): Promise<Array<User> | null> => {
         });
 }
 
+export const getUser = async (userApiId): Promise<User | null> => {
+    return axios.get<Array<User>>('http://localhost:5001/user/' + userApiId)
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
 export const postUser = async (createUserEntity: CreateUserEntity) => {
     return axios.post('http://localhost:5001/user', createUserEntity)
         .then(response => {
