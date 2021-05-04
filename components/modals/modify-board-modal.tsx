@@ -145,7 +145,7 @@ const ModifyBoardModal = ({
                                 disabled={workflowListUnchanged() && temporalConstraintUnchanged()}
                                 onClick={() => {
                                     if (!workflowListUnchanged()) {
-                                        modifyWorkflowList(workflowList.uuid, updateBoardEntity).then(res => {
+                                        modifyWorkflowList(workflowList.apiId, updateBoardEntity).then(res => {
                                             closeModal()
                                         })
                                     }
@@ -153,7 +153,7 @@ const ModifyBoardModal = ({
                                         const entity: TemporalConstraint = {
                                             endDate: dueDate
                                         }
-                                        setTemporalConstraint(workflowList.uuid, entity).then(res => {
+                                        setTemporalConstraint(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
                                     }

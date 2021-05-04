@@ -79,8 +79,8 @@ const ListComponent = ({
 
     return (
         <Draggable
-            key={workflowList.uuid}
-            draggableId={workflowList.uuid}
+            key={workflowList.apiId}
+            draggableId={workflowList.apiId}
             index={index}
         >
             {(provided, snapshot) => (
@@ -106,7 +106,7 @@ const ListComponent = ({
                             {workflowList.description}
                         </div>
 
-                        <Droppable droppableId={workflowList.uuid} type={workflowList.level}>
+                        <Droppable droppableId={workflowList.apiId} type={workflowList.level}>
                             {(provided, snapshot) => (
                                 <div ref={provided.innerRef}
                                      style={getDroppableStyle(snapshot.isDraggingOver)}
@@ -178,7 +178,7 @@ const ListComponent = ({
                     <CreateWorkflowListModal show={showCreateModal}
                                              closeModal={closeCreateModal}
                                              createType={WorkflowListType.ITEM}
-                                             parentUuid={workflowList.uuid}
+                                             parentUuid={workflowList.apiId}
                                              userApiId={userApiId}
                                              createWorkflowList={createWorkflowList}/>
                     <ModifyListModal show={showModifyModal}

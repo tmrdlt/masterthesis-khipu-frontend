@@ -288,7 +288,7 @@ const ModifyItemModal = ({
                                 disabled={workflowListUnchanged() && temporalConstraintUnchanged() || temporalConstraintFormInvalid()}
                                 onClick={() => {
                                     if (!workflowListUnchanged()) {
-                                        modifyWorkflowList(workflowList.uuid, updateItemEntity).then(res => {
+                                        modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
                                             closeModal()
                                         })
                                     }
@@ -299,7 +299,7 @@ const ModifyItemModal = ({
                                             durationInMinutes: tempConstraint.durationInMinutes === "" ? null : parseInt(tempConstraint.durationInMinutes),
                                             connectedWorkflowListApiId: tempConstraint.connectedWorkflowListApiId === "" ? null : tempConstraint.connectedWorkflowListApiId
                                         }
-                                        modifyTemporalConstraint(workflowList.uuid, entity).then(res => {
+                                        modifyTemporalConstraint(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
                                     }

@@ -135,7 +135,7 @@ const Home: FunctionComponent = (): JSX.Element => {
             // The destination would be inside the element we want to move
             const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
             // The destination would be exactly the element we want to move
-            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.uuid == workflowListToMove.uuid)
+            const destinationIsElementToMove = destinationToDropOn && (destinationToDropOn.apiId == workflowListToMove.apiId)
 
             // Show drop button only if all three are false
             return !destinationIsSameLevelAsElementToMove && !destinationInsideElementToMove && !destinationIsElementToMove;
@@ -227,11 +227,11 @@ const Home: FunctionComponent = (): JSX.Element => {
         let newParentUuid = null
         // We are not on root
         if (destinationWorkflowList) {
-            newParentUuid = destinationWorkflowList.uuid;
+            newParentUuid = destinationWorkflowList.apiId;
         }
-        console.log("MOVING " + workflowListToMove.uuid + " to " + newParentUuid);
+        console.log("MOVING " + workflowListToMove.apiId + " to " + newParentUuid);
         postWorkflowListMove(
-            workflowListToMove.uuid,
+            workflowListToMove.apiId,
             {newParentApiId: newParentUuid, userApiId: userApiId}
         ).then(res => {
             getWorkflowLists(userApiId).then(workflowLists => {

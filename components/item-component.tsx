@@ -138,8 +138,8 @@ const ItemComponent = ({
     }
 
     return (
-        <Draggable key={workflowList.uuid}
-                   draggableId={workflowList.uuid}
+        <Draggable key={workflowList.apiId}
+                   draggableId={workflowList.apiId}
                    index={index}>
             {(provided, snapshot) => (
                 <div ref={provided.innerRef}

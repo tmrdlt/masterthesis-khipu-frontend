@@ -11,8 +11,7 @@ export type WorkflowListSimple = {
 
 // FROM BACKEND
 export type WorkflowList = {
-    id: number,
-    uuid: string,
+    apiId: string,
     title: string,
     description?: string,
     usageType: WorkflowListType,
@@ -25,7 +24,7 @@ export type WorkflowList = {
 
 export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowListSimple => {
     return {
-        apiId: wl.uuid,
+        apiId: wl.apiId,
         title: wl.title
     }
 }
@@ -70,7 +69,6 @@ export enum WorkflowListType {
 }
 
 export type User = {
-    id: number,
     apiId: string,
     username: string,
     createdAt: Date,
