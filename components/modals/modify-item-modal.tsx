@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {
-    TemporalConstraint,
+    TemporalResource,
     TemporalConstraintType,
     UpdateWorkflowListEntity,
     WorkflowList,
@@ -21,7 +21,7 @@ interface ModifyItemModalProps {
     isInsideTemporalConstraintBoard: boolean
     boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
-    modifyTemporalConstraint
+    modifyTemporalResource
 }
 
 const ModifyItemModal = ({
@@ -31,7 +31,7 @@ const ModifyItemModal = ({
                              isInsideTemporalConstraintBoard,
                              boardChildLists,
                              modifyWorkflowList,
-                             modifyTemporalConstraint
+                             modifyTemporalResource
                          }: ModifyItemModalProps): JSX.Element => {
     // STATE
     const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -39,11 +39,11 @@ const ModifyItemModal = ({
         newDescription: getOptionalString(workflowList.description),
         isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
-    const initTempConstraint: TemporalConstraint = workflowList.temporalConstraint ? {
-        startDate: workflowList.temporalConstraint.startDate,
-        endDate: workflowList.temporalConstraint.endDate,
-        durationInMinutes: getOptionalString(workflowList.temporalConstraint.durationInMinutes),
-        connectedWorkflowListApiId: getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId)
+    const initTempConstraint: TemporalResource = workflowList.temporalResource ? {
+        startDate: workflowList.temporalResource.startDate,
+        endDate: workflowList.temporalResource.endDate,
+        durationInMinutes: getOptionalString(workflowList.temporalResource.durationInMinutes),
+        connectedWorkflowListApiId: getOptionalString(workflowList.temporalResource.connectedWorkflowListApiId)
     } : {
         startDate: null,
         endDate: null,
@@ -111,18 +111,18 @@ const ModifyItemModal = ({
             && updateItemEntity.newDescription == getOptionalString(workflowList.description)
     }
 
-    const temporalConstraintUnchanged = (): boolean => {
-        if (workflowList.temporalConstraint == null) {
+    const temporalResourceUnchanged = (): boolean => {
+        if (workflowList.temporalResource == null) {
             return isNoConstraint(tempConstraint)
         } else {
-            return (compareDateOptions(tempConstraint.startDate, workflowList.temporalConstraint.startDate)
-                && compareDateOptions(tempConstraint.endDate, workflowList.temporalConstraint.endDate)
-                && tempConstraint.durationInMinutes == getOptionalString(workflowList.temporalConstraint.durationInMinutes)
-                && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId))
+            return (compareDateOptions(tempConstraint.startDate, workflowList.temporalResource.startDate)
+                && compareDateOptions(tempConstraint.endDate, workflowList.temporalResource.endDate)
+                && tempConstraint.durationInMinutes == getOptionalString(workflowList.temporalResource.durationInMinutes)
+                && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalResource.connectedWorkflowListApiId))
         }
     }
 
-    const temporalConstraintFormInvalid = (): boolean => {
+    const temporalResourceFormInvalid = (): boolean => {
         if (!isNoConstraint(tempConstraint)) {
             return !tempConstraint.startDate && !tempConstraint.endDate && !tempConstraint.connectedWorkflowListApiId && !tempConstraint.durationInMinutes
         } else {
@@ -285,21 +285,21 @@ const ModifyItemModal = ({
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
-                                disabled={workflowListUnchanged() && temporalConstraintUnchanged() || temporalConstraintFormInvalid()}
+                                disabled={workflowListUnchanged() && temporalResourceUnchanged() || temporalResourceFormInvalid()}
                                 onClick={() => {
                                     if (!workflowListUnchanged()) {
                                         modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
                                             closeModal()
                                         })
                                     }
-                                    if (!temporalConstraintUnchanged()) {
+                                    if (!temporalResourceUnchanged()) {
 
                                         const entity = {
                                             ...tempConstraint,
                                             durationInMinutes: tempConstraint.durationInMinutes === "" ? null : parseInt(tempConstraint.durationInMinutes),
                                             connectedWorkflowListApiId: tempConstraint.connectedWorkflowListApiId === "" ? null : tempConstraint.connectedWorkflowListApiId
                                         }
-                                        modifyTemporalConstraint(workflowList.apiId, entity).then(res => {
+                                        modifyTemporalResource(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
                                     }

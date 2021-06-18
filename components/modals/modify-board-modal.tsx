@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {TemporalConstraint, TemporalConstraintType, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
+import {TemporalResource, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,7 +11,7 @@ interface ModifyBoardModalProps {
     closeModal
     workflowList: WorkflowList
     modifyWorkflowList
-    setTemporalConstraint
+    setTemporalResource
 }
 
 const ModifyBoardModal = ({
@@ -19,7 +19,7 @@ const ModifyBoardModal = ({
                               closeModal,
                               workflowList,
                               modifyWorkflowList,
-                              setTemporalConstraint
+                              setTemporalResource
                           }: ModifyBoardModalProps): JSX.Element => {
     // STATE
     const initUpdateBoardEntity: UpdateWorkflowListEntity = {
@@ -28,14 +28,14 @@ const ModifyBoardModal = ({
         isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
     const initDueDate: Date | null =
-        workflowList.temporalConstraint ? workflowList.temporalConstraint.endDate : null
+        workflowList.temporalResource ? workflowList.temporalResource.endDate : null
 
     const [updateBoardEntity, setUpdateBoardEntity] = useState(initUpdateBoardEntity)
     const [dueDate, setDueDate] = useState(initDueDate)
 
     useEffect(() => {
-        if (workflowList.temporalConstraint && workflowList.temporalConstraint.endDate) {
-            setDueDate(workflowList.temporalConstraint.endDate)
+        if (workflowList.temporalResource && workflowList.temporalResource.endDate) {
+            setDueDate(workflowList.temporalResource.endDate)
         }
     }, [workflowList])
 
@@ -59,8 +59,8 @@ const ModifyBoardModal = ({
             && updateBoardEntity.isTemporalConstraintBoard == workflowList.isTemporalConstraintBoard
     }
 
-    const temporalConstraintUnchanged = (): boolean => {
-        return compareDateOptions(dueDate, workflowList.temporalConstraint ? workflowList.temporalConstraint.endDate : null)
+    const temporalResourceUnchanged = (): boolean => {
+        return compareDateOptions(dueDate, workflowList.temporalResource ? workflowList.temporalResource.endDate : null)
 
     }
 
@@ -142,18 +142,18 @@ const ModifyBoardModal = ({
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
-                                disabled={workflowListUnchanged() && temporalConstraintUnchanged()}
+                                disabled={workflowListUnchanged() && temporalResourceUnchanged()}
                                 onClick={() => {
                                     if (!workflowListUnchanged()) {
                                         modifyWorkflowList(workflowList.apiId, updateBoardEntity).then(res => {
                                             closeModal()
                                         })
                                     }
-                                    if (!temporalConstraintUnchanged()) {
-                                        const entity: TemporalConstraint = {
+                                    if (!temporalResourceUnchanged()) {
+                                        const entity: TemporalResource = {
                                             endDate: dueDate
                                         }
-                                        setTemporalConstraint(workflowList.apiId, entity).then(res => {
+                                        setTemporalResource(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
                                     }

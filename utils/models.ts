@@ -19,7 +19,8 @@ export type WorkflowList = {
     level: number
     position: number,
     isTemporalConstraintBoard: boolean,
-    temporalConstraint?: TemporalConstraint
+    temporalResource?: TemporalResource
+    genericResources: Array<GenericResource>
 }
 
 export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowListSimple => {
@@ -57,7 +58,12 @@ export type ReorderWorkflowListEntity = {
     newPosition: number
 }
 
-export type TemporalConstraint = {
+export type GenericResource = {
+    label: string,
+    Value: number
+}
+
+export type TemporalResource = {
     startDate?: Date,
     endDate?: Date,
     durationInMinutes?: string,

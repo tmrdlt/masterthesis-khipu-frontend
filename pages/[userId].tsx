@@ -3,7 +3,7 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    TemporalConstraint,
+    TemporalResource,
     UpdateWorkflowListEntity,
     WorkflowList,
     WorkflowListType
@@ -13,7 +13,7 @@ import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder
 import {
     deleteWorkflowList, getUser,
     getWorkflowLists,
-    postTemporalConstraint,
+    postTemporalResource,
     postWorkflowList,
     postWorkflowListConvert,
     postWorkflowListMove,
@@ -163,8 +163,8 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
-    const modifyTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
-        postTemporalConstraint(uuid, temporalConstraint)
+    const modifyTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
+        postTemporalResource(uuid, temporalResource)
             .then(res => {
                 if (res) {
                     getWorkflowLists(userApiId).then(workflowLists => {
@@ -281,7 +281,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
-                                                        modifyTemporalConstraint={modifyTemporalConstraint}
+                                                        modifyTemporalResource={modifyTemporalResource}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -300,7 +300,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
-                                                       modifyTemporalConstraint={modifyTemporalConstraint}
+                                                       modifyTemporalResource={modifyTemporalResource}
                                         />
                                     )
                                 } else {
@@ -315,7 +315,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
-                                                       modifyTemporalConstraint={modifyTemporalConstraint}
+                                                       modifyTemporalResource={modifyTemporalResource}
                                         />
                                     )
                                 }

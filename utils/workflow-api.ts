@@ -4,7 +4,7 @@ import {
     CreateWorkflowListEntity,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
-    TemporalConstraint,
+    TemporalResource,
     UpdateWorkflowListEntity,
     User,
     WorkflowList
@@ -85,11 +85,11 @@ export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListE
         });
 }
 
-export const postTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
-    console.log(temporalConstraint)
+export const postTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
+    console.log(temporalResource)
     return axios.post(
-        'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
-        {...temporalConstraint, startDate: toLocalDateTimeString(temporalConstraint.startDate), endDate: toLocalDateTimeString(temporalConstraint.endDate)}
+        'http://localhost:5001/workflowlist/' + uuid + '/resource/temporal',
+        {...temporalResource, startDate: toLocalDateTimeString(temporalResource.startDate), endDate: toLocalDateTimeString(temporalResource.endDate)}
     )
         .then(response => {
             return response;

@@ -17,7 +17,7 @@ interface IItemProps {
     removeWorkflowList
     workflowListToMove
     selectWorkflowListToMove
-    modifyTemporalConstraint
+    modifyTemporalResource
 }
 
 
@@ -31,7 +31,7 @@ const ItemComponent = ({
                            removeWorkflowList,
                            workflowListToMove,
                            selectWorkflowListToMove,
-                           modifyTemporalConstraint
+                           modifyTemporalResource
                        }: IItemProps): JSX.Element => {
     // STATE
     const [showModifyModal, setShowModifyModal] = useState(false);
@@ -60,10 +60,10 @@ const ItemComponent = ({
         setShowMoveModal(false);
     }
 
-    const getTemporalConstraintText = (): JSX.Element => {
+    const getTemporalResourceText = (): JSX.Element => {
         let elements: Array<JSX.Element> = []
-        if (!isNoConstraint(workflowList.temporalConstraint)) {
-            const temp = workflowList.temporalConstraint
+        if (!isNoConstraint(workflowList.temporalResource)) {
+            const temp = workflowList.temporalResource
             if (temp.startDate) {
                 elements.push(
                     <div key={0} className="inline-flex items-center">
@@ -125,10 +125,10 @@ const ItemComponent = ({
         }
         return (
             <div className="grid text-xs">
-                {isNoConstraint(workflowList.temporalConstraint) &&
+                {isNoConstraint(workflowList.temporalResource) &&
                 "No constraint configured"
                 }
-                {!isNoConstraint(workflowList.temporalConstraint) &&
+                {!isNoConstraint(workflowList.temporalResource) &&
                 elements.map(element => {
                     return (element)
                 })
@@ -152,7 +152,7 @@ const ItemComponent = ({
                             >
                                 <span className="font-bold">{workflowList.title} </span>
                                 {isInsideTemporalConstraintBoard &&
-                                getTemporalConstraintText()
+                                getTemporalResourceText()
                                 }
                             </div>
                             <ButtonsMenu workflowList={workflowList}
@@ -171,7 +171,7 @@ const ItemComponent = ({
                                      isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                                      boardChildLists={boardChildLists}
                                      modifyWorkflowList={modifyWorkflowList}
-                                     modifyTemporalConstraint={modifyTemporalConstraint}
+                                     modifyTemporalResource={modifyTemporalResource}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

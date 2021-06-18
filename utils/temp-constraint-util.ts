@@ -1,9 +1,9 @@
-import {TemporalConstraint} from "utils/models";
+import {TemporalResource} from "utils/models";
 
-export const isNoConstraint = (temporalConstraint?: TemporalConstraint): boolean => {
-    if (!temporalConstraint) {
+export const isNoConstraint = (temporalResource?: TemporalResource): boolean => {
+    if (!temporalResource) {
         return true
     } else {
-        return (temporalConstraint.startDate == null) && (temporalConstraint.endDate == null) && (temporalConstraint.durationInMinutes == null)
+        return (temporalResource.startDate == null) && (temporalResource.endDate == null) && (temporalResource.durationInMinutes == null)
     }
 }
