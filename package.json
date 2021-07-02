@@ -21,6 +21,7 @@
     "react-beautiful-dnd": "13.0.0",
     "react-datepicker": "^3.6.0",
     "react-dom": "16.13.1",
+    "react-tabs": "^3.2.2",
     "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
