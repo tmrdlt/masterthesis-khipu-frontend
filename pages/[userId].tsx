@@ -310,7 +310,6 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
-                                                       boardChildLists={[]} // TODO maybe make optional
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
@@ -330,7 +329,6 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
-                                                       boardChildLists={[]} // TODO maybe make optional
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        workflowListToMove={workflowListToMove}
