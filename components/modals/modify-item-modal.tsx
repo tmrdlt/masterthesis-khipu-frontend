@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions, formatDuration} from "utils/date-util";
 import {getOptionalString} from "utils/optional-util";
-import {isNoConstraint} from "utils/temp-constraint-util";
+import {hasNoTemporalResource} from "utils/resource-util";
 import timeDurationsInMinutes from "utils/globals";
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -162,7 +162,7 @@ const ModifyItemModal = ({
                                     {isInsideTemporalConstraintBoard &&
                                     <TabPanel>
                                         <div className="grid grid-cols-1 gap-4">
-                                            {!isNoConstraint(tempResource) &&
+                                            {!hasNoTemporalResource(tempResource) &&
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div className="grid">
                                                     <div className="flex place-content-between">

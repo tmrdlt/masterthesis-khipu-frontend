@@ -1,6 +1,6 @@
 import {TemporalResource} from "utils/models";
 
-export const isNoConstraint = (temporalResource?: TemporalResource): boolean => {
+export const hasNoTemporalResource = (temporalResource?: TemporalResource): boolean => {
     if (!temporalResource) {
         return true
     } else {

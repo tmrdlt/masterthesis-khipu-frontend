@@ -5,7 +5,7 @@ import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
-import {isNoConstraint} from "utils/temp-constraint-util";
+import {hasNoTemporalResource} from "utils/resource-util";
 
 interface IItemProps {
     index: number
@@ -62,7 +62,7 @@ const ItemComponent = ({
 
     const getTemporalResourceText = (): JSX.Element => {
         let elements: Array<JSX.Element> = []
-        if (!isNoConstraint(workflowList.temporalResource)) {
+        if (!hasNoTemporalResource(workflowList.temporalResource)) {
             const temp = workflowList.temporalResource
             if (temp.startDate) {
                 elements.push(
@@ -110,13 +110,34 @@ const ItemComponent = ({
         }
         return (
             <div className="grid text-xs">
-                {isNoConstraint(workflowList.temporalResource) &&
-                "No constraint configured"
-                }
-                {!isNoConstraint(workflowList.temporalResource) &&
+                {!hasNoTemporalResource(workflowList.temporalResource) &&
                 elements.map(element => {
                     return (element)
                 })
+                }
+            </div>
+        )
+    }
+
+    const getGenericResourcesText = (): JSX.Element => {
+        return (
+            <div className="grid text-xs">
+                {
+                    workflowList.genericResources.map((genericResource, index) => {
+                        return (
+                            <div key={index} className="inline-flex items-center">
+                                <div className="w-3 h-3 mr-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <span>{"" + genericResource.label}:&nbsp;</span>
+                                <span>{genericResource.value}</span>
+                            </div>
+                        )
+                    })
                 }
             </div>
         )
@@ -130,7 +151,8 @@ const ItemComponent = ({
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
-                    <div className={"bg-white border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}>
+                    <div
+                        className={"bg-white border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}>
                         <div className="flex place-content-between">
                             <div className="grid w-full m-1 hover:bg-gray-200"
                                  {...provided.dragHandleProps}
@@ -139,6 +161,7 @@ const ItemComponent = ({
                                 {isInsideTemporalConstraintBoard &&
                                 getTemporalResourceText()
                                 }
+                                {getGenericResourcesText()}
                             </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}
@@ -146,7 +169,7 @@ const ItemComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        <div className="m-1 text-sm whitespace-pre bg-gray-50 rounded p-1">
+                        <div className="m-1 text-sm whitespace-pre bg-gray-100 rounded p-1">
                             {workflowList.description}
                         </div>
                     </div>
