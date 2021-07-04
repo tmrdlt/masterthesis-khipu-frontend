@@ -83,11 +83,7 @@ const Home: FunctionComponent = (): JSX.Element => {
 
             if (source.index != destination.index) {
                 postWorkflowListReorder(draggableId, {newPosition: destination.index}).then(res => {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 })
             }
         } else {
@@ -105,11 +101,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                 newPosition: destination.index,
                 userApiId: userApiId
             }).then(res => {
-                getWorkflowLists(userApiId).then(workflowLists => {
-                    if (workflowLists) {
-                        setState(workflowLists)
-                    }
-                })
+                updateState();
             })
         }
     }
@@ -145,6 +137,14 @@ const Home: FunctionComponent = (): JSX.Element => {
         }
     }
 
+    const updateState = () => {
+        getWorkflowLists(userApiId).then(workflowLists => {
+            if (workflowLists) {
+                setState(workflowLists)
+            }
+        })
+    }
+
     const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
         let newCreateWorkflowListEntity: CreateWorkflowListEntity;
         if (createWorkflowListEntity.description == "") {
@@ -156,11 +156,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postWorkflowList(newCreateWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState()
                 }
                 return res
             });
@@ -176,11 +172,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         updateWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
                 return res
             });
@@ -190,11 +182,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         deleteWorkflowList(uuid)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
             });
     }
@@ -203,11 +191,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postWorkflowListConvert(uuid, convertWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
             });
     }
@@ -236,11 +220,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postTemporalResource(uuid, temporalResource)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
                 return res
             });
@@ -250,11 +230,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postGenericResources(uuid, genericResources)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
                 return res
             });
@@ -291,12 +267,12 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         index={index}
                                                         workflowList={wl}
                                                         userApiId={userApiId}
+                                                        workflowListToMove={workflowListToMove}
                                                         createWorkflowList={createWorkflowList}
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
                                                         moveWorkflowList={moveWorkflowList}
-                                                        workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
                                                         modifyTemporalResource={modifyTemporalResource}
@@ -310,12 +286,12 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
+                                                       workflowListToMove={workflowListToMove}
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
                                                        moveWorkflowList={moveWorkflowList}
-                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
                                                        modifyTemporalResource={modifyTemporalResource}
@@ -329,9 +305,9 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
+                                                       workflowListToMove={workflowListToMove}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
-                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        modifyTemporalResource={modifyTemporalResource}
                                                        modifyGenericResources={modifyGenericResources}

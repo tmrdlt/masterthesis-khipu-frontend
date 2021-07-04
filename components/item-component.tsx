@@ -12,9 +12,9 @@ interface IItemProps {
     workflowList: WorkflowList
     userApiId: string
     isInsideTemporalConstraintBoard: boolean
+    workflowListToMove: WorkflowList
     modifyWorkflowList
     removeWorkflowList
-    workflowListToMove
     selectWorkflowListToMove
     modifyTemporalResource
     modifyGenericResources
@@ -26,9 +26,9 @@ const ItemComponent = ({
                            workflowList,
                            userApiId,
                            isInsideTemporalConstraintBoard,
+                           workflowListToMove,
                            modifyWorkflowList,
                            removeWorkflowList,
-                           workflowListToMove,
                            selectWorkflowListToMove,
                            modifyTemporalResource,
                            modifyGenericResources
