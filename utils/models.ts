@@ -1,14 +1,3 @@
-// FRONTEND ONLY
-export enum TemporalConstraintType {
-    noConstraint = "noConstraint", constraint = "constraint", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
-}
-
-
-export type WorkflowListSimple = {
-    apiId: string,
-    title: string
-}
-
 // FROM BACKEND
 export type WorkflowList = {
     apiId: string,
@@ -21,13 +10,6 @@ export type WorkflowList = {
     isTemporalConstraintBoard: boolean,
     temporalResource?: TemporalResource
     genericResources: Array<GenericResource>
-}
-
-export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowListSimple => {
-    return {
-        apiId: wl.apiId,
-        title: wl.title
-    }
 }
 
 export type CreateWorkflowListEntity = {

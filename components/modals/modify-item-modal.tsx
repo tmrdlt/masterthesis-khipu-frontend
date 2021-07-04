@@ -1,11 +1,5 @@
 import React, {useState} from "react";
-import {
-    GenericResource,
-    TemporalResource,
-    UpdateWorkflowListEntity,
-    WorkflowList,
-    WorkflowListSimple
-} from "utils/models";
+import {GenericResource, TemporalResource, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions, formatDuration} from "utils/date-util";

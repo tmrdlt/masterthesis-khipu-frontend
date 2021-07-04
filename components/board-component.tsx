@@ -1,4 +1,4 @@
-import {WorkflowList, WorkflowListSimple, workflowListToWorkflowListSimple, WorkflowListType} from "utils/models";
+import {WorkflowList, WorkflowListType} from "utils/models";
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import ListComponent from "components/list-component";
 import React, {useEffect, useState} from "react";

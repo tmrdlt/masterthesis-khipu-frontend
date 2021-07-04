@@ -1,6 +1,6 @@
 import {Draggable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {WorkflowList, WorkflowListSimple} from "utils/models";
+import {WorkflowList} from "utils/models";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
