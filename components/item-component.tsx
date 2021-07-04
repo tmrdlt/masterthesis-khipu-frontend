@@ -12,7 +12,6 @@ interface IItemProps {
     workflowList: WorkflowList
     userApiId: string
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
     removeWorkflowList
     workflowListToMove
@@ -27,7 +26,6 @@ const ItemComponent = ({
                            workflowList,
                            userApiId,
                            isInsideTemporalConstraintBoard,
-                           boardChildLists,
                            modifyWorkflowList,
                            removeWorkflowList,
                            workflowListToMove,
@@ -109,21 +107,6 @@ const ItemComponent = ({
                 )
                 elements.push()
             }
-            if (temp.connectedWorkflowListApiId) {
-                const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                elements.push(
-                    <div key={3} className="inline-flex items-center">
-                        <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
-                            </svg>
-                        </div>
-                        {"Connected List: '" + connectedList.title + "'"}
-                    </div>
-                )
-            }
         }
         return (
             <div className="grid text-xs">
@@ -171,7 +154,6 @@ const ItemComponent = ({
                                      closeModal={closeModifyModal}
                                      workflowList={workflowList}
                                      isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                     boardChildLists={boardChildLists}
                                      modifyWorkflowList={modifyWorkflowList}
                                      modifyTemporalResource={modifyTemporalResource}
                                      modifyGenericResources={modifyGenericResources}

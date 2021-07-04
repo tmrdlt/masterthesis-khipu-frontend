@@ -15,7 +15,6 @@ interface IListProps {
     workflowList: WorkflowList
     userApiId: string
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
@@ -33,7 +32,6 @@ const ListComponent = ({
                            workflowList,
                            userApiId,
                            isInsideTemporalConstraintBoard,
-                           boardChildLists,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
@@ -141,7 +139,6 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardChildLists={boardChildLists}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
@@ -161,7 +158,6 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardChildLists={boardChildLists}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                workflowListToMove={workflowListToMove}

@@ -82,18 +82,6 @@ const BoardComponent = ({
             "No due date configured"
     }
 
-    const simpleChildLists: Array<WorkflowListSimple> = workflowList.children
-        .filter(wl => wl.usageType == WorkflowListType.LIST)
-        .map(wl => workflowListToWorkflowListSimple(wl))
-
-    // TODO maybe use in the future for blocked by
-    // const simpleChildItems: Array<WorkflowListSimple> = workflowList.children
-    //     .filter(wl => wl.usageType == WorkflowListType.LIST)
-    //     .map(wl => wl.children
-    //         .filter(wl => wl.usageType == WorkflowListType.ITEM)
-    //         .map(wl => workflowListToWorkflowListSimple(wl))
-    //     ).flat()
-
     return (
         <Draggable
             key={workflowList.apiId}
@@ -169,7 +157,6 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    userApiId={userApiId}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
-                                                                   boardChildLists={simpleChildLists}
                                                                    createWorkflowList={createWorkflowList}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
@@ -189,7 +176,6 @@ const BoardComponent = ({
                                                                    workflowList={wl}
                                                                    userApiId={userApiId}
                                                                    isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
-                                                                   boardChildLists={simpleChildLists}
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    workflowListToMove={workflowListToMove}

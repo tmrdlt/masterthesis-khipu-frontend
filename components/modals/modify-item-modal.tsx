@@ -21,7 +21,6 @@ interface ModifyItemModalProps {
     closeModal
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
     modifyTemporalResource
     modifyGenericResources
@@ -32,7 +31,6 @@ const ModifyItemModal = ({
                              closeModal,
                              workflowList,
                              isInsideTemporalConstraintBoard,
-                             boardChildLists,
                              modifyWorkflowList,
                              modifyTemporalResource,
                              modifyGenericResources
