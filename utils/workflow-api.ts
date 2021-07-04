@@ -1,7 +1,9 @@
 import axios from "axios";
 import {
-    ConvertWorkflowListEntity, CreateUserEntity,
+    ConvertWorkflowListEntity,
+    CreateUserEntity,
     CreateWorkflowListEntity,
+    GenericResource,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
     TemporalResource,
@@ -35,8 +37,8 @@ export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowL
         });
 }
 
-export const putWorkflowList = async (uuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
-    return axios.put('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
+export const updateWorkflowList = async (uuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
+    return axios.patch('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -89,8 +91,23 @@ export const postTemporalResource = async (uuid: string, temporalResource: Tempo
     console.log(temporalResource)
     return axios.post(
         'http://localhost:5001/workflowlist/' + uuid + '/resource/temporal',
-        {...temporalResource, startDate: toLocalDateTimeString(temporalResource.startDate), endDate: toLocalDateTimeString(temporalResource.endDate)}
+        {
+            ...temporalResource,
+            startDate: toLocalDateTimeString(temporalResource.startDate),
+            endDate: toLocalDateTimeString(temporalResource.endDate)
+        }
     )
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const postGenericResources = async (uuid: string, genericResources: Array<GenericResource>) => {
+    console.log(genericResources)
+    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/resource/generic', genericResources)
         .then(response => {
             return response;
         }).catch(error => {

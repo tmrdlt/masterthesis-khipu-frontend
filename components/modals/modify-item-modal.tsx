@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {
+    GenericResource,
     TemporalResource,
-    TemporalConstraintType,
     UpdateWorkflowListEntity,
     WorkflowList,
     WorkflowListSimple
@@ -12,9 +12,9 @@ import {compareDateOptions, formatDuration} from "utils/date-util";
 import {getOptionalString} from "utils/optional-util";
 import {isNoConstraint} from "utils/temp-constraint-util";
 import timeDurationsInMinutes from "utils/globals";
-import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
+import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-
+import {arraysEqual} from "utils/compare-util";
 
 interface ModifyItemModalProps {
     show
@@ -24,6 +24,7 @@ interface ModifyItemModalProps {
     boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
     modifyTemporalResource
+    modifyGenericResources
 }
 
 const ModifyItemModal = ({
@@ -33,7 +34,8 @@ const ModifyItemModal = ({
                              isInsideTemporalConstraintBoard,
                              boardChildLists,
                              modifyWorkflowList,
-                             modifyTemporalResource
+                             modifyTemporalResource,
+                             modifyGenericResources
                          }: ModifyItemModalProps): JSX.Element => {
     // STATE
     const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -53,14 +55,17 @@ const ModifyItemModal = ({
         connectedWorkflowListApiId: null
     }
 
+    const initGenericResources: Array<GenericResource> = workflowList.genericResources
+
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
     const [tempResource, setTempResource] = useState(initTempResource)
+    const [genericResources, setGenericResources] = useState(initGenericResources)
 
     // DYNAMIC CLASSES
     const showHideClass = show ? "" : "hidden";
 
     // FUNCTIONS
-    const handleFormChange = (event) => {
+    const handleUpdateItemFormChange = (event) => {
         const newState = {...updateItemEntity, [event.target.id]: event.target.value}
         setUpdateItemEntity(newState)
     }
@@ -80,16 +85,44 @@ const ModifyItemModal = ({
         }
     }
 
-    const workflowListUnchanged = (): boolean => {
+    const handleGenericResourceFormChange = (event, index) => {
+        const newState = [...genericResources];
+        let newElement: GenericResource;
+        if (event.target.id === "label") {
+            newElement = {...newState[index], "label": event.target.value};
+        } else {
+            newElement = {...newState[index], "value": event.target.valueAsNumber};
+        }
+        newState.splice(index, 1, newElement)
+        setGenericResources(newState)
+    }
+
+    const addEmptyGenericResource = () => {
+        const newState = [...genericResources];
+        newState.push({label: "", value: 0});
+        setGenericResources(newState);
+    }
+
+    const removeGenericResource = (index: number) => {
+        const newState = [...genericResources];
+        newState.splice(index, 1);
+        setGenericResources(newState);
+    }
+
+    const isWorkflowListUnchanged = (): boolean => {
         return updateItemEntity.newTitle == initUpdateItemEntity.newTitle
             && updateItemEntity.newDescription == initUpdateItemEntity.newDescription
     }
 
-    const temporalResourceUnchanged = (): boolean => {
+    const isTemporalResourceUnchanged = (): boolean => {
         return (compareDateOptions(tempResource.startDate, initTempResource.startDate)
             && compareDateOptions(tempResource.endDate, initTempResource.endDate)
             && tempResource.durationInMinutes == getOptionalString(initTempResource.durationInMinutes)
             && tempResource.connectedWorkflowListApiId === getOptionalString(initTempResource.connectedWorkflowListApiId))
+    }
+
+    const areGenericResourcesUnchanged = (): boolean => {
+        return arraysEqual(genericResources, initGenericResources)
     }
 
     return (
@@ -111,7 +144,7 @@ const ModifyItemModal = ({
                                         type="text"
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                         value={updateItemEntity.newTitle}
-                                        onChange={handleFormChange}
+                                        onChange={handleUpdateItemFormChange}
                                         id="newTitle"
                                     />
                                 </label>
@@ -121,7 +154,7 @@ const ModifyItemModal = ({
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                         rows={3}
                                         value={updateItemEntity.newDescription}
-                                        onChange={handleFormChange}
+                                        onChange={handleUpdateItemFormChange}
                                         id="newDescription"
                                     />
                                 </label>
@@ -141,8 +174,7 @@ const ModifyItemModal = ({
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div className="grid">
                                                     <div className="flex place-content-between">
-                                            <span
-                                                className="text-gray-700">Start date</span>
+                                                        <span className="text-gray-700">Start date</span>
                                                         <button className="text-gray-700"
                                                                 onClick={() => {
                                                                     handleDatePickerChange(null, "startDate");
@@ -217,7 +249,63 @@ const ModifyItemModal = ({
                                     </TabPanel>
                                     }
                                     <TabPanel>
-                                        <h2>Any content 2</h2>
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {genericResources.map((gr, index) => {
+                                                    return (
+                                                        <div className="flex items-end" key={index}>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <label className="block">
+                                                                    <span className="text-gray-700">Label</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                        value={gr.label}
+                                                                        onChange={(event) => {
+                                                                            handleGenericResourceFormChange(event, index)
+                                                                        }
+                                                                        }
+                                                                        id="label"
+                                                                    />
+                                                                </label>
+                                                                <label className="block">
+                                                                    <span className="text-gray-700">Value</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                        value={gr.value}
+                                                                        onChange={(event) => {
+                                                                            handleGenericResourceFormChange(event, index)
+                                                                        }
+                                                                        }
+                                                                        id="value"
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                            <button className="text-gray-700"
+                                                                    onClick={() => {
+                                                                        removeGenericResource(index);
+                                                                    }}>
+                                                                &#x2715; Delete
+                                                            </button>
+                                                        </div>
+
+                                                    )
+                                                }
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    addEmptyGenericResource();
+                                                }}
+                                                className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                     stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </TabPanel>
                                     <TabPanel>
                                         <h2>Any content 2</h2>
@@ -228,14 +316,14 @@ const ModifyItemModal = ({
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
-                                disabled={workflowListUnchanged() && temporalResourceUnchanged()}
+                                disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areGenericResourcesUnchanged()}
                                 onClick={() => {
-                                    if (!workflowListUnchanged()) {
+                                    if (!isWorkflowListUnchanged()) {
                                         modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
                                             closeModal()
                                         })
                                     }
-                                    if (!temporalResourceUnchanged()) {
+                                    if (!isTemporalResourceUnchanged()) {
 
                                         const entity = {
                                             ...tempResource,
@@ -243,6 +331,11 @@ const ModifyItemModal = ({
                                             connectedWorkflowListApiId: tempResource.connectedWorkflowListApiId === "" ? null : tempResource.connectedWorkflowListApiId
                                         }
                                         modifyTemporalResource(workflowList.apiId, entity).then(res => {
+                                            closeModal()
+                                        })
+                                    }
+                                    if (!areGenericResourcesUnchanged()) {
+                                        modifyGenericResources(workflowList.apiId, genericResources).then(res => {
                                             closeModal()
                                         })
                                     }
@@ -256,6 +349,7 @@ const ModifyItemModal = ({
                                 closeModal()
                                 setUpdateItemEntity(initUpdateItemEntity)
                                 setTempResource(initTempResource)
+                                setGenericResources(initGenericResources)
                             }}
                             className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >Cancel

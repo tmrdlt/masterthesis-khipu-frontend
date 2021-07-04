@@ -60,7 +60,7 @@ export type ReorderWorkflowListEntity = {
 
 export type GenericResource = {
     label: string,
-    Value: number
+    value: number
 }
 
 export type TemporalResource = {

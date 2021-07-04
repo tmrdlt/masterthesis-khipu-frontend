@@ -25,6 +25,7 @@ interface IListProps {
     selectWorkflowListToMove
     showDropButton
     modifyTemporalResource
+    modifyGenericResources
 }
 
 const ListComponent = ({
@@ -41,7 +42,8 @@ const ListComponent = ({
                            workflowListToMove,
                            selectWorkflowListToMove,
                            showDropButton,
-                           modifyTemporalResource
+                           modifyTemporalResource,
+                           modifyGenericResources
                        }: IListProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -129,6 +131,7 @@ const ListComponent = ({
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
                                                                 modifyTemporalResource={modifyTemporalResource}
+                                                                modifyGenericResources={modifyGenericResources}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -148,6 +151,7 @@ const ListComponent = ({
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
                                                                modifyTemporalResource={modifyTemporalResource}
+                                                               modifyGenericResources={modifyGenericResources}
                                                 />
                                             )
                                         } else {
@@ -163,6 +167,7 @@ const ListComponent = ({
                                                                workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                modifyTemporalResource={modifyTemporalResource}
+                                                               modifyGenericResources={modifyGenericResources}
                                                 />
                                             )
                                         }

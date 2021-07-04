@@ -3,6 +3,7 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
+    GenericResource,
     TemporalResource,
     UpdateWorkflowListEntity,
     WorkflowList,
@@ -11,14 +12,16 @@ import {
 import BoardComponent from "components/board-component";
 import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
-    deleteWorkflowList, getUser,
+    deleteWorkflowList,
+    getUser,
     getWorkflowLists,
+    postGenericResources,
     postTemporalResource,
     postWorkflowList,
     postWorkflowListConvert,
     postWorkflowListMove,
     postWorkflowListReorder,
-    putWorkflowList
+    updateWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ListComponent from "components/list-component";
@@ -163,20 +166,6 @@ const Home: FunctionComponent = (): JSX.Element => {
             });
     }
 
-    const modifyTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
-        postTemporalResource(uuid, temporalResource)
-            .then(res => {
-                if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
-                }
-                return res
-            });
-    }
-
     const modifyWorkflowList = async (workflowListUuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
         let newUpdateWorkflowListEntity: UpdateWorkflowListEntity;
         if (updateWorkflowListEntity.newDescription == "") {
@@ -184,7 +173,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         } else {
             newUpdateWorkflowListEntity = updateWorkflowListEntity
         }
-        putWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
+        updateWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
             .then(res => {
                 if (res) {
                     getWorkflowLists(userApiId).then(workflowLists => {
@@ -243,6 +232,35 @@ const Home: FunctionComponent = (): JSX.Element => {
         })
     }
 
+    const modifyTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
+        postTemporalResource(uuid, temporalResource)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists(userApiId).then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+                return res
+            });
+    }
+
+    const modifyGenericResources = async (uuid: string, genericResources: Array<GenericResource>) => {
+        postGenericResources(uuid, genericResources)
+            .then(res => {
+                if (res) {
+                    getWorkflowLists(userApiId).then(workflowLists => {
+                        if (workflowLists) {
+                            setState(workflowLists)
+                        }
+                    })
+                }
+                return res
+            });
+    }
+
+
     return (
         <div className="bg-gray-200 h-screen p-3">
             <button
@@ -282,6 +300,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
                                                         modifyTemporalResource={modifyTemporalResource}
+                                                        modifyGenericResources={modifyGenericResources}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -301,6 +320,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
                                                        modifyTemporalResource={modifyTemporalResource}
+                                                       modifyGenericResources={modifyGenericResources}
                                         />
                                     )
                                 } else {
@@ -316,6 +336,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        modifyTemporalResource={modifyTemporalResource}
+                                                       modifyGenericResources={modifyGenericResources}
                                         />
                                     )
                                 }

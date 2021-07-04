@@ -18,6 +18,7 @@ interface IItemProps {
     workflowListToMove
     selectWorkflowListToMove
     modifyTemporalResource
+    modifyGenericResources
 }
 
 
@@ -31,7 +32,8 @@ const ItemComponent = ({
                            removeWorkflowList,
                            workflowListToMove,
                            selectWorkflowListToMove,
-                           modifyTemporalResource
+                           modifyTemporalResource,
+                           modifyGenericResources
                        }: IItemProps): JSX.Element => {
     // STATE
     const [showModifyModal, setShowModifyModal] = useState(false);
@@ -172,6 +174,7 @@ const ItemComponent = ({
                                      boardChildLists={boardChildLists}
                                      modifyWorkflowList={modifyWorkflowList}
                                      modifyTemporalResource={modifyTemporalResource}
+                                     modifyGenericResources={modifyGenericResources}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}
