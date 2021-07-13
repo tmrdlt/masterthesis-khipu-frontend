@@ -65,8 +65,7 @@ export type UserResource = {
 export type TemporalResource = {
     startDate?: Date,
     endDate?: Date,
-    durationInMinutes?: string,
-    connectedWorkflowListApiId?: string
+    durationInMinutes?: number
 }
 
 export enum WorkflowListType {
