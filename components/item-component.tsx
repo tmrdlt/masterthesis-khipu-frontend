@@ -6,6 +6,7 @@ import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
 import {hasNoTemporalResource} from "utils/resource-util";
+import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon} from "components/icons";
 
 interface IItemProps {
     index: number
@@ -66,11 +67,7 @@ const ItemComponent = ({
                 elements.push(
                     <div key={0} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
+                            <CalendarIcon/>
                         </div>
                         {"Start date: " + formatDate(temp.startDate)}
                     </div>
@@ -80,11 +77,7 @@ const ItemComponent = ({
                 elements.push(
                     <div key={1} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
-                            </svg>
+                            <FlagIcon/>
                         </div>
                         {"Due date: " + formatDate(temp.endDate)}
                     </div>
@@ -94,11 +87,7 @@ const ItemComponent = ({
                 elements.push(
                     <div key={2} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <ClockIcon/>
                         </div>
                         {"Takes " + formatDuration(temp.durationInMinutes)}
                     </div>
@@ -125,11 +114,7 @@ const ItemComponent = ({
                         return (
                             <div key={index} className="inline-flex items-center">
                                 <div className="w-3 h-3 mr-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
+                                    <ChartBarIcon/>
                                 </div>
                                 <span>{"" + numericResource.label}:&nbsp;</span>
                                 <span>{numericResource.value}</span>
@@ -149,11 +134,7 @@ const ItemComponent = ({
                         return (
                             <div key={index} className="inline-flex items-center">
                                 <div className="w-3 h-3 mr-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                    </svg>
+                                    <DocumentTextIcon/>
                                 </div>
                                 <span>{textualResource.label}</span>
                                 <span>{textualResource.value ? ": " + textualResource.value : ""}</span>

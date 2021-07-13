@@ -16,6 +16,7 @@ import timeDurationsInMinutes from "utils/globals";
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {arraysEqual} from "utils/compare-util";
+import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
 
 interface ModifyItemModalProps {
     show
@@ -206,11 +207,39 @@ const ModifyItemModal = ({
                                     <Tabs>
                                         <TabList>
                                             {isInsideTemporalConstraintBoard &&
-                                            <Tab>Temporal</Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <ClockIcon/>
+                                                    </div>
+                                                    Temporal
+                                                </div>
+                                            </Tab>
                                             }
-                                            <Tab>Numeric</Tab>
-                                            <Tab>Textual</Tab>
-                                            <Tab>User</Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <ChartBarIcon/>
+                                                    </div>
+                                                    Numeric
+                                                </div>
+                                            </Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <DocumentTextIcon/>
+                                                    </div>
+                                                    Textual
+                                                </div>
+                                            </Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <UserIcon/>
+                                                    </div>
+                                                    User
+                                                </div>
+                                            </Tab>
                                         </TabList>
                                         {isInsideTemporalConstraintBoard &&
                                         <TabPanel>
@@ -218,7 +247,12 @@ const ModifyItemModal = ({
                                                 <div className="grid grid-cols-1 gap-4">
                                                     <div className="grid">
                                                         <div className="flex place-content-between">
-                                                            <span className="text-gray-700">Start date</span>
+                                                            <div className="inline-flex items-center">
+                                                                <div className="w-4 h-4 mr-1">
+                                                                    <CalendarIcon/>
+                                                                </div>
+                                                                <span className="text-gray-700">Start date</span>
+                                                            </div>
                                                             <button className="text-gray-700"
                                                                     onClick={() => {
                                                                         handleDatePickerChange(null, "startDate");
@@ -245,8 +279,12 @@ const ModifyItemModal = ({
                                                     </div>
                                                     <div className="grid">
                                                         <div className="flex place-content-between">
-                                            <span
-                                                className="text-gray-700">Due date</span>
+                                                            <div className="inline-flex items-center">
+                                                                <div className="w-4 h-4 mr-1">
+                                                                    <FlagIcon/>
+                                                                </div>
+                                                                <span className="text-gray-700">Due date</span>
+                                                            </div>
                                                             <button className="text-gray-700"
                                                                     onClick={() => {
                                                                         handleDatePickerChange(null, "endDate");
@@ -272,20 +310,28 @@ const ModifyItemModal = ({
                                                         />
                                                     </div>
                                                     <label className="block">
-                                                        <span
-                                                            className="text-gray-700">Estimated time required</span><select
-                                                        className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                        value={tempResource.durationInMinutes}
-                                                        onChange={handleTimeRequiredSelectionChange}
-                                                    >
-                                                        <option className="opacity-40" key={0} value={0}>None</option>
-                                                        {
-                                                            timeDurationsInMinutes.map(durationInMinutes =>
+                                                        <div className="inline-flex items-center">
+                                                            <div className="w-4 h-4 mr-1">
+                                                                <ClockIcon/>
+                                                            </div>
+                                                            <span className="text-gray-700">
+                                                            Estimated time required
+                                                        </span>
+                                                        </div>
+                                                        <select
+                                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                            value={tempResource.durationInMinutes}
+                                                            onChange={handleTimeRequiredSelectionChange}
+                                                        >
+                                                            <option className="opacity-40" key={0} value={0}>None
+                                                            </option>
+                                                            {timeDurationsInMinutes.map(durationInMinutes =>
                                                                 <option key={durationInMinutes}
-                                                                        value={durationInMinutes}>{formatDuration(durationInMinutes)}</option>
-                                                            )
-                                                        }
-                                                    </select>
+                                                                        value={durationInMinutes}>
+                                                                    {formatDuration(durationInMinutes)}
+                                                                </option>
+                                                            )}
+                                                        </select>
                                                     </label>
                                                 </div>
                                             </div>
