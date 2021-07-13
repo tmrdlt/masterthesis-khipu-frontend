@@ -52,11 +52,13 @@ const ModifyItemModal = ({
         connectedWorkflowListApiId: ""
     }
 
-    const initGenericResources: Array<NumericResource> = workflowList.genericResources
+    const initNumericResources: Array<NumericResource> = workflowList.numericResources
+    const initTextualResources: Array<TextualResource> = workflowList.textualResources
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
     const [tempResource, setTempResource] = useState(initTempResource)
-    const [genericResources, setGenericResources] = useState(initGenericResources)
+    const [numericResources, setNumericResources] = useState(initNumericResources)
+    const [textualResources, setTextualResources] = useState(initTextualResources)
 
     // DYNAMIC CLASSES
     const showHideClass = show ? "" : "hidden";
@@ -82,8 +84,8 @@ const ModifyItemModal = ({
         }
     }
 
-    const handleGenericResourceFormChange = (event, index) => {
-        const newState = [...genericResources];
+    const handleNumericResourceFormChange = (event, index) => {
+        const newState = [...numericResources];
         let newElement: NumericResource;
         if (event.target.id === "label") {
             newElement = {...newState[index], "label": event.target.value};
@@ -91,19 +93,43 @@ const ModifyItemModal = ({
             newElement = {...newState[index], "value": event.target.valueAsNumber};
         }
         newState.splice(index, 1, newElement)
-        setGenericResources(newState)
+        setNumericResources(newState)
     }
 
-    const addEmptyGenericResource = () => {
-        const newState = [...genericResources];
+    const addEmptyNumericResource = () => {
+        const newState = [...numericResources];
         newState.push({label: "", value: undefined});
-        setGenericResources(newState);
+        setNumericResources(newState);
     }
 
-    const removeGenericResource = (index: number) => {
-        const newState = [...genericResources];
+    const removeNumericResource = (index: number) => {
+        const newState = [...numericResources];
         newState.splice(index, 1);
-        setGenericResources(newState);
+        setNumericResources(newState);
+    }
+
+    const handleTextualResourceFormChange = (event, index) => {
+        const newState = [...textualResources];
+        let newElement: TextualResource;
+        if (event.target.id === "label") {
+            newElement = {...newState[index], "label": event.target.value};
+        } else {
+            newElement = {...newState[index], "value": event.target.value};
+        }
+        newState.splice(index, 1, newElement)
+        setTextualResources(newState)
+    }
+
+    const addEmptyTextualResource = () => {
+        const newState = [...textualResources];
+        newState.push({label: "", value: null});
+        setTextualResources(newState);
+    }
+
+    const removeTextualResource = (index: number) => {
+        const newState = [...textualResources];
+        newState.splice(index, 1);
+        setTextualResources(newState);
     }
 
     const isWorkflowListUnchanged = (): boolean => {
@@ -117,8 +143,12 @@ const ModifyItemModal = ({
             && tempResource.durationInMinutes == getOptionalString(initTempResource.durationInMinutes))
     }
 
-    const areGenericResourcesUnchanged = (): boolean => {
-        return arraysEqual(genericResources, initGenericResources)
+    const areNumericResourcesUnchanged = (): boolean => {
+        return arraysEqual(numericResources, initNumericResources)
+    }
+
+    const areTextualResourcesUnchanged = (): boolean => {
+        return arraysEqual(textualResources, initTextualResources)
     }
 
     return (
@@ -160,7 +190,8 @@ const ModifyItemModal = ({
                                         {isInsideTemporalConstraintBoard &&
                                         <Tab>Temporal</Tab>
                                         }
-                                        <Tab>Generic</Tab>
+                                        <Tab>Numeric</Tab>
+                                        <Tab>Textual</Tab>
                                         <Tab>User</Tab>
                                     </TabList>
                                     {isInsideTemporalConstraintBoard &&
@@ -244,7 +275,7 @@ const ModifyItemModal = ({
                                     }
                                     <TabPanel>
                                         <div className="grid grid-cols-1 gap-4">
-                                            {genericResources.map((gr, index) => {
+                                            {numericResources.map((numericResource, index) => {
                                                     return (
                                                         <div className="flex items-end" key={index}>
                                                             <div className="grid grid-cols-2 gap-4">
@@ -253,10 +284,10 @@ const ModifyItemModal = ({
                                                                     <input
                                                                         type="text"
                                                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                                        value={gr.label}
+                                                                        value={numericResource.label}
                                                                         placeholder="Label"
                                                                         onChange={(event) => {
-                                                                            handleGenericResourceFormChange(event, index)
+                                                                            handleNumericResourceFormChange(event, index)
                                                                         }
                                                                         }
                                                                         id="label"
@@ -267,10 +298,10 @@ const ModifyItemModal = ({
                                                                     <input
                                                                         type="number"
                                                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                                        value={gr.value}
+                                                                        value={numericResource.value}
                                                                         placeholder="Value"
                                                                         onChange={(event) => {
-                                                                            handleGenericResourceFormChange(event, index)
+                                                                            handleNumericResourceFormChange(event, index)
                                                                         }
                                                                         }
                                                                         id="value"
@@ -279,7 +310,7 @@ const ModifyItemModal = ({
                                                             </div>
                                                             <button className="text-gray-700"
                                                                     onClick={() => {
-                                                                        removeGenericResource(index);
+                                                                        removeNumericResource(index);
                                                                     }}>
                                                                 &#x2715; Delete
                                                             </button>
@@ -291,7 +322,68 @@ const ModifyItemModal = ({
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    addEmptyGenericResource();
+                                                    addEmptyNumericResource();
+                                                }}
+                                                className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                     stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {textualResources.map((textualResource, index) => {
+                                                    return (
+                                                        <div className="flex items-end" key={index}>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <label className="block">
+                                                                    <span className="text-gray-700">Label</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                        value={textualResource.label}
+                                                                        placeholder="Label"
+                                                                        onChange={(event) => {
+                                                                            handleTextualResourceFormChange(event, index)
+                                                                        }
+                                                                        }
+                                                                        id="label"
+                                                                    />
+                                                                </label>
+                                                                <label className="block">
+                                                                    <span className="text-gray-700">Value</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                        value={textualResource.value}
+                                                                        placeholder="Value"
+                                                                        onChange={(event) => {
+                                                                            handleTextualResourceFormChange(event, index)
+                                                                        }
+                                                                        }
+                                                                        id="value"
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                            <button className="text-gray-700"
+                                                                    onClick={() => {
+                                                                        removeTextualResource(index);
+                                                                    }}>
+                                                                &#x2715; Delete
+                                                            </button>
+                                                        </div>
+
+                                                    )
+                                                }
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    addEmptyTextualResource();
                                                 }}
                                                 className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
                                             >
@@ -312,7 +404,7 @@ const ModifyItemModal = ({
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button type="button"
-                                disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areGenericResourcesUnchanged()}
+                                disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areNumericResourcesUnchanged() && areTextualResourcesUnchanged()}
                                 onClick={() => {
                                     let numericEntity: Array<NumericResource> = null;
                                     let textualEntity: Array<TextualResource> = null;
@@ -329,8 +421,11 @@ const ModifyItemModal = ({
                                             durationInMinutes: tempResource.durationInMinutes === "" ? null : tempResource.durationInMinutes
                                         }
                                     }
-                                    if (!areGenericResourcesUnchanged()) {
-                                        numericEntity = genericResources
+                                    if (!areNumericResourcesUnchanged()) {
+                                        numericEntity = numericResources
+                                    }
+                                    if (!areTextualResourcesUnchanged()) {
+                                        textualEntity = textualResources
                                     }
                                     const entity: WorkflowListResource = {
                                         numeric: numericEntity,
@@ -351,7 +446,8 @@ const ModifyItemModal = ({
                                 closeModal()
                                 setUpdateItemEntity(initUpdateItemEntity)
                                 setTempResource(initTempResource)
-                                setGenericResources(initGenericResources)
+                                setNumericResources(initNumericResources)
+                                setTextualResources(initTextualResources)
                             }}
                             className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >Cancel

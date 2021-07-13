@@ -117,11 +117,35 @@ const ItemComponent = ({
         )
     }
 
-    const getGenericResourcesText = (): JSX.Element => {
+    const getNumericResourcesText = (): JSX.Element => {
         return (
             <div className="grid text-xs">
                 {
-                    workflowList.genericResources.map((genericResource, index) => {
+                    workflowList.numericResources.map((numericResource, index) => {
+                        return (
+                            <div key={index} className="inline-flex items-center">
+                                <div className="w-3 h-3 mr-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <span>{"" + numericResource.label}:&nbsp;</span>
+                                <span>{numericResource.value}</span>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
+    }
+
+    const getTextualResourcesText = (): JSX.Element => {
+        return (
+            <div className="grid text-xs">
+                {
+                    workflowList.textualResources.map((textualResource, index) => {
                         return (
                             <div key={index} className="inline-flex items-center">
                                 <div className="w-3 h-3 mr-1">
@@ -131,8 +155,8 @@ const ItemComponent = ({
                                               d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                     </svg>
                                 </div>
-                                <span>{"" + genericResource.label}:&nbsp;</span>
-                                <span>{genericResource.value}</span>
+                                <span>{"" + textualResource.label}:&nbsp;</span>
+                                <span>{textualResource.value}</span>
                             </div>
                         )
                     })
@@ -159,7 +183,8 @@ const ItemComponent = ({
                                 {isInsideTemporalConstraintBoard &&
                                 getTemporalResourceText()
                                 }
-                                {getGenericResourcesText()}
+                                {getNumericResourcesText()}
+                                {getTextualResourcesText()}
                             </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}

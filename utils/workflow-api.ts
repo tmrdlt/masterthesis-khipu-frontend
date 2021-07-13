@@ -93,24 +93,13 @@ export const postWorkflowListResource = async (uuid: string, workflowListResourc
         'http://localhost:5001/workflowlist/' + uuid + '/resource',
         {
             ...workflowListResource,
-            temporal: {
+            temporal: workflowListResource.temporal ? {
                 ...workflowListResource.temporal,
                 startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
                 endDate: toLocalDateTimeString(workflowListResource.temporal.endDate)
-            }
+            }: null
         }
     )
-        .then(response => {
-            return response;
-        }).catch(error => {
-            console.error(error);
-            return null
-        });
-}
-
-export const postGenericResources = async (uuid: string, genericResources: Array<NumericResource>) => {
-    console.log(genericResources)
-    return axios.post('http://localhost:5001/workflowlist/' + uuid + '/resource/generic', genericResources)
         .then(response => {
             return response;
         }).catch(error => {

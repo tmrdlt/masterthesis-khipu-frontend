@@ -9,7 +9,8 @@ export type WorkflowList = {
     position: number,
     isTemporalConstraintBoard: boolean,
     temporalResource?: TemporalResource
-    genericResources: Array<NumericResource>
+    numericResources: Array<NumericResource>
+    textualResources: Array<TextualResource>
 }
 
 export type CreateWorkflowListEntity = {
