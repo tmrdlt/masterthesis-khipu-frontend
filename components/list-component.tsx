@@ -23,8 +23,7 @@ interface IListProps {
     moveWorkflowList
     selectWorkflowListToMove
     showDropButton
-    modifyTemporalResource
-    modifyGenericResources
+    modifyResources
 }
 
 const ListComponent = ({
@@ -40,8 +39,7 @@ const ListComponent = ({
                            moveWorkflowList,
                            selectWorkflowListToMove,
                            showDropButton,
-                           modifyTemporalResource,
-                           modifyGenericResources
+                           modifyResources
                        }: IListProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -128,8 +126,7 @@ const ListComponent = ({
                                                                 moveWorkflowList={moveWorkflowList}
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
-                                                                modifyTemporalResource={modifyTemporalResource}
-                                                                modifyGenericResources={modifyGenericResources}
+                                                                modifyResources={modifyResources}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -147,8 +144,7 @@ const ListComponent = ({
                                                                moveWorkflowList={moveWorkflowList}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
-                                                               modifyTemporalResource={modifyTemporalResource}
-                                                               modifyGenericResources={modifyGenericResources}
+                                                               modifyResources={modifyResources}
                                                 />
                                             )
                                         } else {
@@ -162,8 +158,7 @@ const ListComponent = ({
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
-                                                               modifyTemporalResource={modifyTemporalResource}
-                                                               modifyGenericResources={modifyGenericResources}
+                                                               modifyResources={modifyResources}
                                                 />
                                             )
                                         }

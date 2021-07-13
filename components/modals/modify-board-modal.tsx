@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {TemporalResource, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
+import {TemporalResource, UpdateWorkflowListEntity, WorkflowList, WorkflowListResource} from "utils/models";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,7 +11,7 @@ interface ModifyBoardModalProps {
     closeModal
     workflowList: WorkflowList
     modifyWorkflowList
-    setTemporalResource
+    modifyResources
 }
 
 const ModifyBoardModal = ({
@@ -19,7 +19,7 @@ const ModifyBoardModal = ({
                               closeModal,
                               workflowList,
                               modifyWorkflowList,
-                              setTemporalResource
+                              modifyResources
                           }: ModifyBoardModalProps): JSX.Element => {
     // STATE
     const initUpdateBoardEntity: UpdateWorkflowListEntity = {
@@ -150,10 +150,12 @@ const ModifyBoardModal = ({
                                         })
                                     }
                                     if (!temporalResourceUnchanged()) {
-                                        const entity: TemporalResource = {
-                                            endDate: dueDate
+                                        const entity: WorkflowListResource = {
+                                            temporal: {
+                                                endDate: dueDate
+                                            }
                                         }
-                                        setTemporalResource(workflowList.apiId, entity).then(res => {
+                                        modifyResources(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
                                     }

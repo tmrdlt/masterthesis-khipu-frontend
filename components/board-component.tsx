@@ -23,8 +23,7 @@ interface IBoardProps {
     moveWorkflowList
     selectWorkflowListToMove
     showDropButton
-    modifyTemporalResource
-    modifyGenericResources
+    modifyResources
 }
 
 const BoardComponent = ({
@@ -39,8 +38,7 @@ const BoardComponent = ({
                             moveWorkflowList,
                             selectWorkflowListToMove,
                             showDropButton,
-                            modifyTemporalResource,
-                            modifyGenericResources
+                            modifyResources
                         }: IBoardProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -146,8 +144,7 @@ const BoardComponent = ({
                                                                     moveWorkflowList={moveWorkflowList}
                                                                     selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
-                                                                    modifyTemporalResource={modifyTemporalResource}
-                                                                    modifyGenericResources={modifyGenericResources}
+                                                                    modifyResources={modifyResources}
                                                     />
                                                 )
                                             } else if (wl.usageType == WorkflowListType.LIST) {
@@ -165,8 +162,7 @@ const BoardComponent = ({
                                                                    moveWorkflowList={moveWorkflowList}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
-                                                                   modifyTemporalResource={modifyTemporalResource}
-                                                                   modifyGenericResources={modifyGenericResources}
+                                                                   modifyResources={modifyResources}
                                                     />
                                                 )
                                             } else {
@@ -180,8 +176,7 @@ const BoardComponent = ({
                                                                    modifyWorkflowList={modifyWorkflowList}
                                                                    removeWorkflowList={removeWorkflowList}
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
-                                                                   modifyTemporalResource={modifyTemporalResource}
-                                                                   modifyGenericResources={modifyGenericResources}
+                                                                   modifyResources={modifyResources}
                                                     />
                                                 )
                                             }
@@ -206,7 +201,7 @@ const BoardComponent = ({
                                       closeModal={closeModifyModal}
                                       workflowList={workflowList}
                                       modifyWorkflowList={modifyWorkflowList}
-                                      setTemporalResource={modifyTemporalResource}
+                                      modifyResources={modifyResources}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

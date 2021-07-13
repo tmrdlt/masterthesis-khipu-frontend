@@ -3,13 +3,13 @@ import {
     ConvertWorkflowListEntity,
     CreateUserEntity,
     CreateWorkflowListEntity,
-    GenericResource,
+    NumericResource,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
     TemporalResource,
     UpdateWorkflowListEntity,
     User,
-    WorkflowList
+    WorkflowList, WorkflowListResource
 } from "utils/models";
 import {toLocalDateTimeString} from "utils/date-util";
 import {recursiveParseDate} from "utils/list-util";
@@ -87,14 +87,17 @@ export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListE
         });
 }
 
-export const postTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
-    console.log(temporalResource)
+export const postWorkflowListResource = async (uuid: string, workflowListResource: WorkflowListResource) => {
+    console.log(workflowListResource)
     return axios.post(
-        'http://localhost:5001/workflowlist/' + uuid + '/resource/temporal',
+        'http://localhost:5001/workflowlist/' + uuid + '/resource',
         {
-            ...temporalResource,
-            startDate: toLocalDateTimeString(temporalResource.startDate),
-            endDate: toLocalDateTimeString(temporalResource.endDate)
+            ...workflowListResource,
+            temporal: {
+                ...workflowListResource.temporal,
+                startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
+                endDate: toLocalDateTimeString(workflowListResource.temporal.endDate)
+            }
         }
     )
         .then(response => {
@@ -105,7 +108,7 @@ export const postTemporalResource = async (uuid: string, temporalResource: Tempo
         });
 }
 
-export const postGenericResources = async (uuid: string, genericResources: Array<GenericResource>) => {
+export const postGenericResources = async (uuid: string, genericResources: Array<NumericResource>) => {
     console.log(genericResources)
     return axios.post('http://localhost:5001/workflowlist/' + uuid + '/resource/generic', genericResources)
         .then(response => {

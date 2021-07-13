@@ -3,10 +3,10 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    GenericResource,
+    NumericResource,
     TemporalResource,
     UpdateWorkflowListEntity,
-    WorkflowList,
+    WorkflowList, WorkflowListResource,
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
@@ -15,12 +15,10 @@ import {
     deleteWorkflowList,
     getUser,
     getWorkflowLists,
-    postGenericResources,
-    postTemporalResource,
     postWorkflowList,
     postWorkflowListConvert,
     postWorkflowListMove,
-    postWorkflowListReorder,
+    postWorkflowListReorder, postWorkflowListResource,
     updateWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
@@ -216,24 +214,14 @@ const Home: FunctionComponent = (): JSX.Element => {
         })
     }
 
-    const modifyTemporalResource = async (uuid: string, temporalResource: TemporalResource) => {
-        postTemporalResource(uuid, temporalResource)
-            .then(res => {
-                if (res) {
-                    updateState();
-                }
-                return res
-            });
-    }
-
-    const modifyGenericResources = async (uuid: string, genericResources: Array<GenericResource>) => {
-        postGenericResources(uuid, genericResources)
-            .then(res => {
-                if (res) {
-                    updateState();
-                }
-                return res
-            });
+    const modifyResources = async (uuid: string, workflowListResource: WorkflowListResource) => {
+        postWorkflowListResource(uuid, workflowListResource)
+        .then(res => {
+            if (res) {
+                updateState();
+            }
+            return res
+        });
     }
 
 
@@ -275,8 +263,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         moveWorkflowList={moveWorkflowList}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
-                                                        modifyTemporalResource={modifyTemporalResource}
-                                                        modifyGenericResources={modifyGenericResources}
+                                                        modifyResources={modifyResources}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -294,8 +281,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        moveWorkflowList={moveWorkflowList}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
-                                                       modifyTemporalResource={modifyTemporalResource}
-                                                       modifyGenericResources={modifyGenericResources}
+                                                       modifyResources={modifyResources}
                                         />
                                     )
                                 } else {
@@ -309,8 +295,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
-                                                       modifyTemporalResource={modifyTemporalResource}
-                                                       modifyGenericResources={modifyGenericResources}
+                                                       modifyResources={modifyResources}
                                         />
                                     )
                                 }

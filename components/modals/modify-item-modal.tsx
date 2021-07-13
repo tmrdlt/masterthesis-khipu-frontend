@@ -1,5 +1,12 @@
 import React, {useState} from "react";
-import {GenericResource, TemporalResource, UpdateWorkflowListEntity, WorkflowList} from "utils/models";
+import {
+    NumericResource,
+    TemporalResource,
+    TextualResource,
+    UpdateWorkflowListEntity,
+    UserResource,
+    WorkflowList, WorkflowListResource
+} from "utils/models";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions, formatDuration} from "utils/date-util";
@@ -16,8 +23,7 @@ interface ModifyItemModalProps {
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
     modifyWorkflowList
-    modifyTemporalResource
-    modifyGenericResources
+    modifyResources
 }
 
 const ModifyItemModal = ({
@@ -26,8 +32,7 @@ const ModifyItemModal = ({
                              workflowList,
                              isInsideTemporalConstraintBoard,
                              modifyWorkflowList,
-                             modifyTemporalResource,
-                             modifyGenericResources
+                             modifyResources
                          }: ModifyItemModalProps): JSX.Element => {
     // STATE
     const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -43,11 +48,11 @@ const ModifyItemModal = ({
     } : {
         startDate: null,
         endDate: null,
-        durationInMinutes: null,
-        connectedWorkflowListApiId: null
+        durationInMinutes: "",
+        connectedWorkflowListApiId: ""
     }
 
-    const initGenericResources: Array<GenericResource> = workflowList.genericResources
+    const initGenericResources: Array<NumericResource> = workflowList.genericResources
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
     const [tempResource, setTempResource] = useState(initTempResource)
@@ -79,7 +84,7 @@ const ModifyItemModal = ({
 
     const handleGenericResourceFormChange = (event, index) => {
         const newState = [...genericResources];
-        let newElement: GenericResource;
+        let newElement: NumericResource;
         if (event.target.id === "label") {
             newElement = {...newState[index], "label": event.target.value};
         } else {
@@ -91,7 +96,7 @@ const ModifyItemModal = ({
 
     const addEmptyGenericResource = () => {
         const newState = [...genericResources];
-        newState.push({label: "", value: 0});
+        newState.push({label: "", value: undefined});
         setGenericResources(newState);
     }
 
@@ -109,8 +114,7 @@ const ModifyItemModal = ({
     const isTemporalResourceUnchanged = (): boolean => {
         return (compareDateOptions(tempResource.startDate, initTempResource.startDate)
             && compareDateOptions(tempResource.endDate, initTempResource.endDate)
-            && tempResource.durationInMinutes == getOptionalString(initTempResource.durationInMinutes)
-            && tempResource.connectedWorkflowListApiId === getOptionalString(initTempResource.connectedWorkflowListApiId))
+            && tempResource.durationInMinutes == getOptionalString(initTempResource.durationInMinutes))
     }
 
     const areGenericResourcesUnchanged = (): boolean => {
@@ -162,7 +166,6 @@ const ModifyItemModal = ({
                                     {isInsideTemporalConstraintBoard &&
                                     <TabPanel>
                                         <div className="grid grid-cols-1 gap-4">
-                                            {!hasNoTemporalResource(tempResource) &&
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div className="grid">
                                                     <div className="flex place-content-between">
@@ -220,12 +223,12 @@ const ModifyItemModal = ({
                                                     />
                                                 </div>
                                                 <label className="block">
-                                                    <span className="text-gray-700">Time required</span><select
+                                                    <span className="text-gray-700">Estimated time required</span><select
                                                     className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                                     value={tempResource.durationInMinutes}
                                                     onChange={handleTimeRequiredSelectionChange}
                                                 >
-                                                    <option className="opacity-40" key={0} value={"0"}>None
+                                                    <option className="opacity-40" key={0} value={""}>None
                                                     </option>
                                                     {
                                                         timeDurationsInMinutes.map(durationInMinutes =>
@@ -236,7 +239,6 @@ const ModifyItemModal = ({
                                                 </select>
                                                 </label>
                                             </div>
-                                            }
                                         </div>
                                     </TabPanel>
                                     }
@@ -252,6 +254,7 @@ const ModifyItemModal = ({
                                                                         type="text"
                                                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                                                         value={gr.label}
+                                                                        placeholder="Label"
                                                                         onChange={(event) => {
                                                                             handleGenericResourceFormChange(event, index)
                                                                         }
@@ -265,6 +268,7 @@ const ModifyItemModal = ({
                                                                         type="number"
                                                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                                                                         value={gr.value}
+                                                                        placeholder="Value"
                                                                         onChange={(event) => {
                                                                             handleGenericResourceFormChange(event, index)
                                                                         }
@@ -310,27 +314,33 @@ const ModifyItemModal = ({
                         <button type="button"
                                 disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areGenericResourcesUnchanged()}
                                 onClick={() => {
+                                    let numericEntity: Array<NumericResource> = null;
+                                    let textualEntity: Array<TextualResource> = null;
+                                    let temporalEntity: TemporalResource = null;
+                                    let userEntity: UserResource = null
                                     if (!isWorkflowListUnchanged()) {
                                         modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
                                             closeModal()
                                         })
                                     }
                                     if (!isTemporalResourceUnchanged()) {
-
-                                        const entity = {
+                                        temporalEntity = {
                                             ...tempResource,
-                                            durationInMinutes: tempResource.durationInMinutes === "" ? null : parseInt(tempResource.durationInMinutes),
-                                            connectedWorkflowListApiId: tempResource.connectedWorkflowListApiId === "" ? null : tempResource.connectedWorkflowListApiId
+                                            durationInMinutes: tempResource.durationInMinutes === "" ? null : tempResource.durationInMinutes
                                         }
-                                        modifyTemporalResource(workflowList.apiId, entity).then(res => {
-                                            closeModal()
-                                        })
                                     }
                                     if (!areGenericResourcesUnchanged()) {
-                                        modifyGenericResources(workflowList.apiId, genericResources).then(res => {
-                                            closeModal()
-                                        })
+                                        numericEntity = genericResources
                                     }
+                                    const entity: WorkflowListResource = {
+                                        numeric: numericEntity,
+                                        textual: textualEntity,
+                                        temporal: temporalEntity,
+                                        user: userEntity
+                                    }
+                                    modifyResources(workflowList.apiId, entity).then(res => {
+                                        closeModal()
+                                    })
                                 }}
                                 className="disabled:opacity-50 disabled:cursor-not-allowed w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                             Save
