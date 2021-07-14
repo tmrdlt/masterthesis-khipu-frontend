@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     NumericResource,
     TemporalResource,
     TextualResource,
     UpdateWorkflowListEntity,
+    User,
     UserResource,
     WorkflowList,
     WorkflowListResource
@@ -17,6 +18,7 @@ import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {arraysEqual} from "utils/compare-util";
 import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
+import {getUsers} from "utils/workflow-api";
 
 interface ModifyItemModalProps {
     show
@@ -50,14 +52,33 @@ const ModifyItemModal = ({
         endDate: null,
         durationInMinutes: 0
     }
-
     const initNumericResources = workflowList.numericResources
     const initTextualResources = workflowList.textualResources
+    const initUserResource = workflowList.userResource ? {
+        username: getOptionalString(workflowList.userResource.username)
+    } : {
+        username: ""
+    }
+    const initUsers: Array<User> = []
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
     const [tempResource, setTempResource] = useState(initTempResource)
     const [numericResources, setNumericResources] = useState(initNumericResources)
     const [textualResources, setTextualResources] = useState(initTextualResources)
+    const [userResource, setUserResource] = useState(initUserResource)
+    const [users, setUsers] = useState(initUsers)
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    const init = () => {
+        getUsers().then(users => {
+            if (users) {
+                setUsers(users)
+            }
+        })
+    }
 
     // DYNAMIC CLASSES
     const showHideClass = show ? "" : "hidden";
@@ -128,6 +149,11 @@ const ModifyItemModal = ({
         setTextualResources(newState)
     }
 
+    const handleUserResourceFormChange = (event) => {
+        const newState = {...userResource, username: event.target.value}
+        setUserResource(newState)
+    }
+
     const addEmptyTextualResource = () => {
         const newState = [...textualResources];
         newState.push({label: "", value: ""});
@@ -157,6 +183,10 @@ const ModifyItemModal = ({
 
     const areTextualResourcesUnchanged = (): boolean => {
         return arraysEqual(textualResources, initTextualResources)
+    }
+
+    const isUserResourceUnchanged = (): boolean => {
+        return userResource.username === initUserResource.username
     }
 
     const isNumericResourceFormInvalid = (): boolean => {
@@ -468,7 +498,23 @@ const ModifyItemModal = ({
                                             </div>
                                         </TabPanel>
                                         <TabPanel>
-                                            <h2>Any content 2</h2>
+                                            <label className="block">
+                                                <span className="text-gray-700">Assigned user</span>
+                                                <select
+                                                    className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                    value={userResource.username}
+                                                    onChange={handleUserResourceFormChange}
+                                                >
+                                                    <option className="opacity-40" key={0} value={""}>None
+                                                    </option>
+                                                    {users.map(user =>
+                                                        <option key={user.username}
+                                                                value={user.username}>
+                                                            {user.username}
+                                                        </option>
+                                                    )}
+                                                </select>
+                                            </label>
                                         </TabPanel>
                                     </Tabs>
                                 </div>
@@ -477,7 +523,7 @@ const ModifyItemModal = ({
                         <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                             <button type="button"
                                     disabled={
-                                        isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areNumericResourcesUnchanged() && areTextualResourcesUnchanged() ||
+                                        isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areNumericResourcesUnchanged() && areTextualResourcesUnchanged() && isUserResourceUnchanged() ||
                                         isNumericResourceFormInvalid() || isTextualResourceFormInvalid()
                                     }
                                     onClick={() => {
@@ -502,6 +548,15 @@ const ModifyItemModal = ({
                                         }
                                         if (!areTextualResourcesUnchanged() && !isTextualResourceFormInvalid()) {
                                             textualEntity = textualResources
+                                        }
+                                        if (!isUserResourceUnchanged()) {
+                                            if (userResource.username === "") {
+                                                userEntity = {
+                                                    username: null
+                                                }
+                                            } else {
+                                                userEntity = userResource
+                                            }
                                         }
                                         const entity: WorkflowListResource = {
                                             numeric: numericEntity,

@@ -5,8 +5,8 @@ import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
-import {hasNoTemporalResource} from "utils/resource-util";
-import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon} from "components/icons";
+import {hasNoTemporalResource, hasNoUserResource} from "utils/resource-util";
+import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
 
 interface IItemProps {
     index: number
@@ -146,6 +146,22 @@ const ItemComponent = ({
         )
     }
 
+    const getUserResourceText = (): JSX.Element => {
+        console.log(workflowList.userResource)
+        return (
+            <div className="grid text-xs">
+                {!hasNoUserResource(workflowList.userResource) &&
+                <div key={index} className="inline-flex items-center">
+                    <div className="w-3 h-3 mr-1">
+                        <UserIcon/>
+                    </div>
+                    <span>{workflowList.userResource.username}</span>
+                </div>
+                }
+            </div>
+        )
+    }
+
     return (
         <Draggable key={workflowList.apiId}
                    draggableId={workflowList.apiId}
@@ -166,6 +182,7 @@ const ItemComponent = ({
                                 }
                                 {getNumericResourcesText()}
                                 {getTextualResourcesText()}
+                                {getUserResourceText()}
                             </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}

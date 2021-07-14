@@ -1,21 +1,22 @@
 // FROM BACKEND
 export type WorkflowList = {
-    apiId: string,
-    title: string,
-    description?: string,
-    usageType: WorkflowListType,
-    children: Array<WorkflowList>,
+    apiId: string
+    title: string
+    description?: string
+    usageType: WorkflowListType
+    children: Array<WorkflowList>
     level: number
-    position: number,
+    position: number
     isTemporalConstraintBoard: boolean,
     temporalResource?: TemporalResource
+    userResource?: UserResource
     numericResources: Array<NumericResource>
     textualResources: Array<TextualResource>
 }
 
 export type CreateWorkflowListEntity = {
-    title: string,
-    description?: string,
+    title: string
+    description?: string
     listType: WorkflowListType
     parentApiId?: string
     userApiId: string
@@ -59,7 +60,7 @@ export type TextualResource = {
 }
 
 export type UserResource = {
-    userId: number
+    username: string
 }
 
 export type TemporalResource = {
