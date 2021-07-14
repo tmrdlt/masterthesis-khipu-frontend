@@ -1,13 +1,15 @@
 import axios from "axios";
 import {
-    ConvertWorkflowListEntity, CreateUserEntity,
+    ConvertWorkflowListEntity,
+    CreateUserEntity,
     CreateWorkflowListEntity,
+    NumericResource,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
-    TemporalConstraint,
+    TemporalResource,
     UpdateWorkflowListEntity,
     User,
-    WorkflowList
+    WorkflowList, WorkflowListResource
 } from "utils/models";
 import {toLocalDateTimeString} from "utils/date-util";
 import {recursiveParseDate} from "utils/list-util";
@@ -35,8 +37,8 @@ export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowL
         });
 }
 
-export const putWorkflowList = async (uuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
-    return axios.put('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
+export const updateWorkflowList = async (uuid: string, updateWorkflowListEntity: UpdateWorkflowListEntity) => {
+    return axios.patch('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
         .then(response => {
             return response;
         }).catch(error => {
@@ -85,11 +87,18 @@ export const postWorkflowListReorder = async (uuid: string, reorderWorkflowListE
         });
 }
 
-export const postTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
-    console.log(temporalConstraint)
+export const postWorkflowListResource = async (uuid: string, workflowListResource: WorkflowListResource) => {
+    console.log(workflowListResource)
     return axios.post(
-        'http://localhost:5001/workflowlist/' + uuid + '/tempconstraint',
-        {...temporalConstraint, startDate: toLocalDateTimeString(temporalConstraint.startDate), endDate: toLocalDateTimeString(temporalConstraint.endDate)}
+        'http://localhost:5001/workflowlist/' + uuid + '/resource',
+        {
+            ...workflowListResource,
+            temporal: workflowListResource.temporal ? {
+                ...workflowListResource.temporal,
+                startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
+                endDate: toLocalDateTimeString(workflowListResource.temporal.endDate)
+            }: null
+        }
     )
         .then(response => {
             return response;

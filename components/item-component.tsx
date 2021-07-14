@@ -1,23 +1,23 @@
 import {Draggable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {WorkflowList, WorkflowListSimple} from "utils/models";
+import {WorkflowList} from "utils/models";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
-import {isNoConstraint} from "utils/temp-constraint-util";
+import {hasNoTemporalResource, hasNoUserResource} from "utils/resource-util";
+import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
 
 interface IItemProps {
     index: number
     workflowList: WorkflowList
     userApiId: string
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
+    workflowListToMove: WorkflowList
     modifyWorkflowList
     removeWorkflowList
-    workflowListToMove
     selectWorkflowListToMove
-    modifyTemporalConstraint
+    modifyResources
 }
 
 
@@ -26,12 +26,11 @@ const ItemComponent = ({
                            workflowList,
                            userApiId,
                            isInsideTemporalConstraintBoard,
-                           boardChildLists,
+                           workflowListToMove,
                            modifyWorkflowList,
                            removeWorkflowList,
-                           workflowListToMove,
                            selectWorkflowListToMove,
-                           modifyTemporalConstraint
+                           modifyResources
                        }: IItemProps): JSX.Element => {
     // STATE
     const [showModifyModal, setShowModifyModal] = useState(false);
@@ -60,19 +59,15 @@ const ItemComponent = ({
         setShowMoveModal(false);
     }
 
-    const getTemporalConstraintText = (): JSX.Element => {
+    const getTemporalResourceText = (): JSX.Element => {
         let elements: Array<JSX.Element> = []
-        if (!isNoConstraint(workflowList.temporalConstraint)) {
-            const temp = workflowList.temporalConstraint
+        if (!hasNoTemporalResource(workflowList.temporalResource)) {
+            const temp = workflowList.temporalResource
             if (temp.startDate) {
                 elements.push(
                     <div key={0} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
+                            <CalendarIcon/>
                         </div>
                         {"Start date: " + formatDate(temp.startDate)}
                     </div>
@@ -82,11 +77,7 @@ const ItemComponent = ({
                 elements.push(
                     <div key={1} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
-                            </svg>
+                            <FlagIcon/>
                         </div>
                         {"Due date: " + formatDate(temp.endDate)}
                     </div>
@@ -96,42 +87,76 @@ const ItemComponent = ({
                 elements.push(
                     <div key={2} className="inline-flex items-center">
                         <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <ClockIcon/>
                         </div>
                         {"Takes " + formatDuration(temp.durationInMinutes)}
                     </div>
                 )
                 elements.push()
             }
-            if (temp.connectedWorkflowListApiId) {
-                const connectedList = boardChildLists.find(sl => sl.apiId == temp.connectedWorkflowListApiId)
-                elements.push(
-                    <div key={3} className="inline-flex items-center">
-                        <div className="w-3 h-3 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
-                            </svg>
-                        </div>
-                        {"Connected List: '" + connectedList.title + "'"}
-                    </div>
-                )
-            }
         }
         return (
             <div className="grid text-xs">
-                {isNoConstraint(workflowList.temporalConstraint) &&
-                "No constraint configured"
-                }
-                {!isNoConstraint(workflowList.temporalConstraint) &&
+                {!hasNoTemporalResource(workflowList.temporalResource) &&
                 elements.map(element => {
                     return (element)
                 })
+                }
+            </div>
+        )
+    }
+
+    const getNumericResourcesText = (): JSX.Element => {
+        return (
+            <div className="grid text-xs">
+                {
+                    workflowList.numericResources.map((numericResource, index) => {
+                        return (
+                            <div key={index} className="inline-flex items-center">
+                                <div className="w-3 h-3 mr-1">
+                                    <ChartBarIcon/>
+                                </div>
+                                <span>{"" + numericResource.label}:&nbsp;</span>
+                                <span>{numericResource.value}</span>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
+    }
+
+    const getTextualResourcesText = (): JSX.Element => {
+        return (
+            <div className="grid text-xs">
+                {
+                    workflowList.textualResources.map((textualResource, index) => {
+                        return (
+                            <div key={index} className="inline-flex items-center">
+                                <div className="w-3 h-3 mr-1">
+                                    <DocumentTextIcon/>
+                                </div>
+                                <span>{textualResource.label}</span>
+                                <span>{textualResource.value ? ": " + textualResource.value : ""}</span>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
+    }
+
+    const getUserResourceText = (): JSX.Element => {
+        console.log(workflowList.userResource)
+        return (
+            <div className="grid text-xs">
+                {!hasNoUserResource(workflowList.userResource) &&
+                <div key={index} className="inline-flex items-center">
+                    <div className="w-3 h-3 mr-1">
+                        <UserIcon/>
+                    </div>
+                    <span>{workflowList.userResource.username}</span>
+                </div>
                 }
             </div>
         )
@@ -145,15 +170,19 @@ const ItemComponent = ({
                 <div ref={provided.innerRef}
                      {...provided.draggableProps}
                      className="mb-2 mr-2">
-                    <div className={"bg-white border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}>
+                    <div
+                        className={"bg-white border border-gray-500 rounded shadow max-w-sm p-1" + moveClassName}>
                         <div className="flex place-content-between">
                             <div className="grid w-full m-1 hover:bg-gray-200"
                                  {...provided.dragHandleProps}
                             >
                                 <span className="font-bold">{workflowList.title} </span>
                                 {isInsideTemporalConstraintBoard &&
-                                getTemporalConstraintText()
+                                getTemporalResourceText()
                                 }
+                                {getNumericResourcesText()}
+                                {getTextualResourcesText()}
+                                {getUserResourceText()}
                             </div>
                             <ButtonsMenu workflowList={workflowList}
                                          removeWorkflowList={removeWorkflowList}
@@ -161,7 +190,7 @@ const ItemComponent = ({
                                          openModifyModal={openModifyModal}
                                          openMoveModal={openMoveModal}/>
                         </div>
-                        <div className="m-1 text-sm whitespace-pre bg-gray-50 rounded p-1">
+                        <div className="m-1 text-sm whitespace-pre bg-gray-100 rounded p-1">
                             {workflowList.description}
                         </div>
                     </div>
@@ -169,9 +198,8 @@ const ItemComponent = ({
                                      closeModal={closeModifyModal}
                                      workflowList={workflowList}
                                      isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                     boardChildLists={boardChildLists}
                                      modifyWorkflowList={modifyWorkflowList}
-                                     modifyTemporalConstraint={modifyTemporalConstraint}
+                                     modifyResources={modifyResources}
                     />
                     <MoveWorkflowListModal show={showMoveModal}
                                            closeModal={closeMoveModal}

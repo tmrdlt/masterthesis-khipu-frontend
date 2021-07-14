@@ -25,6 +25,6 @@ export const compareDateOptions = (date1?: Date, date2?: Date): boolean => {
     } else return !date1 && !date2;
 }
 
-export const formatDuration = (minutes: string): string =>{
-    return moment.duration(Number(minutes), "minutes").format("h [hours], m [minutes]", {trim: "both"})
+export const formatDuration = (minutes: number): string =>{
+    return moment.duration(minutes, "minutes").format("h [hours], m [minutes]", {trim: "both"})
 }

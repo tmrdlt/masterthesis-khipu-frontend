@@ -125,12 +125,12 @@ const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolea
  */
 export const recursiveParseDate = (lists: Array<WorkflowList>) => {
     lists.forEach(wl => {
-        if (wl.temporalConstraint) {
-            if (wl.temporalConstraint.startDate) {
-                wl.temporalConstraint.startDate = new Date(wl.temporalConstraint.startDate)
+        if (wl.temporalResource) {
+            if (wl.temporalResource.startDate) {
+                wl.temporalResource.startDate = new Date(wl.temporalResource.startDate)
             }
-            if (wl.temporalConstraint.endDate) {
-                wl.temporalConstraint.endDate = new Date(wl.temporalConstraint.endDate)
+            if (wl.temporalResource.endDate) {
+                wl.temporalResource.endDate = new Date(wl.temporalResource.endDate)
             }
         }
         if (wl.children.length > 0) {

@@ -1,27 +1,32 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
-    TemporalConstraint,
-    TemporalConstraintType,
+    NumericResource,
+    TemporalResource,
+    TextualResource,
     UpdateWorkflowListEntity,
+    User,
+    UserResource,
     WorkflowList,
-    WorkflowListSimple
+    WorkflowListResource
 } from "utils/models";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {compareDateOptions, formatDuration} from "utils/date-util";
-import {getOptionalString} from "utils/optional-util";
-import {isNoConstraint} from "utils/temp-constraint-util";
+import {getOptionalNumber, getOptionalString} from "utils/optional-util";
 import timeDurationsInMinutes from "utils/globals";
-
+import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import {arraysEqual} from "utils/compare-util";
+import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
+import {getUsers} from "utils/workflow-api";
 
 interface ModifyItemModalProps {
     show
     closeModal
     workflowList: WorkflowList
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
     modifyWorkflowList
-    modifyTemporalConstraint
+    modifyResources
 }
 
 const ModifyItemModal = ({
@@ -29,9 +34,8 @@ const ModifyItemModal = ({
                              closeModal,
                              workflowList,
                              isInsideTemporalConstraintBoard,
-                             boardChildLists,
                              modifyWorkflowList,
-                             modifyTemporalConstraint
+                             modifyResources
                          }: ModifyItemModalProps): JSX.Element => {
     // STATE
     const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -39,95 +43,160 @@ const ModifyItemModal = ({
         newDescription: getOptionalString(workflowList.description),
         isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard
     }
-    const initTempConstraint: TemporalConstraint = workflowList.temporalConstraint ? {
-        startDate: workflowList.temporalConstraint.startDate,
-        endDate: workflowList.temporalConstraint.endDate,
-        durationInMinutes: getOptionalString(workflowList.temporalConstraint.durationInMinutes),
-        connectedWorkflowListApiId: getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId)
+    const initTempResource: TemporalResource = workflowList.temporalResource ? {
+        startDate: workflowList.temporalResource.startDate,
+        endDate: workflowList.temporalResource.endDate,
+        durationInMinutes: getOptionalNumber(workflowList.temporalResource.durationInMinutes)
     } : {
         startDate: null,
         endDate: null,
-        durationInMinutes: null,
-        connectedWorkflowListApiId: null
+        durationInMinutes: 0
     }
+    const initNumericResources = workflowList.numericResources
+    const initTextualResources = workflowList.textualResources
+    const initUserResource = workflowList.userResource ? {
+        username: getOptionalString(workflowList.userResource.username)
+    } : {
+        username: ""
+    }
+    const initUsers: Array<User> = []
 
     const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
-    const [tempConstraint, setTempConstraint] = useState(initTempConstraint)
+    const [tempResource, setTempResource] = useState(initTempResource)
+    const [numericResources, setNumericResources] = useState(initNumericResources)
+    const [textualResources, setTextualResources] = useState(initTextualResources)
+    const [userResource, setUserResource] = useState(initUserResource)
+    const [users, setUsers] = useState(initUsers)
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    const init = () => {
+        getUsers().then(users => {
+            if (users) {
+                setUsers(users)
+            }
+        })
+    }
 
     // DYNAMIC CLASSES
     const showHideClass = show ? "" : "hidden";
 
     // FUNCTIONS
-    const handleFormChange = (event) => {
+    const handleUpdateItemFormChange = (event) => {
         const newState = {...updateItemEntity, [event.target.id]: event.target.value}
         setUpdateItemEntity(newState)
     }
-    const handleRadioButtonChange = (event) => {
-        const tempConstraintType: TemporalConstraintType = event.target.value
-        if (tempConstraintType == TemporalConstraintType.noConstraint) {
-            setTempConstraint({
-                startDate: null,
-                endDate: null,
-                durationInMinutes: null,
-                connectedWorkflowListApiId: null
-            })
-        } else {
-            setTempConstraint({
-                startDate: null,
-                endDate: null,
-                durationInMinutes: "",
-                connectedWorkflowListApiId: ""
-            })
-        }
-    }
 
     const handleDatePickerChange = (date, key) => {
-        const newState = {...tempConstraint, [key]: date}
-        setTempConstraint(newState)
+        const newState = {...tempResource, [key]: date}
+        setTempResource(newState)
     }
 
     const handleTimeRequiredSelectionChange = (event) => {
-        if (event.target.value == "0") {
-            const newState = {...tempConstraint, durationInMinutes: ""}
-            setTempConstraint(newState)
+        if (event.target.value === 0) {
+            const newState = {...tempResource, durationInMinutes: 0}
+            setTempResource(newState)
         } else {
-            const newState = {...tempConstraint, durationInMinutes: event.target.value}
-            setTempConstraint(newState)
+            const newState = {...tempResource, durationInMinutes: parseInt(event.target.value)}
+            setTempResource(newState)
         }
     }
 
-    const handleSelectionChange = (event) => {
-        if (event.target.value == "0") {
-            const newState = {...tempConstraint, connectedWorkflowListApiId: ""}
-            setTempConstraint(newState)
+    const handleNumericResourceFormChange = (event, index) => {
+        const newState = [...numericResources];
+        let newElement: NumericResource;
+        if (event.target.id === "label") {
+            newElement = {...newState[index], "label": event.target.value};
+            newState.splice(index, 1, newElement)
         } else {
-            const newState = {...tempConstraint, connectedWorkflowListApiId: event.target.value}
-            setTempConstraint(newState)
+            const regex = /^[0-9\b]+$/
+            if (regex.test(event.target.value)) {
+                newElement = {...newState[index], "value": parseFloat(event.target.value)};
+                console.log(newElement)
+                newState.splice(index, 1, newElement)
+            } else if (event.target.value === "") {
+                newElement = {...newState[index], "value": event.target.value};
+                newState.splice(index, 1, newElement)
+            }
         }
+        setNumericResources(newState)
     }
 
-    const workflowListUnchanged = (): boolean => {
-        return updateItemEntity.newTitle == workflowList.title
-            && updateItemEntity.newDescription == getOptionalString(workflowList.description)
+    const addEmptyNumericResource = () => {
+        const newState = [...numericResources];
+        // @ts-ignore
+        newState.push({label: "", value: ""});
+        setNumericResources(newState);
     }
 
-    const temporalConstraintUnchanged = (): boolean => {
-        if (workflowList.temporalConstraint == null) {
-            return isNoConstraint(tempConstraint)
-        } else {
-            return (compareDateOptions(tempConstraint.startDate, workflowList.temporalConstraint.startDate)
-                && compareDateOptions(tempConstraint.endDate, workflowList.temporalConstraint.endDate)
-                && tempConstraint.durationInMinutes == getOptionalString(workflowList.temporalConstraint.durationInMinutes)
-                && tempConstraint.connectedWorkflowListApiId === getOptionalString(workflowList.temporalConstraint.connectedWorkflowListApiId))
-        }
+    const removeNumericResource = (index: number) => {
+        const newState = [...numericResources];
+        newState.splice(index, 1);
+        setNumericResources(newState);
     }
 
-    const temporalConstraintFormInvalid = (): boolean => {
-        if (!isNoConstraint(tempConstraint)) {
-            return !tempConstraint.startDate && !tempConstraint.endDate && !tempConstraint.connectedWorkflowListApiId && !tempConstraint.durationInMinutes
+    const handleTextualResourceFormChange = (event, index) => {
+        const newState = [...textualResources];
+        let newElement: TextualResource;
+        if (event.target.id === "label") {
+            newElement = {...newState[index], "label": event.target.value};
         } else {
-            return false
+            newElement = {...newState[index], "value": event.target.value};
         }
+        newState.splice(index, 1, newElement)
+        setTextualResources(newState)
+    }
+
+    const handleUserResourceFormChange = (event) => {
+        const newState = {...userResource, username: event.target.value}
+        setUserResource(newState)
+    }
+
+    const addEmptyTextualResource = () => {
+        const newState = [...textualResources];
+        newState.push({label: "", value: ""});
+        setTextualResources(newState);
+    }
+
+    const removeTextualResource = (index: number) => {
+        const newState = [...textualResources];
+        newState.splice(index, 1);
+        setTextualResources(newState);
+    }
+
+    const isWorkflowListUnchanged = (): boolean => {
+        return updateItemEntity.newTitle == initUpdateItemEntity.newTitle
+            && updateItemEntity.newDescription == initUpdateItemEntity.newDescription
+    }
+
+    const isTemporalResourceUnchanged = (): boolean => {
+        return (compareDateOptions(tempResource.startDate, initTempResource.startDate)
+            && compareDateOptions(tempResource.endDate, initTempResource.endDate)
+            && tempResource.durationInMinutes == getOptionalNumber(initTempResource.durationInMinutes))
+    }
+
+    const areNumericResourcesUnchanged = (): boolean => {
+        return arraysEqual(numericResources, initNumericResources)
+    }
+
+    const areTextualResourcesUnchanged = (): boolean => {
+        return arraysEqual(textualResources, initTextualResources)
+    }
+
+    const isUserResourceUnchanged = (): boolean => {
+        return userResource.username === initUserResource.username
+    }
+
+    const isNumericResourceFormInvalid = (): boolean => {
+        // @ts-ignore
+        return numericResources.filter(nr => nr.label === "" || nr.value === "").length !== 0;
+    }
+
+    const isTextualResourceFormInvalid = (): boolean => {
+        // @ts-ignore
+        return textualResources.filter(tr => tr.label === "").length !== 0;
     }
 
     return (
@@ -139,185 +208,383 @@ const ModifyItemModal = ({
                     className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 
                     { /* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
-                    <div className="m-5">
-                        <h3 className="font-bold">Modify Item</h3>
-                        <div className="mt-4 w-full">
-                            <div className="grid grid-cols-1 gap-4 text-sm">
-                                <label className="block">
-                                    <span className="text-gray-700">New title</span>
-                                    <input
-                                        type="text"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                        value={updateItemEntity.newTitle}
-                                        onChange={handleFormChange}
-                                        id="newTitle"
-                                    />
-                                </label>
-                                <label className="block">
-                                    <span className="text-gray-700">New description</span>
-                                    <textarea
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                        rows={3}
-                                        value={updateItemEntity.newDescription}
-                                        onChange={handleFormChange}
-                                        id="newDescription"
-                                    />
-                                </label>
-                                {isInsideTemporalConstraintBoard &&
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex items-center">
-                                        <label className="inline-flex items-center mr-3">
-                                            <input type="radio"
-                                                   value={TemporalConstraintType.noConstraint}
-                                                   id="temporalConstraintType"
-                                                   checked={isNoConstraint(tempConstraint)}
-                                                   onChange={handleRadioButtonChange}
-                                                   className="h-4 w-4"/>
-                                            <span className="ml-1">No constraint</span>
-                                        </label>
-                                        <label className="inline-flex items-center mr-3">
-                                            <input type="radio"
-                                                   value={TemporalConstraintType.constraint}
-                                                   id="temporalConstraintType"
-                                                   checked={!isNoConstraint(tempConstraint)}
-                                                   onChange={handleRadioButtonChange}
-                                                   className="h-4 w-4"/>
-                                            <span className="ml-1">Temporal constraint</span>
-                                        </label>
-                                    </div>
-                                    {!isNoConstraint(tempConstraint) &&
-                                    <div className="grid grid-cols-1 gap-4">
-                                        <div className="grid">
-                                            <div className="flex place-content-between">
-                                            <span
-                                                className="text-gray-700">Start date</span>
-                                                <button className="text-gray-700"
-                                                        onClick={() => {
-                                                            handleDatePickerChange(null, "startDate");
-                                                        }}>
-                                                    &#x2715; Clear date
-                                                </button>
-                                            </div>
-                                            <DatePicker
-                                                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                selected={tempConstraint ? tempConstraint.startDate : null}
-                                                onChange={date => handleDatePickerChange(date, "startDate")}
-                                                selectsStart
-                                                startDate={tempConstraint.startDate}
-                                                endDate={tempConstraint.endDate}
-                                                maxDate={tempConstraint.endDate}
-                                                disabled={!tempConstraint}
-                                                placeholderText="No start date set"
-                                                showTimeSelect
-                                                timeIntervals={15}
-                                                timeCaption="Time"
-                                                timeFormat="HH:mm"
-                                                dateFormat="dd.MM.yyyy, HH:mm"
-                                            />
-                                        </div>
-                                        <div className="grid">
-                                            <div className="flex place-content-between">
-                                            <span
-                                                className="text-gray-700">Due date</span>
-                                                <button className="text-gray-700"
-                                                        onClick={() => {
-                                                            handleDatePickerChange(null, "endDate");
-                                                        }}>
-                                                    &#x2715; Clear date
-                                                </button>
-                                            </div>
-                                            <DatePicker
-                                                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                selected={tempConstraint ? tempConstraint.endDate : null}
-                                                onChange={date => handleDatePickerChange(date, "endDate")}
-                                                selectsEnd
-                                                startDate={tempConstraint.startDate}
-                                                endDate={tempConstraint.endDate}
-                                                minDate={tempConstraint.startDate}
-                                                disabled={!tempConstraint}
-                                                placeholderText="No due date set"
-                                                showTimeSelect
-                                                timeIntervals={15}
-                                                timeCaption="Time"
-                                                timeFormat="HH:mm"
-                                                dateFormat="dd.MM.yyyy, HH:mm"
-                                            />
-                                        </div>
-                                        <label className="block">
-                                            <span className="text-gray-700">Time required</span><select
-                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                            value={tempConstraint.durationInMinutes}
-                                            onChange={handleTimeRequiredSelectionChange}
-                                        >
-                                            <option className="opacity-40" key={0} value={"0"}>None
-                                            </option>
-                                            {
-                                                timeDurationsInMinutes.map(durationInMinutes =>
-                                                    <option key={durationInMinutes}
-                                                            value={durationInMinutes}>{formatDuration(durationInMinutes.toString())}</option>
-                                                )
+                    <form>
+                        <div className="m-5">
+                            <h3 className="font-bold">Modify Item</h3>
+                            <div className="mt-4 w-full">
+                                <div className="grid grid-cols-1 gap-4 text-sm">
+                                    <label className="block">
+                                        <span className="text-gray-700">Title</span>
+                                        <input
+                                            type="text"
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                            value={updateItemEntity.newTitle}
+                                            onChange={handleUpdateItemFormChange}
+                                            id="newTitle"
+                                        />
+                                    </label>
+                                    <label className="block">
+                                        <span className="text-gray-700">Description</span>
+                                        <textarea
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                            rows={3}
+                                            value={updateItemEntity.newDescription}
+                                            onChange={handleUpdateItemFormChange}
+                                            id="newDescription"
+                                        />
+                                    </label>
+                                    <span className="text-gray-700">Resources</span>
+                                    <Tabs>
+                                        <TabList>
+                                            {isInsideTemporalConstraintBoard &&
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <ClockIcon/>
+                                                    </div>
+                                                    Temporal
+                                                </div>
+                                            </Tab>
                                             }
-                                        </select>
-                                        </label>
-                                        <label className="block">
-                                            <span className="text-gray-700">Should be in List</span>
-                                            <select
-                                                className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                                                value={tempConstraint.connectedWorkflowListApiId}
-                                                onChange={handleSelectionChange}
-                                            >
-                                                <option className="opacity-40" key={0} value={"0"}>No list selected
-                                                </option>
-                                                {
-                                                    boardChildLists.map(simpleList =>
-                                                        <option key={simpleList.apiId}
-                                                                value={simpleList.apiId}>{simpleList.title}</option>
-                                                    )
-                                                }
-                                            </select>
-                                        </label>
-                                    </div>
-                                    }
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <ChartBarIcon/>
+                                                    </div>
+                                                    Numeric
+                                                </div>
+                                            </Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <DocumentTextIcon/>
+                                                    </div>
+                                                    Textual
+                                                </div>
+                                            </Tab>
+                                            <Tab>
+                                                <div className="inline-flex items-center">
+                                                    <div className="w-4 h-4 mr-1">
+                                                        <UserIcon/>
+                                                    </div>
+                                                    User
+                                                </div>
+                                            </Tab>
+                                        </TabList>
+                                        {isInsideTemporalConstraintBoard &&
+                                        <TabPanel>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    <div className="grid">
+                                                        <div className="flex place-content-between">
+                                                            <div className="inline-flex items-center">
+                                                                <div className="w-4 h-4 mr-1">
+                                                                    <CalendarIcon/>
+                                                                </div>
+                                                                <span className="text-gray-700">Start date</span>
+                                                            </div>
+                                                            <button className="text-gray-700"
+                                                                    onClick={() => {
+                                                                        handleDatePickerChange(null, "startDate");
+                                                                    }}>
+                                                                &#x2715; Clear date
+                                                            </button>
+                                                        </div>
+                                                        <DatePicker
+                                                            className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                            selected={tempResource ? tempResource.startDate : null}
+                                                            onChange={date => handleDatePickerChange(date, "startDate")}
+                                                            selectsStart
+                                                            startDate={tempResource.startDate}
+                                                            endDate={tempResource.endDate}
+                                                            maxDate={tempResource.endDate}
+                                                            disabled={!tempResource}
+                                                            placeholderText="No start date set"
+                                                            showTimeSelect
+                                                            timeIntervals={15}
+                                                            timeCaption="Time"
+                                                            timeFormat="HH:mm"
+                                                            dateFormat="dd.MM.yyyy, HH:mm"
+                                                        />
+                                                    </div>
+                                                    <div className="grid">
+                                                        <div className="flex place-content-between">
+                                                            <div className="inline-flex items-center">
+                                                                <div className="w-4 h-4 mr-1">
+                                                                    <FlagIcon/>
+                                                                </div>
+                                                                <span className="text-gray-700">Due date</span>
+                                                            </div>
+                                                            <button className="text-gray-700"
+                                                                    onClick={() => {
+                                                                        handleDatePickerChange(null, "endDate");
+                                                                    }}>
+                                                                &#x2715; Clear date
+                                                            </button>
+                                                        </div>
+                                                        <DatePicker
+                                                            className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                            selected={tempResource ? tempResource.endDate : null}
+                                                            onChange={date => handleDatePickerChange(date, "endDate")}
+                                                            selectsEnd
+                                                            startDate={tempResource.startDate}
+                                                            endDate={tempResource.endDate}
+                                                            minDate={tempResource.startDate}
+                                                            disabled={!tempResource}
+                                                            placeholderText="No due date set"
+                                                            showTimeSelect
+                                                            timeIntervals={15}
+                                                            timeCaption="Time"
+                                                            timeFormat="HH:mm"
+                                                            dateFormat="dd.MM.yyyy, HH:mm"
+                                                        />
+                                                    </div>
+                                                    <label className="block">
+                                                        <div className="inline-flex items-center">
+                                                            <div className="w-4 h-4 mr-1">
+                                                                <ClockIcon/>
+                                                            </div>
+                                                            <span className="text-gray-700">
+                                                            Estimated time required
+                                                        </span>
+                                                        </div>
+                                                        <select
+                                                            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                            value={tempResource.durationInMinutes}
+                                                            onChange={handleTimeRequiredSelectionChange}
+                                                        >
+                                                            <option className="opacity-40" key={0} value={0}>None
+                                                            </option>
+                                                            {timeDurationsInMinutes.map(durationInMinutes =>
+                                                                <option key={durationInMinutes}
+                                                                        value={durationInMinutes}>
+                                                                    {formatDuration(durationInMinutes)}
+                                                                </option>
+                                                            )}
+                                                        </select>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </TabPanel>
+                                        }
+                                        <TabPanel>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {numericResources.map((numericResource, index) => {
+                                                        return (
+                                                            <div className="flex items-end" key={index}>
+                                                                <div className="grid grid-cols-2 gap-4">
+                                                                    <label className="block">
+                                                                        <span
+                                                                            className="text-gray-700">Label (required)</span>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                            value={numericResource.label}
+                                                                            placeholder="Label"
+                                                                            onChange={(event) => {
+                                                                                handleNumericResourceFormChange(event, index)
+                                                                            }
+                                                                            }
+                                                                            id="label"
+                                                                        />
+                                                                    </label>
+                                                                    <label className="block">
+                                                                        <span
+                                                                            className="text-gray-700">Value (required)</span>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                            value={numericResource.value}
+                                                                            placeholder="Value"
+                                                                            onChange={(event) => {
+                                                                                handleNumericResourceFormChange(event, index)
+                                                                            }
+                                                                            }
+                                                                            id="value"
+                                                                        />
+                                                                    </label>
+                                                                </div>
+                                                                <button className="text-gray-700"
+                                                                        onClick={() => {
+                                                                            removeNumericResource(index);
+                                                                        }}>
+                                                                    &#x2715; Delete
+                                                                </button>
+                                                            </div>
+
+                                                        )
+                                                    }
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        addEmptyNumericResource();
+                                                    }}
+                                                    className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                         viewBox="0 0 24 24"
+                                                         stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                                              strokeWidth={2}
+                                                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </TabPanel>
+                                        <TabPanel>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {textualResources.map((textualResource, index) => {
+                                                        return (
+                                                            <div className="flex items-end" key={index}>
+                                                                <div className="grid grid-cols-2 gap-4">
+                                                                    <label className="block">
+                                                                        <span
+                                                                            className="text-gray-700">Label (required)</span>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                            value={textualResource.label}
+                                                                            placeholder="Label"
+                                                                            onChange={(event) => {
+                                                                                handleTextualResourceFormChange(event, index)
+                                                                            }
+                                                                            }
+                                                                            id="label"
+                                                                        />
+                                                                    </label>
+                                                                    <label className="block">
+                                                                        <span
+                                                                            className="text-gray-700">Value (optional)</span>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                                            value={textualResource.value}
+                                                                            placeholder="Value"
+                                                                            onChange={(event) => {
+                                                                                handleTextualResourceFormChange(event, index)
+                                                                            }
+                                                                            }
+                                                                            id="value"
+                                                                        />
+                                                                    </label>
+                                                                </div>
+                                                                <button className="text-gray-700"
+                                                                        onClick={() => {
+                                                                            removeTextualResource(index);
+                                                                        }}>
+                                                                    &#x2715; Delete
+                                                                </button>
+                                                            </div>
+
+                                                        )
+                                                    }
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        addEmptyTextualResource();
+                                                    }}
+                                                    className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                         viewBox="0 0 24 24"
+                                                         stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                                              strokeWidth={2}
+                                                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </TabPanel>
+                                        <TabPanel>
+                                            <label className="block">
+                                                <span className="text-gray-700">Assigned user</span>
+                                                <select
+                                                    className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                                                    value={userResource.username}
+                                                    onChange={handleUserResourceFormChange}
+                                                >
+                                                    <option className="opacity-40" key={0} value={""}>None
+                                                    </option>
+                                                    {users.map(user =>
+                                                        <option key={user.username}
+                                                                value={user.username}>
+                                                            {user.username}
+                                                        </option>
+                                                    )}
+                                                </select>
+                                            </label>
+                                        </TabPanel>
+                                    </Tabs>
                                 </div>
-                                }
                             </div>
                         </div>
-                    </div>
-                    <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
-                        <button type="button"
-                                disabled={workflowListUnchanged() && temporalConstraintUnchanged() || temporalConstraintFormInvalid()}
-                                onClick={() => {
-                                    if (!workflowListUnchanged()) {
-                                        modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
-                                            closeModal()
-                                        })
+                        <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
+                            <button type="button"
+                                    disabled={
+                                        isWorkflowListUnchanged() && isTemporalResourceUnchanged() && areNumericResourcesUnchanged() && areTextualResourcesUnchanged() && isUserResourceUnchanged() ||
+                                        isNumericResourceFormInvalid() || isTextualResourceFormInvalid()
                                     }
-                                    if (!temporalConstraintUnchanged()) {
-
-                                        const entity = {
-                                            ...tempConstraint,
-                                            durationInMinutes: tempConstraint.durationInMinutes === "" ? null : parseInt(tempConstraint.durationInMinutes),
-                                            connectedWorkflowListApiId: tempConstraint.connectedWorkflowListApiId === "" ? null : tempConstraint.connectedWorkflowListApiId
+                                    onClick={() => {
+                                        let numericEntity: Array<NumericResource> = null;
+                                        let textualEntity: Array<TextualResource> = null;
+                                        let temporalEntity: TemporalResource = null;
+                                        let userEntity: UserResource = null
+                                        if (!isWorkflowListUnchanged()) {
+                                            modifyWorkflowList(workflowList.apiId, updateItemEntity).then(res => {
+                                                closeModal()
+                                            })
                                         }
-                                        modifyTemporalConstraint(workflowList.apiId, entity).then(res => {
+                                        if (!isTemporalResourceUnchanged()) {
+                                            // @ts-ignore
+                                            temporalEntity = {
+                                                ...tempResource,
+                                                durationInMinutes: tempResource.durationInMinutes === 0 ? null : tempResource.durationInMinutes
+                                            }
+                                        }
+                                        if (!areNumericResourcesUnchanged() && !isNumericResourceFormInvalid()) {
+                                            numericEntity = numericResources
+                                        }
+                                        if (!areTextualResourcesUnchanged() && !isTextualResourceFormInvalid()) {
+                                            textualEntity = textualResources
+                                        }
+                                        if (!isUserResourceUnchanged()) {
+                                            if (userResource.username === "") {
+                                                userEntity = {
+                                                    username: null
+                                                }
+                                            } else {
+                                                userEntity = userResource
+                                            }
+                                        }
+                                        const entity: WorkflowListResource = {
+                                            numeric: numericEntity,
+                                            textual: textualEntity,
+                                            temporal: temporalEntity,
+                                            user: userEntity
+                                        }
+                                        modifyResources(workflowList.apiId, entity).then(res => {
                                             closeModal()
                                         })
-                                    }
+                                    }}
+                                    className="disabled:opacity-50 disabled:cursor-not-allowed w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    closeModal()
+                                    setUpdateItemEntity(initUpdateItemEntity)
+                                    setTempResource(initTempResource)
+                                    setNumericResources(initNumericResources)
+                                    setTextualResources(initTextualResources)
                                 }}
-                                className="disabled:opacity-50 disabled:cursor-not-allowed w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Save
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                closeModal()
-                                setUpdateItemEntity(initUpdateItemEntity)
-                                setTempConstraint(initTempConstraint)
-                            }}
-                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        >Cancel
-                        </button>
-                    </div>
+                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                            >Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

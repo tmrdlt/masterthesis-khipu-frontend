@@ -1,5 +1,4 @@
 import React from "react";
-import {WorkflowList, WorkflowListType} from "utils/models";
 
 
 interface MoveWorkflowListModalProps {

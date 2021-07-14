@@ -1,6 +1,6 @@
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
-import {WorkflowList, WorkflowListSimple, WorkflowListType} from "utils/models";
+import {WorkflowList, WorkflowListType} from "utils/models";
 import ItemComponent from "components/item-component";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ModifyListModal from "components/modals/modify-list-modal";
@@ -15,16 +15,15 @@ interface IListProps {
     workflowList: WorkflowList
     userApiId: string
     isInsideTemporalConstraintBoard: boolean
-    boardChildLists: Array<WorkflowListSimple>
+    workflowListToMove: WorkflowList
     createWorkflowList
     modifyWorkflowList
     removeWorkflowList
     convertWorkflowList
     moveWorkflowList
-    workflowListToMove
     selectWorkflowListToMove
     showDropButton
-    modifyTemporalConstraint
+    modifyResources
 }
 
 const ListComponent = ({
@@ -32,16 +31,15 @@ const ListComponent = ({
                            workflowList,
                            userApiId,
                            isInsideTemporalConstraintBoard,
-                           boardChildLists,
+                           workflowListToMove,
                            createWorkflowList,
                            modifyWorkflowList,
                            removeWorkflowList,
                            convertWorkflowList,
                            moveWorkflowList,
-                           workflowListToMove,
                            selectWorkflowListToMove,
                            showDropButton,
-                           modifyTemporalConstraint
+                           modifyResources
                        }: IListProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -120,15 +118,15 @@ const ListComponent = ({
                                                                 index={index}
                                                                 workflowList={wl}
                                                                 userApiId={userApiId}
+                                                                workflowListToMove={workflowListToMove}
                                                                 createWorkflowList={createWorkflowList}
                                                                 modifyWorkflowList={modifyWorkflowList}
                                                                 removeWorkflowList={removeWorkflowList}
                                                                 convertWorkflowList={convertWorkflowList}
                                                                 moveWorkflowList={moveWorkflowList}
-                                                                workflowListToMove={workflowListToMove}
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
-                                                                modifyTemporalConstraint={modifyTemporalConstraint}
+                                                                modifyResources={modifyResources}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -138,16 +136,15 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardChildLists={boardChildLists}
+                                                               workflowListToMove={workflowListToMove}
                                                                createWorkflowList={createWorkflowList}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
                                                                convertWorkflowList={convertWorkflowList}
                                                                moveWorkflowList={moveWorkflowList}
-                                                               workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
-                                                               modifyTemporalConstraint={modifyTemporalConstraint}
+                                                               modifyResources={modifyResources}
                                                 />
                                             )
                                         } else {
@@ -157,12 +154,11 @@ const ListComponent = ({
                                                                workflowList={wl}
                                                                userApiId={userApiId}
                                                                isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-                                                               boardChildLists={boardChildLists}
+                                                               workflowListToMove={workflowListToMove}
                                                                modifyWorkflowList={modifyWorkflowList}
                                                                removeWorkflowList={removeWorkflowList}
-                                                               workflowListToMove={workflowListToMove}
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
-                                                               modifyTemporalConstraint={modifyTemporalConstraint}
+                                                               modifyResources={modifyResources}
                                                 />
                                             )
                                         }

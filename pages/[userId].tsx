@@ -3,22 +3,23 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    TemporalConstraint,
+    NumericResource,
+    TemporalResource,
     UpdateWorkflowListEntity,
-    WorkflowList,
+    WorkflowList, WorkflowListResource,
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
 import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder} from "utils/list-util";
 import {
-    deleteWorkflowList, getUser,
+    deleteWorkflowList,
+    getUser,
     getWorkflowLists,
-    postTemporalConstraint,
     postWorkflowList,
     postWorkflowListConvert,
     postWorkflowListMove,
-    postWorkflowListReorder,
-    putWorkflowList
+    postWorkflowListReorder, postWorkflowListResource,
+    updateWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
 import ListComponent from "components/list-component";
@@ -80,11 +81,7 @@ const Home: FunctionComponent = (): JSX.Element => {
 
             if (source.index != destination.index) {
                 postWorkflowListReorder(draggableId, {newPosition: destination.index}).then(res => {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 })
             }
         } else {
@@ -102,11 +99,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                 newPosition: destination.index,
                 userApiId: userApiId
             }).then(res => {
-                getWorkflowLists(userApiId).then(workflowLists => {
-                    if (workflowLists) {
-                        setState(workflowLists)
-                    }
-                })
+                updateState();
             })
         }
     }
@@ -142,6 +135,14 @@ const Home: FunctionComponent = (): JSX.Element => {
         }
     }
 
+    const updateState = () => {
+        getWorkflowLists(userApiId).then(workflowLists => {
+            if (workflowLists) {
+                setState(workflowLists)
+            }
+        })
+    }
+
     const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
         let newCreateWorkflowListEntity: CreateWorkflowListEntity;
         if (createWorkflowListEntity.description == "") {
@@ -153,25 +154,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postWorkflowList(newCreateWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
-                }
-                return res
-            });
-    }
-
-    const modifyTemporalConstraint = async (uuid: string, temporalConstraint: TemporalConstraint) => {
-        postTemporalConstraint(uuid, temporalConstraint)
-            .then(res => {
-                if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState()
                 }
                 return res
             });
@@ -184,14 +167,10 @@ const Home: FunctionComponent = (): JSX.Element => {
         } else {
             newUpdateWorkflowListEntity = updateWorkflowListEntity
         }
-        putWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
+        updateWorkflowList(workflowListUuid, newUpdateWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
                 return res
             });
@@ -201,11 +180,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         deleteWorkflowList(uuid)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
             });
     }
@@ -214,11 +189,7 @@ const Home: FunctionComponent = (): JSX.Element => {
         postWorkflowListConvert(uuid, convertWorkflowListEntity)
             .then(res => {
                 if (res) {
-                    getWorkflowLists(userApiId).then(workflowLists => {
-                        if (workflowLists) {
-                            setState(workflowLists)
-                        }
-                    })
+                    updateState();
                 }
             });
     }
@@ -242,6 +213,17 @@ const Home: FunctionComponent = (): JSX.Element => {
             })
         })
     }
+
+    const modifyResources = async (uuid: string, workflowListResource: WorkflowListResource) => {
+        postWorkflowListResource(uuid, workflowListResource)
+        .then(res => {
+            if (res) {
+                updateState();
+            }
+            return res
+        });
+    }
+
 
     return (
         <div className="bg-gray-200 h-screen p-3">
@@ -273,15 +255,15 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         index={index}
                                                         workflowList={wl}
                                                         userApiId={userApiId}
+                                                        workflowListToMove={workflowListToMove}
                                                         createWorkflowList={createWorkflowList}
                                                         modifyWorkflowList={modifyWorkflowList}
                                                         removeWorkflowList={removeWorkflowList}
                                                         convertWorkflowList={convertWorkflowList}
                                                         moveWorkflowList={moveWorkflowList}
-                                                        workflowListToMove={workflowListToMove}
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
-                                                        modifyTemporalConstraint={modifyTemporalConstraint}
+                                                        modifyResources={modifyResources}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -291,16 +273,15 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
-                                                       boardChildLists={[]} // TODO maybe make optional
+                                                       workflowListToMove={workflowListToMove}
                                                        createWorkflowList={createWorkflowList}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
                                                        convertWorkflowList={convertWorkflowList}
                                                        moveWorkflowList={moveWorkflowList}
-                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
-                                                       modifyTemporalConstraint={modifyTemporalConstraint}
+                                                       modifyResources={modifyResources}
                                         />
                                     )
                                 } else {
@@ -310,12 +291,11 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        workflowList={wl}
                                                        userApiId={userApiId}
                                                        isInsideTemporalConstraintBoard={false}
-                                                       boardChildLists={[]} // TODO maybe make optional
+                                                       workflowListToMove={workflowListToMove}
                                                        modifyWorkflowList={modifyWorkflowList}
                                                        removeWorkflowList={removeWorkflowList}
-                                                       workflowListToMove={workflowListToMove}
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
-                                                       modifyTemporalConstraint={modifyTemporalConstraint}
+                                                       modifyResources={modifyResources}
                                         />
                                     )
                                 }

@@ -1,37 +1,22 @@
-// FRONTEND ONLY
-export enum TemporalConstraintType {
-    noConstraint = "noConstraint", constraint = "constraint", itemToBeInList = "itemToBeInList", dependsOn = "dependsOn"
-}
-
-
-export type WorkflowListSimple = {
-    apiId: string,
-    title: string
-}
-
 // FROM BACKEND
 export type WorkflowList = {
-    apiId: string,
-    title: string,
-    description?: string,
-    usageType: WorkflowListType,
-    children: Array<WorkflowList>,
+    apiId: string
+    title: string
+    description?: string
+    usageType: WorkflowListType
+    children: Array<WorkflowList>
     level: number
-    position: number,
+    position: number
     isTemporalConstraintBoard: boolean,
-    temporalConstraint?: TemporalConstraint
-}
-
-export const workflowListToWorkflowListSimple = (wl: WorkflowList): WorkflowListSimple => {
-    return {
-        apiId: wl.apiId,
-        title: wl.title
-    }
+    temporalResource?: TemporalResource
+    userResource?: UserResource
+    numericResources: Array<NumericResource>
+    textualResources: Array<TextualResource>
 }
 
 export type CreateWorkflowListEntity = {
-    title: string,
-    description?: string,
+    title: string
+    description?: string
     listType: WorkflowListType
     parentApiId?: string
     userApiId: string
@@ -57,11 +42,31 @@ export type ReorderWorkflowListEntity = {
     newPosition: number
 }
 
-export type TemporalConstraint = {
+export type WorkflowListResource = {
+    numeric?: Array<NumericResource>
+    textual?: Array<TextualResource>
+    temporal?: TemporalResource
+    user?: UserResource
+}
+
+export type NumericResource = {
+    label: string,
+    value: number
+}
+
+export type TextualResource = {
+    label: string,
+    value?: string
+}
+
+export type UserResource = {
+    username: string
+}
+
+export type TemporalResource = {
     startDate?: Date,
     endDate?: Date,
-    durationInMinutes?: string,
-    connectedWorkflowListApiId?: string
+    durationInMinutes?: number
 }
 
 export enum WorkflowListType {
