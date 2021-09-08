@@ -284,7 +284,8 @@ const ModifyItemModal = ({
                                                                 <span className="text-gray-700">Start date</span>
                                                             </div>
                                                             <button className="text-gray-700"
-                                                                    onClick={() => {
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault(); // needed so react doesn't reload page
                                                                         handleDatePickerChange(null, "startDate");
                                                                     }}>
                                                                 &#x2715; Clear date
@@ -316,7 +317,8 @@ const ModifyItemModal = ({
                                                                 <span className="text-gray-700">Due date</span>
                                                             </div>
                                                             <button className="text-gray-700"
-                                                                    onClick={() => {
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault(); // needed so react doesn't reload page
                                                                         handleDatePickerChange(null, "endDate");
                                                                     }}>
                                                                 &#x2715; Clear date
