@@ -11,6 +11,7 @@ import ButtonsMenu from "components/buttons-menu";
 import {formatDate, formatDuration} from "utils/date-util";
 import ModifyBoardModal from "components/modals/modify-board-modal";
 import {usePopperTooltip} from "react-popper-tooltip";
+import {FlagIcon} from "components/icons";
 
 interface IBoardProps {
     index: number
@@ -119,19 +120,15 @@ const BoardComponent = ({
                                 {workflowList.isTemporalConstraintBoard &&
                                 <div className="inline-flex items-center text-xs">
                                     <div className="w-3 h-3 mr-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
+                                        <FlagIcon/>
                                     </div>
                                     {getTemporalResourceText()}
                                 </div>
                                 }
                             </div>
-                            <div className="flex flex-row items-center">
+                            <div className="flex flex-row">
                                 {workflowList.temporalQueryResult != null &&
-                                <div>
+                                <div className="flex justify-center items-center h-8">
                                     <div
                                         className={"flex border border-gray-500 rounded w-36 h-6 text-xs justify-center items-center mr-1" + temporalQueryLabelColor}
                                         ref={setTriggerRef}
