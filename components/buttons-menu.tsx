@@ -13,6 +13,8 @@ interface IButtonsMenuProps {
     convertWorkflowList?
     openCreateModal?
     getTemporalQueryResult?
+    isLoadingQuery?: boolean,
+    startLoading?
 }
 
 const ButtonsMenu = ({
@@ -23,23 +25,29 @@ const ButtonsMenu = ({
                          openCreateModal,
                          openModifyModal,
                          openMoveModal,
-                         getTemporalQueryResult
+                         getTemporalQueryResult,
+                         isLoadingQuery,
+                         startLoading
                      }: IButtonsMenuProps): JSX.Element => {
 
+    // DYNAMIC CLASSES
+    const animationSpinClassName = isLoadingQuery ? " animate-spin" : ""
+
     return (
-
-
         <div className="flex">
             <div
                 className={"flex justify-center items-center h-8"}>
-                {workflowList.usageType == WorkflowListType.BOARD &&
+                {workflowList.usageType == WorkflowListType.BOARD && workflowList.isTemporalConstraintBoard &&
                 <button type="button"
                         onClick={() => {
-                            getTemporalQueryResult(workflowList.apiId)
+                            startLoading();
+                            getTemporalQueryResult(workflowList.apiId);
                         }}
                         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
                 >
-                    <ClockIcon/>
+                    <div className={animationSpinClassName}>
+                        <ClockIcon/>
+                    </div>
                 </button>
                 }
                 {(workflowList.usageType == WorkflowListType.BOARD || workflowList.usageType == WorkflowListType.LIST) &&

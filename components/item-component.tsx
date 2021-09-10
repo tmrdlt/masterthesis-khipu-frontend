@@ -203,13 +203,12 @@ const ItemComponent = ({
                                 {workflowList.temporalQueryResult != null &&
                                 <div>
                                     <div
-                                        className={"w-10 border border-gray-500 rounded shadow p-1 text-xs text-center" + temporalQueryLabelColor}
+                                        className={"flex w-10 border border-gray-500 rounded p-1 text-xs justify-center items-center" + temporalQueryLabelColor}
                                         ref={setTriggerRef}>
                                         {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}
                                     </div>
                                     {visible &&
                                     <div
-                                        className="bg-blue-900 border border-gray-500 rounded shadow p-1 text-xs text-center"
                                         ref={setTooltipRef}
                                         {...getTooltipProps({className: 'tooltip-container text-xs'})}>
                                         <span>Optimal processing order: {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}</span>

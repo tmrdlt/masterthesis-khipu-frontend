@@ -47,6 +47,7 @@ const BoardComponent = ({
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showModifyModal, setShowModifyModal] = useState(false);
     const [showMoveModal, setShowMoveModal] = useState(false);
+    const [isLoadingQuery, setIsLoadingQuery] = useState(false);
     const {
         getArrowProps,
         getTooltipProps,
@@ -60,6 +61,12 @@ const BoardComponent = ({
             closeMoveModal();
         }
     }, [workflowListToMove])
+
+    useEffect(() => {
+        if (workflowList.temporalQueryResult != null) {
+            setIsLoadingQuery(false);
+        }
+    }, [workflowList.temporalQueryResult])
 
     // DYNAMIC CLASSES
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
@@ -83,6 +90,9 @@ const BoardComponent = ({
     }
     const closeMoveModal = () => {
         setShowMoveModal(false);
+    }
+    const startLoading = () => {
+        setIsLoadingQuery(true);
     }
 
     const getTemporalResourceText = (): string => {
@@ -119,22 +129,14 @@ const BoardComponent = ({
                                 </div>
                                 }
                             </div>
-                            <div className="flex flex-col items-center">
-                                <ButtonsMenu workflowList={workflowList}
-                                             removeWorkflowList={removeWorkflowList}
-                                             convertWorkflowList={convertWorkflowList}
-                                             selectWorkflowListToMove={selectWorkflowListToMove}
-                                             openCreateModal={openCreateModal}
-                                             openModifyModal={openModifyModal}
-                                             openMoveModal={openMoveModal}
-                                             getTemporalQueryResult={getTemporalQueryResult}
-                                />
+                            <div className="flex flex-row items-center">
                                 {workflowList.temporalQueryResult != null &&
                                 <div>
                                     <div
-                                        className={"border border-gray-500 rounded shadow p-1 text-xs text-center" + temporalQueryLabelColor}
-                                        ref={setTriggerRef}>
-                                        Query result
+                                        className={"flex border border-gray-500 rounded w-36 h-6 text-xs justify-center items-center mr-1" + temporalQueryLabelColor}
+                                        ref={setTriggerRef}
+                                    >
+                                        Scheduling result
                                     </div>
                                     {visible &&
                                     <div
@@ -152,7 +154,17 @@ const BoardComponent = ({
                                     }
                                 </div>
                                 }
-
+                                <ButtonsMenu workflowList={workflowList}
+                                             removeWorkflowList={removeWorkflowList}
+                                             convertWorkflowList={convertWorkflowList}
+                                             selectWorkflowListToMove={selectWorkflowListToMove}
+                                             openCreateModal={openCreateModal}
+                                             openModifyModal={openModifyModal}
+                                             openMoveModal={openMoveModal}
+                                             getTemporalQueryResult={getTemporalQueryResult}
+                                             isLoadingQuery={isLoadingQuery}
+                                             startLoading={startLoading}
+                                />
                             </div>
                         </div>
 
