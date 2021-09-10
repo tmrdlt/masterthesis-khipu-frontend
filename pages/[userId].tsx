@@ -3,22 +3,29 @@ import {DragDropContext, Droppable, DropResult} from "react-beautiful-dnd";
 import {
     ConvertWorkflowListEntity,
     CreateWorkflowListEntity,
-    NumericResource,
-    TemporalResource,
     UpdateWorkflowListEntity,
-    WorkflowList, WorkflowListResource,
+    WorkflowList,
+    WorkflowListResource,
     WorkflowListType
 } from "utils/models";
 import BoardComponent from "components/board-component";
-import {isInsideParent, isSameLevelOfSameParent, recursiveMove, recursiveReorder} from "utils/list-util";
+import {
+    isInsideParent,
+    isSameLevelOfSameParent,
+    recursiveMove,
+    recursiveReorder,
+    recursiveSetField
+} from "utils/list-util";
 import {
     deleteWorkflowList,
+    getTemporalQuery,
     getUser,
     getWorkflowLists,
     postWorkflowList,
     postWorkflowListConvert,
     postWorkflowListMove,
-    postWorkflowListReorder, postWorkflowListResource,
+    postWorkflowListReorder,
+    postWorkflowListResource,
     updateWorkflowList
 } from "utils/workflow-api";
 import CreateWorkflowListModal from "components/modals/create-workflowlist-modal";
@@ -216,12 +223,26 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     const modifyResources = async (uuid: string, workflowListResource: WorkflowListResource) => {
         postWorkflowListResource(uuid, workflowListResource)
-        .then(res => {
-            if (res) {
-                updateState();
-            }
-            return res
-        });
+            .then(res => {
+                if (res) {
+                    updateState();
+                }
+                return res
+            });
+    }
+
+    const getTemporalQueryResult = (workflowListApiId: string) => {
+        getTemporalQuery(workflowListApiId)
+            .then(res => {
+                if (res) {
+                    let newState = [...state]
+                    res.tasksResult.forEach(taskPlanningSolution => {
+                        recursiveSetField(newState, taskPlanningSolution.apiId, "temporalQueryResult", taskPlanningSolution)
+                    })
+                    recursiveSetField(newState, workflowListApiId, "temporalQueryResult", res.boardResult)
+                    setState(newState)
+                }
+            })
     }
 
 
@@ -264,6 +285,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                         selectWorkflowListToMove={selectWorkflowListToMove}
                                                         showDropButton={showDropButton}
                                                         modifyResources={modifyResources}
+                                                        getTemporalQueryResult={getTemporalQueryResult}
                                         />
                                     )
                                 } else if (wl.usageType == WorkflowListType.LIST) {
@@ -282,6 +304,7 @@ const Home: FunctionComponent = (): JSX.Element => {
                                                        selectWorkflowListToMove={selectWorkflowListToMove}
                                                        showDropButton={showDropButton}
                                                        modifyResources={modifyResources}
+                                                       getTemporalQueryResult={getTemporalQueryResult}
                                         />
                                     )
                                 } else {

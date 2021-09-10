@@ -24,6 +24,7 @@ interface IListProps {
     selectWorkflowListToMove
     showDropButton
     modifyResources
+    getTemporalQueryResult
 }
 
 const ListComponent = ({
@@ -39,7 +40,8 @@ const ListComponent = ({
                            moveWorkflowList,
                            selectWorkflowListToMove,
                            showDropButton,
-                           modifyResources
+                           modifyResources,
+                           getTemporalQueryResult
                        }: IListProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -127,6 +129,7 @@ const ListComponent = ({
                                                                 selectWorkflowListToMove={selectWorkflowListToMove}
                                                                 showDropButton={showDropButton}
                                                                 modifyResources={modifyResources}
+                                                                getTemporalQueryResult={getTemporalQueryResult}
                                                 />
                                             )
                                         } else if (wl.usageType == WorkflowListType.LIST) {
@@ -145,6 +148,7 @@ const ListComponent = ({
                                                                selectWorkflowListToMove={selectWorkflowListToMove}
                                                                showDropButton={showDropButton}
                                                                modifyResources={modifyResources}
+                                                               getTemporalQueryResult={getTemporalQueryResult}
                                                 />
                                             )
                                         } else {

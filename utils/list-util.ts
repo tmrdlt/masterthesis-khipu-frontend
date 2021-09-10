@@ -138,3 +138,26 @@ export const recursiveParseDate = (lists: Array<WorkflowList>) => {
         }
     })
 };
+
+/**
+ * Set data to a field of given workflow list in a list of nested workflowlists
+ * @param lists Nested workflowLists
+ * @param workflowListApiId workflowList to change
+ * @param fieldName field to set
+ * @param data data to bind to field
+ */
+export const recursiveSetField = (lists: Array<WorkflowList>,
+                                  workflowListApiId: string,
+                                  fieldName: string,
+                                  data: any) => {
+    console.log("#3")
+    lists.forEach(list => {
+        if (list.apiId == workflowListApiId) {
+            console.log("#4")
+            list[fieldName] = data;
+            console.log(list[fieldName])
+        } else {
+            recursiveSetField(list.children, workflowListApiId, fieldName, data)
+        }
+    })
+}

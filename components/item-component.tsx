@@ -7,6 +7,9 @@ import {formatDate, formatDuration} from "utils/date-util";
 import ModifyItemModal from "components/modals/modify-item-modal";
 import {hasNoTemporalResource, hasNoUserResource} from "utils/resource-util";
 import CalendarIcon, {ChartBarIcon, ClockIcon, DocumentTextIcon, FlagIcon, UserIcon} from "components/icons";
+import {getNumberWithOrdinal} from "utils/number-util";
+import 'react-popper-tooltip/dist/styles.css';
+import {usePopperTooltip} from "react-popper-tooltip";
 
 interface IItemProps {
     index: number
@@ -35,6 +38,13 @@ const ItemComponent = ({
     // STATE
     const [showModifyModal, setShowModifyModal] = useState(false);
     const [showMoveModal, setShowMoveModal] = useState(false);
+    const {
+        getArrowProps,
+        getTooltipProps,
+        setTooltipRef,
+        setTriggerRef,
+        visible,
+    } = usePopperTooltip();
 
     useEffect(() => {
         if (!workflowListToMove) {
@@ -44,6 +54,7 @@ const ItemComponent = ({
 
     // DYNAMIC CLASSES
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+    const temporalQueryLabelColor = workflowList.temporalQueryResult != null ? workflowList.temporalQueryResult.dueDateKept ? " bg-green-500" : " bg-red-500" : "";
 
     // FUNCTIONS
     const openModifyModal = () => {
@@ -147,7 +158,6 @@ const ItemComponent = ({
     }
 
     const getUserResourceText = (): JSX.Element => {
-        console.log(workflowList.userResource)
         return (
             <div className="grid text-xs">
                 {!hasNoUserResource(workflowList.userResource) &&
@@ -184,11 +194,37 @@ const ItemComponent = ({
                                 {getTextualResourcesText()}
                                 {getUserResourceText()}
                             </div>
-                            <ButtonsMenu workflowList={workflowList}
-                                         removeWorkflowList={removeWorkflowList}
-                                         selectWorkflowListToMove={selectWorkflowListToMove}
-                                         openModifyModal={openModifyModal}
-                                         openMoveModal={openMoveModal}/>
+                            <div className="flex flex-col items-center">
+                                <ButtonsMenu workflowList={workflowList}
+                                             removeWorkflowList={removeWorkflowList}
+                                             selectWorkflowListToMove={selectWorkflowListToMove}
+                                             openModifyModal={openModifyModal}
+                                             openMoveModal={openMoveModal}/>
+                                {workflowList.temporalQueryResult != null &&
+                                <div>
+                                    <div
+                                        className={"w-10 border border-gray-500 rounded shadow p-1 text-xs text-center" + temporalQueryLabelColor}
+                                        ref={setTriggerRef}>
+                                        {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}
+                                    </div>
+                                    {visible &&
+                                    <div
+                                        className="bg-blue-900 border border-gray-500 rounded shadow p-1 text-xs text-center"
+                                        ref={setTooltipRef}
+                                        {...getTooltipProps({className: 'tooltip-container text-xs'})}>
+                                        <span>Optimal processing order: {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}</span>
+                                        <span>Calculated start date: {formatDate(workflowList.temporalQueryResult.startedAt)}</span>
+                                        <span>Calculated finish date: {formatDate(workflowList.temporalQueryResult.finishedAt)}</span>
+                                        <span>Calculated remaining duration: {formatDuration(workflowList.temporalQueryResult.duration)}</span>
+                                        {workflowList.temporalQueryResult.dueDate != null &&
+                                        <span>Does {workflowList.temporalQueryResult.dueDateKept ? "" : "NOT "}comply with due date</span>
+                                        }
+                                        <div {...getArrowProps({className: 'tooltip-arrow'})} />
+                                    </div>
+                                    }
+                                </div>
+                                }
+                            </div>
                         </div>
                         <div className="m-1 text-sm whitespace-pre bg-gray-100 rounded p-1">
                             {workflowList.description}

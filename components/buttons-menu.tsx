@@ -2,6 +2,7 @@ import {ConvertWorkflowListEntity, WorkflowList, WorkflowListType} from "utils/m
 import React from "react";
 import {Menu, MenuButton, MenuItem, MenuList} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
+import {ClockIcon} from "components/icons";
 
 interface IButtonsMenuProps {
     workflowList: WorkflowList
@@ -11,6 +12,7 @@ interface IButtonsMenuProps {
     openMoveModal
     convertWorkflowList?
     openCreateModal?
+    getTemporalQueryResult?
 }
 
 const ButtonsMenu = ({
@@ -20,7 +22,8 @@ const ButtonsMenu = ({
                          selectWorkflowListToMove,
                          openCreateModal,
                          openModifyModal,
-                         openMoveModal
+                         openMoveModal,
+                         getTemporalQueryResult
                      }: IButtonsMenuProps): JSX.Element => {
 
     return (
@@ -29,6 +32,16 @@ const ButtonsMenu = ({
         <div className="flex">
             <div
                 className={"flex justify-center items-center h-8"}>
+                {workflowList.usageType == WorkflowListType.BOARD &&
+                <button type="button"
+                        onClick={() => {
+                            getTemporalQueryResult(workflowList.apiId)
+                        }}
+                        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+                >
+                    <ClockIcon/>
+                </button>
+                }
                 {(workflowList.usageType == WorkflowListType.BOARD || workflowList.usageType == WorkflowListType.LIST) &&
                 <button type="button"
                         onClick={() => {

@@ -12,6 +12,7 @@ export type WorkflowList = {
     userResource?: UserResource
     numericResources: Array<NumericResource>
     textualResources: Array<TextualResource>
+    temporalQueryResult?: TaskPlanningSolution // not present in backend model
 }
 
 export type CreateWorkflowListEntity = {
@@ -82,4 +83,21 @@ export type User = {
 
 export type CreateUserEntity = {
     username: string
+}
+
+export type TaskPlanningSolution = {
+    apiId: string,
+    title: string,
+    startDate?: Date,
+    dueDate?: Date,
+    duration: number,
+    startedAt: Date,
+    finishedAt: Date,
+    dueDateKept: boolean,
+    index: number
+}
+
+export type TemporalQueryResult = {
+    boardResult: TaskPlanningSolution,
+    tasksResult: Array<TaskPlanningSolution>
 }

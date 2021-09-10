@@ -3,13 +3,13 @@ import {
     ConvertWorkflowListEntity,
     CreateUserEntity,
     CreateWorkflowListEntity,
-    NumericResource,
     MoveWorkflowListEntity,
     ReorderWorkflowListEntity,
-    TemporalResource,
+    TemporalQueryResult,
     UpdateWorkflowListEntity,
     User,
-    WorkflowList, WorkflowListResource
+    WorkflowList,
+    WorkflowListResource
 } from "utils/models";
 import {toLocalDateTimeString} from "utils/date-util";
 import {recursiveParseDate} from "utils/list-util";
@@ -97,7 +97,7 @@ export const postWorkflowListResource = async (uuid: string, workflowListResourc
                 ...workflowListResource.temporal,
                 startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
                 endDate: toLocalDateTimeString(workflowListResource.temporal.endDate)
-            }: null
+            } : null
         }
     )
         .then(response => {
@@ -132,6 +132,16 @@ export const postUser = async (createUserEntity: CreateUserEntity) => {
     return axios.post('http://localhost:5001/user', createUserEntity)
         .then(response => {
             return response;
+        }).catch(error => {
+            console.error(error);
+            return null
+        });
+}
+
+export const getTemporalQuery = async (workflowListApiId: String): Promise<TemporalQueryResult | null> => {
+    return axios.get<TemporalQueryResult>('http://localhost:5001/workflowlist/' + workflowListApiId + '/query')
+        .then(response => {
+            return response.data;
         }).catch(error => {
             console.error(error);
             return null

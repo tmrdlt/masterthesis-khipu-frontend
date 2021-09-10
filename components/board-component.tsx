@@ -8,8 +8,9 @@ import {getDroppableStyle} from "utils/style-elements";
 import MoveWorkflowListModal from "components/modals/move-workflowlist-modal";
 import DropButton from "components/drop-button";
 import ButtonsMenu from "components/buttons-menu";
-import {formatDate} from "utils/date-util";
+import {formatDate, formatDuration} from "utils/date-util";
 import ModifyBoardModal from "components/modals/modify-board-modal";
+import {usePopperTooltip} from "react-popper-tooltip";
 
 interface IBoardProps {
     index: number
@@ -24,6 +25,7 @@ interface IBoardProps {
     selectWorkflowListToMove
     showDropButton
     modifyResources
+    getTemporalQueryResult
 }
 
 const BoardComponent = ({
@@ -38,12 +40,20 @@ const BoardComponent = ({
                             moveWorkflowList,
                             selectWorkflowListToMove,
                             showDropButton,
-                            modifyResources
+                            modifyResources,
+                            getTemporalQueryResult
                         }: IBoardProps): JSX.Element => {
     // STATE
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showModifyModal, setShowModifyModal] = useState(false);
     const [showMoveModal, setShowMoveModal] = useState(false);
+    const {
+        getArrowProps,
+        getTooltipProps,
+        setTooltipRef,
+        setTriggerRef,
+        visible,
+    } = usePopperTooltip();
 
     useEffect(() => {
         if (!workflowListToMove) {
@@ -53,6 +63,7 @@ const BoardComponent = ({
 
     // DYNAMIC CLASSES
     const moveClassName = showMoveModal ? " z-20 relative transition-all" : "";
+    const temporalQueryLabelColor = workflowList.temporalQueryResult != null ? workflowList.temporalQueryResult.dueDateKept ? " bg-green-500" : " bg-red-500" : "";
 
     // FUNCTIONS
     const openCreateModal = () => {
@@ -108,14 +119,41 @@ const BoardComponent = ({
                                 </div>
                                 }
                             </div>
-                            <ButtonsMenu workflowList={workflowList}
-                                         removeWorkflowList={removeWorkflowList}
-                                         convertWorkflowList={convertWorkflowList}
-                                         selectWorkflowListToMove={selectWorkflowListToMove}
-                                         openCreateModal={openCreateModal}
-                                         openModifyModal={openModifyModal}
-                                         openMoveModal={openMoveModal}
-                            />
+                            <div className="flex flex-col items-center">
+                                <ButtonsMenu workflowList={workflowList}
+                                             removeWorkflowList={removeWorkflowList}
+                                             convertWorkflowList={convertWorkflowList}
+                                             selectWorkflowListToMove={selectWorkflowListToMove}
+                                             openCreateModal={openCreateModal}
+                                             openModifyModal={openModifyModal}
+                                             openMoveModal={openMoveModal}
+                                             getTemporalQueryResult={getTemporalQueryResult}
+                                />
+                                {workflowList.temporalQueryResult != null &&
+                                <div>
+                                    <div
+                                        className={"border border-gray-500 rounded shadow p-1 text-xs text-center" + temporalQueryLabelColor}
+                                        ref={setTriggerRef}>
+                                        Query result
+                                    </div>
+                                    {visible &&
+                                    <div
+                                        className="bg-blue-900 border border-gray-500 rounded shadow p-1 text-xs text-center"
+                                        ref={setTooltipRef}
+                                        {...getTooltipProps({className: 'tooltip-container text-xs'})}>
+                                        <span>Calculated start date: {formatDate(workflowList.temporalQueryResult.startedAt)}</span>
+                                        <span>Calculated finish date: {formatDate(workflowList.temporalQueryResult.finishedAt)}</span>
+                                        <span>Calculated total remaining duration: {formatDuration(workflowList.temporalQueryResult.duration)}</span>
+                                        {workflowList.temporalQueryResult.dueDate != null &&
+                                        <span>Does {workflowList.temporalQueryResult.dueDateKept ? "" : "NOT "}comply with due date</span>
+                                        }
+                                        <div {...getArrowProps({className: 'tooltip-arrow'})} />
+                                    </div>
+                                    }
+                                </div>
+                                }
+
+                            </div>
                         </div>
 
                         <div className="m-1 text-sm whitespace-pre">
@@ -145,6 +183,7 @@ const BoardComponent = ({
                                                                     selectWorkflowListToMove={selectWorkflowListToMove}
                                                                     showDropButton={showDropButton}
                                                                     modifyResources={modifyResources}
+                                                                    getTemporalQueryResult={getTemporalQueryResult}
                                                     />
                                                 )
                                             } else if (wl.usageType == WorkflowListType.LIST) {
@@ -163,6 +202,7 @@ const BoardComponent = ({
                                                                    selectWorkflowListToMove={selectWorkflowListToMove}
                                                                    showDropButton={showDropButton}
                                                                    modifyResources={modifyResources}
+                                                                   getTemporalQueryResult={getTemporalQueryResult}
                                                     />
                                                 )
                                             } else {
