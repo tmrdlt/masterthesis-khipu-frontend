@@ -150,12 +150,9 @@ export const recursiveSetField = (lists: Array<WorkflowList>,
                                   workflowListApiId: string,
                                   fieldName: string,
                                   data: any) => {
-    console.log("#3")
     lists.forEach(list => {
         if (list.apiId == workflowListApiId) {
-            console.log("#4")
             list[fieldName] = data;
-            console.log(list[fieldName])
         } else {
             recursiveSetField(list.children, workflowListApiId, fieldName, data)
         }
