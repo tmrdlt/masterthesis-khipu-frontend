@@ -130,10 +130,10 @@ const BoardComponent = ({
                                 {workflowList.temporalQueryResult != null &&
                                 <div className="flex justify-center items-center h-8">
                                     <div
-                                        className={"flex border border-gray-500 rounded w-36 h-6 text-xs justify-center items-center mr-1" + temporalQueryLabelColor}
+                                        className={"flex border border-gray-500 rounded w-48 h-6 text-xs justify-center items-center mr-1" + temporalQueryLabelColor}
                                         ref={setTriggerRef}
                                     >
-                                        Scheduling result
+                                        Remaining duration: {formatDuration(workflowList.temporalQueryResult.duration)}
                                     </div>
                                     {visible &&
                                     <div
