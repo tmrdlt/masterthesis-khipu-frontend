@@ -13,6 +13,7 @@ import {
   isInsideParent,
   isSameLevelOfSameParent,
   recursiveMove,
+  recursiveParseDate,
   recursiveReorder,
   recursiveSetField,
 } from 'utils/list-util'
@@ -35,38 +36,62 @@ import { getDroppableStyle } from 'utils/style-elements'
 import DropButton from 'components/drop-button'
 import { useRouter } from 'next/router'
 
-const Home: FunctionComponent = (): JSX.Element => {
-  // STATE
-  const initState: Array<WorkflowList> = []
-  const [state, setState] = useState(initState)
-  const [userApiId, setUserApiId] = useState(null)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const initWorkflowListToMove: WorkflowList | null = null
-  const [workflowListToMove, setWorkflowListToMove] = useState(initWorkflowListToMove)
+import axios from 'axios'
+import useSWR, { useSWRConfig } from 'swr'
 
+const fetcher = (url) =>
+  axios.get(url).then((res) => {
+    const workflowLists = res.data
+    recursiveParseDate(workflowLists)
+    return workflowLists
+  })
+
+const HomeWrapper: FunctionComponent = (): JSX.Element => {
+  const [userApiId, setUserApiId] = useState(null)
   const router = useRouter()
   useEffect(() => {
     if (router.isReady && userApiId == null) {
       const userApiId = router.query.userId.toString()
-      setUserApiId(userApiId)
-      init(userApiId)
+      getUser(userApiId).then((user) => {
+        setUserApiId(user.apiId)
+      })
     }
   }, [router.isReady, router.query.userId, userApiId])
 
-  // FUNCTIONS
-  const init = (userApiId: string) => {
-    getUser(userApiId).then((user) => {
-      if (user) {
-        getWorkflowLists(userApiId).then((workflowLists) => {
-          if (workflowLists) {
-            setState(workflowLists)
-          }
-        })
-      }
-    })
-  }
+  if (userApiId == null) return null
 
-  const onDragEnd = (result: DropResult) => {
+  return <Home userApiId={userApiId} />
+}
+
+interface HomeProps {
+  userApiId: string
+}
+
+function useWorkflowLists(userApiId) {
+  const { data, error } = useSWR(
+    `http://localhost:5001/workflowlist?userApiId=${userApiId}`,
+    fetcher
+  )
+
+  return {
+    workflowLists: data,
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
+const Home = ({ userApiId }: HomeProps): JSX.Element => {
+  // STATE
+  const initState: Array<WorkflowList> = []
+  const [state, setState] = useState(initState)
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const initWorkflowListToMove: WorkflowList | null = null
+  const [workflowListToMove, setWorkflowListToMove] = useState(initWorkflowListToMove)
+  const { mutate } = useSWRConfig()
+  const { workflowLists, isLoading, isError } = useWorkflowLists(userApiId)
+
+  // FUNCTIONS
+  const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result
 
     console.log('OnDragEnd', result)
@@ -81,32 +106,30 @@ const Home: FunctionComponent = (): JSX.Element => {
 
     if (sourceDroppableId === destinationDroppableId) {
       // It's a REORDER action
-      let newState = [...state]
-      recursiveReorder(newState, sourceDroppableId, source.index, destination.index)
-      setState(newState)
+      let newWorkflowLists = [...workflowLists]
+      recursiveReorder(newWorkflowLists, sourceDroppableId, source.index, destination.index)
+      mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
 
       if (source.index != destination.index) {
-        postWorkflowListReorder(draggableId, { newPosition: destination.index }).then((_res) => {
-          updateState()
-        })
+        await postWorkflowListReorder(draggableId, { newPosition: destination.index })
+        mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
       }
     } else {
       // It's a MOVE action
-      let newState = [...state]
-      recursiveMove(newState, source, destination)
-      setState(newState)
+      let newWorkflowLists = [...workflowLists]
+      recursiveMove(newWorkflowLists, source, destination)
+      mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
 
       let newParentUuid = null
       if (!(destinationDroppableId === 'ROOT')) {
         newParentUuid = destinationDroppableId
       }
-      postWorkflowListMove(draggableId, {
+      await postWorkflowListMove(draggableId, {
         newParentApiId: newParentUuid,
         newPosition: destination.index,
         userApiId: userApiId,
-      }).then((_res) => {
-        updateState()
       })
+      mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
     }
   }
 
@@ -131,7 +154,7 @@ const Home: FunctionComponent = (): JSX.Element => {
       // The following would be illegal moves or moves that doesn't make sense
       // Destination is already the list the element is in
       const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(
-        state,
+        workflowLists,
         destinationToDropOn,
         workflowListToMove
       )
@@ -151,11 +174,7 @@ const Home: FunctionComponent = (): JSX.Element => {
   }
 
   const updateState = () => {
-    getWorkflowLists(userApiId).then((workflowLists) => {
-      if (workflowLists) {
-        setState(workflowLists)
-      }
-    })
+    mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
   }
 
   const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
@@ -243,21 +262,29 @@ const Home: FunctionComponent = (): JSX.Element => {
   const getTemporalQueryResult = (workflowListApiId: string) => {
     getTemporalQuery(workflowListApiId).then((res) => {
       if (res) {
-        let newState = [...state]
+        let newWorkflowLists = [...workflowLists]
         res.tasksResult.forEach((taskPlanningSolution) => {
           recursiveSetField(
-            newState,
+            newWorkflowLists,
             taskPlanningSolution.apiId,
             'temporalQueryResult',
             taskPlanningSolution
           )
         })
-        recursiveSetField(newState, workflowListApiId, 'temporalQueryResult', res.boardResult)
-        setState(newState)
+        recursiveSetField(
+          newWorkflowLists,
+          workflowListApiId,
+          'temporalQueryResult',
+          res.boardResult
+        )
+        mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
       }
     })
   }
 
+  // TODO Spinner
+  if (isLoading) return null
+  if (isError) return null
   return (
     <div className="bg-gray-200 h-screen p-3">
       <button
@@ -290,7 +317,7 @@ const Home: FunctionComponent = (): JSX.Element => {
               {...provided.droppableProps}
               className="p-1"
             >
-              {state.map((wl, index) => {
+              {workflowLists.map((wl, index) => {
                 if (wl.usageType == WorkflowListType.BOARD) {
                   return (
                     <BoardComponent
@@ -366,4 +393,4 @@ const Home: FunctionComponent = (): JSX.Element => {
   )
 }
 
-export default Home
+export default HomeWrapper
