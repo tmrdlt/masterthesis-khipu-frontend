@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { getUser } from 'utils/workflow-api'
+import { getUserFetcher } from 'utils/workflow-api'
 import { useRouter } from 'next/router'
 import Home from 'pages/home'
 
@@ -9,8 +9,8 @@ const HomeWrapper: FunctionComponent = (): JSX.Element => {
   useEffect(() => {
     if (router.isReady && userApiId == null) {
       const userApiId = router.query.userId.toString()
-      getUser(userApiId).then((user) => {
-        setUserApiId(user.apiId)
+      getUserFetcher(userApiId).then((user) => {
+        if (user) setUserApiId(user.apiId)
       })
     }
   }, [router.isReady, router.query.userId, userApiId])

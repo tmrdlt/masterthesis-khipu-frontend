@@ -25,7 +25,7 @@ import CalendarIcon, {
   UserIcon,
 } from 'components/icons'
 import {
-  getUsers,
+  getUsersFetcher,
   getWorkflowListsUrl,
   postWorkflowListResource,
   updateWorkflowList,
@@ -82,7 +82,7 @@ const ModifyItemModal = ({
   const { mutate } = useSWRConfig()
 
   useEffect(() => {
-    getUsers().then((users) => {
+    getUsersFetcher().then((users) => {
       if (users) {
         setUsers(users)
       }

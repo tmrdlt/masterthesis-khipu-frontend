@@ -1,28 +1,14 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import Link from 'next/link'
-import { CreateUserEntity, User } from 'utils/models'
-import { getUsers, postUser } from 'utils/workflow-api'
 import CreateUserModal from 'components/modals/create-user-modal'
+import { useUsers } from 'utils/swr-util'
 
 const Start: FunctionComponent = (): JSX.Element => {
   // STATE
-  const initState: Array<User> = []
-  const [state, setState] = useState(initState)
   const [showCreateModal, setShowCreateModal] = useState(false)
-
-  useEffect(() => {
-    init()
-  }, [])
+  const { users, isLoading, isError } = useUsers()
 
   // FUNCTIONS
-  const init = () => {
-    getUsers().then((users) => {
-      if (users) {
-        setState(users)
-      }
-    })
-  }
-
   const openModal = () => {
     setShowCreateModal(true)
   }
@@ -30,18 +16,9 @@ const Start: FunctionComponent = (): JSX.Element => {
     setShowCreateModal(false)
   }
 
-  const createUser = async (createUserEntity: CreateUserEntity) => {
-    postUser(createUserEntity).then((res) => {
-      if (res) {
-        getUsers().then((users) => {
-          if (users) {
-            setState(users)
-          }
-        })
-      }
-    })
-  }
-
+  // TODO add Spinner
+  if (isLoading) return null
+  if (isError) return null
   return (
     <div className="flex flex-col items-center align-top bg-gray-200 h-screen p-3 ">
       <p className="text-4xl mb-5">Welcome to Khipu</p>
@@ -52,7 +29,7 @@ const Start: FunctionComponent = (): JSX.Element => {
         </button>
       </div>
       <ul>
-        {state.map((user, index) => {
+        {users.map((user, index) => {
           return (
             <li key={index}>
               <Link href={'/' + user.apiId}>
@@ -64,7 +41,7 @@ const Start: FunctionComponent = (): JSX.Element => {
           )
         })}
       </ul>
-      <CreateUserModal show={showCreateModal} closeModal={closeModal} createUser={createUser} />
+      <CreateUserModal show={showCreateModal} closeModal={closeModal} />
     </div>
   )
 }

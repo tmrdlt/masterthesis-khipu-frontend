@@ -18,6 +18,10 @@ export const getWorkflowListsUrl = (userApiId: String): string => {
   return `http://localhost:5001/workflowlist?userApiId=${userApiId}`
 }
 
+export const getUsersUrl = (): string => {
+    return 'http://localhost:5001/user'
+}
+
 export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
     return axios.get<Array<WorkflowList>>(url).then((res) => {
         const workflowLists = res.data
@@ -26,6 +30,25 @@ export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
     })
 }
 
+export const getUsersFetcher = (url): Promise<Array<User>> => {
+    return axios
+        .get<Array<User>>(url)
+        .then((res) => {
+            return res.data
+        })
+}
+
+export const getUserFetcher = (userApiId): Promise<User | undefined> => {
+    return axios
+        .get<User>(`http://localhost:5001/user/${userApiId}`)
+        .then((res) => {
+            return res.data
+        })
+        .catch((error) => {
+            console.error(error)
+            return null
+        })
+}
 
 export const createWorkflowList = async (entity: CreateWorkflowListEntity) => {
   const newEntity = { ...entity, newDescription: entity.description == '' ? null : entity.description }
@@ -137,31 +160,7 @@ export const postWorkflowListResource = async (
     })
 }
 
-export const getUsers = async (): Promise<Array<User> | null> => {
-  return axios
-    .get<Array<User>>('http://localhost:5001/user')
-    .then((response) => {
-      return response.data
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
-}
-
-export const getUser = async (userApiId): Promise<User | null> => {
-  return axios
-    .get<Array<User>>('http://localhost:5001/user/' + userApiId)
-    .then((response) => {
-      return response.data
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
-}
-
-export const postUser = async (createUserEntity: CreateUserEntity) => {
+export const createUser = async (createUserEntity: CreateUserEntity) => {
   return axios
     .post('http://localhost:5001/user', createUserEntity)
     .then((response) => {
