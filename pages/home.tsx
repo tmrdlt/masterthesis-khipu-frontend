@@ -45,14 +45,12 @@ const fetcher = (url) =>
 
 function useWorkflowLists(userApiId) {
     const { data, error } = useSWR(
-        // TODO move to const file
         getWorkflowLists(userApiId),
         fetcher,
         {
             revalidateOnFocus: false
         }
     )
-
     return {
         workflowLists: data,
         isLoading: !error && !data,
@@ -89,17 +87,19 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
             // It's a REORDER action
             let newWorkflowLists = [...workflowLists]
             recursiveReorder(newWorkflowLists, sourceDroppableId, source.index, destination.index)
-            mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
+            // mutate cache first
+            mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
 
             if (source.index != destination.index) {
                 await postWorkflowListReorder(draggableId, { newPosition: destination.index })
-                mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
+                fetchWorkflowLists()
             }
         } else {
             // It's a MOVE action
             let newWorkflowLists = [...workflowLists]
             recursiveMove(newWorkflowLists, source, destination)
-            mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
+            // mutate cache first
+            mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
 
             let newParentUuid = null
             if (!(destinationDroppableId === 'ROOT')) {
@@ -110,7 +110,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                 newPosition: destination.index,
                 userApiId: userApiId,
             })
-            mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
+            fetchWorkflowLists()
         }
     }
 
@@ -155,7 +155,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     }
 
     const fetchWorkflowLists = () => {
-        mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
+        mutate(getWorkflowLists(userApiId))
     }
 
     const modifyWorkflowList = async (
@@ -201,7 +201,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
         if (destinationWorkflowList) {
             newParentUuid = destinationWorkflowList.apiId
         }
-        console.log('MOVING ' + workflowListToMove.apiId + ' to ' + newParentUuid)
         postWorkflowListMove(workflowListToMove.apiId, {
             newParentApiId: newParentUuid,
             userApiId: userApiId,
@@ -239,12 +238,13 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                         res.boardResult
                     )
                 })
-                mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
+                // Mutate only local cache
+                mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
             }
         })
     }
 
-    // TODO Spinner
+    // TODO add Spinner
     if (isLoading) return null
     if (isError) return null
     return (
