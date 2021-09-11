@@ -2,7 +2,6 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import {
   ConvertWorkflowListEntity,
-  CreateWorkflowListEntity,
   UpdateWorkflowListEntity,
   WorkflowList,
   WorkflowListResource,
@@ -21,8 +20,6 @@ import {
   deleteWorkflowList,
   getTemporalQuery,
   getUser,
-  getWorkflowLists,
-  postWorkflowList,
   postWorkflowListConvert,
   postWorkflowListMove,
   postWorkflowListReorder,
@@ -69,6 +66,7 @@ interface HomeProps {
 
 function useWorkflowLists(userApiId) {
   const { data, error } = useSWR(
+    // TODO move to const file
     `http://localhost:5001/workflowlist?userApiId=${userApiId}`,
     fetcher
   )
@@ -82,8 +80,6 @@ function useWorkflowLists(userApiId) {
 
 const Home = ({ userApiId }: HomeProps): JSX.Element => {
   // STATE
-  const initState: Array<WorkflowList> = []
-  const [state, setState] = useState(initState)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const initWorkflowListToMove: WorkflowList | null = null
   const [workflowListToMove, setWorkflowListToMove] = useState(initWorkflowListToMove)
@@ -153,11 +149,11 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
 
       // The following would be illegal moves or moves that doesn't make sense
       // Destination is already the list the element is in
-      const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent(
-        workflowLists,
-        destinationToDropOn,
-        workflowListToMove
-      )
+      const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent({
+        lists: workflowLists,
+        potentialChild: workflowListToMove,
+        parent: destinationToDropOn,
+      })
       // The destination would be inside the element we want to move
       const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
       // The destination would be exactly the element we want to move
@@ -173,24 +169,8 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     }
   }
 
-  const updateState = () => {
+  const fetchWorkflowLists = () => {
     mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
-  }
-
-  const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
-    let newCreateWorkflowListEntity: CreateWorkflowListEntity
-    if (createWorkflowListEntity.description == '') {
-      newCreateWorkflowListEntity = { ...createWorkflowListEntity, description: null }
-    } else {
-      newCreateWorkflowListEntity = createWorkflowListEntity
-    }
-    console.log(newCreateWorkflowListEntity)
-    postWorkflowList(newCreateWorkflowListEntity).then((res) => {
-      if (res) {
-        updateState()
-      }
-      return res
-    })
   }
 
   const modifyWorkflowList = async (
@@ -205,7 +185,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     }
     updateWorkflowList(workflowListUuid, newUpdateWorkflowListEntity).then((res) => {
       if (res) {
-        updateState()
+        fetchWorkflowLists()
       }
       return res
     })
@@ -214,7 +194,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   const removeWorkflowList = (uuid: string) => {
     deleteWorkflowList(uuid).then((res) => {
       if (res) {
-        updateState()
+        fetchWorkflowLists()
       }
     })
   }
@@ -225,7 +205,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   ) => {
     postWorkflowListConvert(uuid, convertWorkflowListEntity).then((res) => {
       if (res) {
-        updateState()
+        fetchWorkflowLists()
       }
     })
   }
@@ -241,19 +221,15 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       newParentApiId: newParentUuid,
       userApiId: userApiId,
     }).then((_res) => {
-      getWorkflowLists(userApiId).then((workflowLists) => {
-        if (workflowLists) {
-          setState(workflowLists)
-          setWorkflowListToMove(null)
-        }
-      })
+      fetchWorkflowLists()
+      setWorkflowListToMove(null)
     })
   }
 
   const modifyResources = async (uuid: string, workflowListResource: WorkflowListResource) => {
     postWorkflowListResource(uuid, workflowListResource).then((res) => {
       if (res) {
-        updateState()
+        fetchWorkflowLists()
       }
       return res
     })
@@ -326,7 +302,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                       workflowList={wl}
                       userApiId={userApiId}
                       workflowListToMove={workflowListToMove}
-                      createWorkflowList={createWorkflowList}
                       modifyWorkflowList={modifyWorkflowList}
                       removeWorkflowList={removeWorkflowList}
                       convertWorkflowList={convertWorkflowList}
@@ -346,7 +321,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                       userApiId={userApiId}
                       isInsideTemporalConstraintBoard={false}
                       workflowListToMove={workflowListToMove}
-                      createWorkflowList={createWorkflowList}
                       modifyWorkflowList={modifyWorkflowList}
                       removeWorkflowList={removeWorkflowList}
                       convertWorkflowList={convertWorkflowList}
@@ -386,7 +360,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
           createType={WorkflowListType.BOARD}
           parentUuid={null}
           userApiId={userApiId}
-          createWorkflowList={createWorkflowList}
         />
       )}
     </div>

@@ -16,7 +16,6 @@ interface IListProps {
   userApiId: string
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
-  createWorkflowList
   modifyWorkflowList
   removeWorkflowList
   convertWorkflowList
@@ -33,7 +32,6 @@ const ListComponent = ({
   userApiId,
   isInsideTemporalConstraintBoard,
   workflowListToMove,
-  createWorkflowList,
   modifyWorkflowList,
   removeWorkflowList,
   convertWorkflowList,
@@ -121,7 +119,6 @@ const ListComponent = ({
                           workflowList={wl}
                           userApiId={userApiId}
                           workflowListToMove={workflowListToMove}
-                          createWorkflowList={createWorkflowList}
                           modifyWorkflowList={modifyWorkflowList}
                           removeWorkflowList={removeWorkflowList}
                           convertWorkflowList={convertWorkflowList}
@@ -141,7 +138,6 @@ const ListComponent = ({
                           userApiId={userApiId}
                           isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
-                          createWorkflowList={createWorkflowList}
                           modifyWorkflowList={modifyWorkflowList}
                           removeWorkflowList={removeWorkflowList}
                           convertWorkflowList={convertWorkflowList}
@@ -185,7 +181,6 @@ const ListComponent = ({
               createType={WorkflowListType.ITEM}
               parentUuid={workflowList.apiId}
               userApiId={userApiId}
-              createWorkflowList={createWorkflowList}
             />
           )}
           {showModifyModal && (

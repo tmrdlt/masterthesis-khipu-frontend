@@ -18,7 +18,6 @@ interface IBoardProps {
   workflowList: WorkflowList
   userApiId: string
   workflowListToMove: WorkflowList
-  createWorkflowList
   modifyWorkflowList
   removeWorkflowList
   convertWorkflowList
@@ -34,7 +33,6 @@ const BoardComponent = ({
   workflowList,
   userApiId,
   workflowListToMove,
-  createWorkflowList,
   modifyWorkflowList,
   removeWorkflowList,
   convertWorkflowList,
@@ -200,7 +198,6 @@ const BoardComponent = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
-                            createWorkflowList={createWorkflowList}
                             modifyWorkflowList={modifyWorkflowList}
                             removeWorkflowList={removeWorkflowList}
                             convertWorkflowList={convertWorkflowList}
@@ -220,7 +217,6 @@ const BoardComponent = ({
                             userApiId={userApiId}
                             isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                             workflowListToMove={workflowListToMove}
-                            createWorkflowList={createWorkflowList}
                             modifyWorkflowList={modifyWorkflowList}
                             removeWorkflowList={removeWorkflowList}
                             convertWorkflowList={convertWorkflowList}
@@ -265,7 +261,6 @@ const BoardComponent = ({
               createType={WorkflowListType.LIST}
               parentUuid={workflowList.apiId}
               userApiId={userApiId}
-              createWorkflowList={createWorkflowList}
             />
           )}
           {showModifyModal && (
