@@ -5,19 +5,23 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { compareDateOptions } from 'utils/date-util'
 import { getOptionalString } from 'utils/optional-util'
+import {
+  getWorkflowListsUrl,
+  postWorkflowListResource,
+  updateWorkflowList,
+} from 'utils/workflow-api'
+import { useSWRConfig } from 'swr'
 
 interface ModifyBoardModalProps {
-  closeModal
+  userApiId: string
   workflowList: WorkflowList
-  modifyWorkflowList
-  modifyResources
+  closeModal
 }
 
 const ModifyBoardModal = ({
-  closeModal,
+  userApiId,
   workflowList,
-  modifyWorkflowList,
-  modifyResources,
+  closeModal,
 }: ModifyBoardModalProps): JSX.Element => {
   // STATE
   const initUpdateBoardEntity: UpdateWorkflowListEntity = {
@@ -31,6 +35,8 @@ const ModifyBoardModal = ({
 
   const [updateBoardEntity, setUpdateBoardEntity] = useState(initUpdateBoardEntity)
   const [dueDate, setDueDate] = useState(initDueDate)
+
+  const { mutate } = useSWRConfig()
 
   useEffect(() => {
     if (workflowList.temporalResource && workflowList.temporalResource.endDate) {
@@ -147,6 +153,9 @@ const ModifyBoardModal = ({
                     timeCaption="Time"
                     timeFormat="HH:mm"
                     dateFormat="dd.MM.yyyy, HH:mm"
+                    autocomplete="off"
+                    id="dueDate"
+                    name="dueDate"
                   />
                 </div>
               </div>
@@ -158,7 +167,8 @@ const ModifyBoardModal = ({
               disabled={workflowListUnchanged() && temporalResourceUnchanged()}
               onClick={() => {
                 if (!workflowListUnchanged()) {
-                  modifyWorkflowList(workflowList.apiId, updateBoardEntity).then((_res) => {
+                  updateWorkflowList(workflowList.apiId, updateBoardEntity).then((res) => {
+                    mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })
                 }
@@ -168,7 +178,8 @@ const ModifyBoardModal = ({
                       endDate: dueDate,
                     },
                   }
-                  modifyResources(workflowList.apiId, entity).then((_res) => {
+                  postWorkflowListResource(workflowList.apiId, entity).then((_res) => {
+                    mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })
                 }

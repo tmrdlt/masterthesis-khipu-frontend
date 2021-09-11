@@ -24,22 +24,26 @@ import CalendarIcon, {
   FlagIcon,
   UserIcon,
 } from 'components/icons'
-import { getUsers } from 'utils/workflow-api'
+import {
+  getUsers,
+  getWorkflowListsUrl,
+  postWorkflowListResource,
+  updateWorkflowList,
+} from 'utils/workflow-api'
+import { useSWRConfig } from 'swr'
 
 interface ModifyItemModalProps {
-  closeModal
+  userApiId: string
   workflowList: WorkflowList
   isInsideTemporalConstraintBoard: boolean
-  modifyWorkflowList
-  modifyResources
+  closeModal
 }
 
 const ModifyItemModal = ({
-  closeModal,
+  userApiId,
   workflowList,
   isInsideTemporalConstraintBoard,
-  modifyWorkflowList,
-  modifyResources,
+  closeModal,
 }: ModifyItemModalProps): JSX.Element => {
   // STATE
   const initUpdateItemEntity: UpdateWorkflowListEntity = {
@@ -75,6 +79,7 @@ const ModifyItemModal = ({
   const [textualResources, setTextualResources] = useState(initTextualResources)
   const [userResource, setUserResource] = useState(initUserResource)
   const [users, setUsers] = useState(initUsers)
+  const { mutate } = useSWRConfig()
 
   useEffect(() => {
     getUsers().then((users) => {
@@ -554,7 +559,8 @@ const ModifyItemModal = ({
                   let temporalEntity: TemporalResource = null
                   let userEntity: UserResource = null
                   if (!isWorkflowListUnchanged()) {
-                    modifyWorkflowList(workflowList.apiId, updateItemEntity).then((_res) => {
+                    updateWorkflowList(workflowList.apiId, updateItemEntity).then((_res) => {
+                      mutate(getWorkflowListsUrl(userApiId))
                       closeModal()
                     })
                   }
@@ -589,7 +595,8 @@ const ModifyItemModal = ({
                     temporal: temporalEntity,
                     user: userEntity,
                   }
-                  modifyResources(workflowList.apiId, entity).then((_res) => {
+                  postWorkflowListResource(workflowList.apiId, entity).then((_res) => {
+                    mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })
                 }}

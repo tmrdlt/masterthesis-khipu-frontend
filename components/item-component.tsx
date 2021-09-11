@@ -23,9 +23,7 @@ interface IItemProps {
   userApiId: string
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
-  modifyWorkflowList
   selectWorkflowListToMove
-  modifyResources
 }
 
 const ItemComponent = ({
@@ -34,9 +32,7 @@ const ItemComponent = ({
   userApiId,
   isInsideTemporalConstraintBoard,
   workflowListToMove,
-  modifyWorkflowList,
   selectWorkflowListToMove,
-  modifyResources,
 }: IItemProps): JSX.Element => {
   // STATE
   const [showModifyModal, setShowModifyModal] = useState(false)
@@ -246,11 +242,10 @@ const ItemComponent = ({
           </div>
           {showModifyModal && (
             <ModifyItemModal
-              closeModal={closeModifyModal}
+              userApiId={userApiId}
               workflowList={workflowList}
               isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-              modifyWorkflowList={modifyWorkflowList}
-              modifyResources={modifyResources}
+              closeModal={closeModifyModal}
             />
           )}
           {showMoveModal && (

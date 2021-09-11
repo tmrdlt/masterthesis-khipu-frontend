@@ -8,17 +8,29 @@ import {
   TemporalQueryResult,
   UpdateWorkflowListEntity,
   User,
+  WorkflowList,
   WorkflowListResource,
 } from 'utils/models'
 import { toLocalDateTimeString } from 'utils/date-util'
+import { recursiveParseDate } from 'utils/list-util'
 
-export const getWorkflowLists = (userApiId: String): string => {
+export const getWorkflowListsUrl = (userApiId: String): string => {
   return `http://localhost:5001/workflowlist?userApiId=${userApiId}`
 }
 
-export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
+export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
+    return axios.get<Array<WorkflowList>>(url).then((res) => {
+        const workflowLists = res.data
+        recursiveParseDate(workflowLists)
+        return workflowLists
+    })
+}
+
+
+export const createWorkflowList = async (entity: CreateWorkflowListEntity) => {
+  const newEntity = { ...entity, newDescription: entity.description == '' ? null : entity.description }
   return axios
-    .post('http://localhost:5001/workflowlist', createWorkflowListEntity)
+    .post('http://localhost:5001/workflowlist', newEntity)
     .then((response) => {
       return response
     })
@@ -30,10 +42,11 @@ export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowL
 
 export const updateWorkflowList = async (
   uuid: string,
-  updateWorkflowListEntity: UpdateWorkflowListEntity
+  entity: UpdateWorkflowListEntity
 ) => {
+  const newEntity = { ...entity, newDescription: entity.newDescription == '' ? null : entity.newDescription }
   return axios
-    .patch('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
+    .patch('http://localhost:5001/workflowlist/' + uuid, newEntity)
     .then((response) => {
       return response
     })
@@ -104,7 +117,6 @@ export const postWorkflowListResource = async (
   uuid: string,
   workflowListResource: WorkflowListResource
 ) => {
-  console.log(workflowListResource)
   return axios
     .post('http://localhost:5001/workflowlist/' + uuid + '/resource', {
       ...workflowListResource,

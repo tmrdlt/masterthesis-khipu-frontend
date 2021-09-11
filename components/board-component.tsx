@@ -18,11 +18,9 @@ interface IBoardProps {
   workflowList: WorkflowList
   userApiId: string
   workflowListToMove: WorkflowList
-  modifyWorkflowList
   moveWorkflowList
   selectWorkflowListToMove
   showDropButton
-  modifyResources
   getTemporalQueryResult
 }
 
@@ -31,11 +29,9 @@ const BoardComponent = ({
   workflowList,
   userApiId,
   workflowListToMove,
-  modifyWorkflowList,
   moveWorkflowList,
   selectWorkflowListToMove,
   showDropButton,
-  modifyResources,
   getTemporalQueryResult,
 }: IBoardProps): JSX.Element => {
   // STATE
@@ -193,11 +189,9 @@ const BoardComponent = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
-                            modifyWorkflowList={modifyWorkflowList}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
-                            modifyResources={modifyResources}
                             getTemporalQueryResult={getTemporalQueryResult}
                           />
                         )
@@ -210,11 +204,9 @@ const BoardComponent = ({
                             userApiId={userApiId}
                             isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                             workflowListToMove={workflowListToMove}
-                            modifyWorkflowList={modifyWorkflowList}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
-                            modifyResources={modifyResources}
                             getTemporalQueryResult={getTemporalQueryResult}
                           />
                         )
@@ -227,9 +219,7 @@ const BoardComponent = ({
                             userApiId={userApiId}
                             isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                             workflowListToMove={workflowListToMove}
-                            modifyWorkflowList={modifyWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
-                            modifyResources={modifyResources}
                           />
                         )
                       }
@@ -255,10 +245,9 @@ const BoardComponent = ({
           )}
           {showModifyModal && (
             <ModifyBoardModal
-              closeModal={closeModifyModal}
+              userApiId={userApiId}
               workflowList={workflowList}
-              modifyWorkflowList={modifyWorkflowList}
-              modifyResources={modifyResources}
+              closeModal={closeModifyModal}
             />
           )}
           {showMoveModal && (

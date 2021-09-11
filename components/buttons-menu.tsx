@@ -3,7 +3,11 @@ import React from 'react'
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button'
 import '@reach/menu-button/styles.css'
 import { ClockIcon } from 'components/icons'
-import { deleteWorkflowList, getWorkflowLists, postWorkflowListConvert } from 'utils/workflow-api'
+import {
+  deleteWorkflowList,
+  getWorkflowListsUrl,
+  postWorkflowListConvert,
+} from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 
 interface IButtonsMenuProps {
@@ -42,15 +46,7 @@ const ButtonsMenu = ({
   ) => {
     postWorkflowListConvert(uuid, convertWorkflowListEntity).then((res) => {
       if (res) {
-        mutate(getWorkflowLists(userApiId))
-      }
-    })
-  }
-
-  const removeWorkflowList = (uuid: string) => {
-    deleteWorkflowList(uuid).then((res) => {
-      if (res) {
-        mutate(getWorkflowLists(userApiId))
+        mutate(getWorkflowListsUrl(userApiId))
       }
     })
   }
@@ -165,7 +161,9 @@ const ButtonsMenu = ({
             )}
             <MenuItem
               onSelect={() => {
-                removeWorkflowList(workflowList.apiId)
+                deleteWorkflowList(workflowList.apiId).then((res) => {
+                  mutate(getWorkflowListsUrl(userApiId))
+                })
               }}
             >
               Delete

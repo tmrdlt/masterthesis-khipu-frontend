@@ -1,61 +1,31 @@
 import React, { useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
-import {
-  UpdateWorkflowListEntity,
-  WorkflowList,
-  WorkflowListResource,
-  WorkflowListType,
-} from 'utils/models'
+import { WorkflowList, WorkflowListType } from 'utils/models'
 import BoardComponent from 'components/board-component'
 import {
   isInsideParent,
   isSameLevelOfSameParent,
   recursiveMove,
-  recursiveParseDate,
   recursiveReorder,
   recursiveSetField,
 } from 'utils/list-util'
 import {
   getTemporalQuery,
-  getWorkflowLists,
+  getWorkflowListsUrl,
   postWorkflowListMove,
   postWorkflowListReorder,
-  postWorkflowListResource,
-  updateWorkflowList,
 } from 'utils/workflow-api'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import ListComponent from 'components/list-component'
 import ItemComponent from 'components/item-component'
 import { getDroppableStyle } from 'utils/style-elements'
 import DropButton from 'components/drop-button'
-
-import axios from 'axios'
-import useSWR, { useSWRConfig } from 'swr'
+import { useSWRConfig } from 'swr'
 import produce from 'immer'
+import { useWorkflowLists } from 'utils/swr-util'
 
-const fetcher = (url) =>
-  axios.get(url).then((res) => {
-    const workflowLists = res.data
-    recursiveParseDate(workflowLists)
-    return workflowLists
-  })
-
-function useWorkflowLists(userApiId) {
-    const { data, error } = useSWR(
-        getWorkflowLists(userApiId),
-        fetcher,
-        {
-            revalidateOnFocus: false
-        }
-    )
-    return {
-        workflowLists: data,
-        isLoading: !error && !data,
-        isError: error,
-    }
-}
 interface HomeProps {
-    userApiId: string
+  userApiId: string
 }
 
 const Home = ({ userApiId }: HomeProps): JSX.Element => {
@@ -85,7 +55,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
             let newWorkflowLists = [...workflowLists]
             recursiveReorder(newWorkflowLists, sourceDroppableId, source.index, destination.index)
             // mutate cache first
-            mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
+            mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
             if (source.index != destination.index) {
                 await postWorkflowListReorder(draggableId, { newPosition: destination.index })
@@ -96,7 +66,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
             let newWorkflowLists = [...workflowLists]
             recursiveMove(newWorkflowLists, source, destination)
             // mutate cache first
-            mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
+            mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
             let newParentUuid = null
             if (!(destinationDroppableId === 'ROOT')) {
@@ -152,25 +122,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     }
 
     const fetchWorkflowLists = () => {
-        mutate(getWorkflowLists(userApiId))
-    }
-
-    const modifyWorkflowList = async (
-        workflowListUuid: string,
-        updateWorkflowListEntity: UpdateWorkflowListEntity
-    ) => {
-        let newUpdateWorkflowListEntity: UpdateWorkflowListEntity
-        if (updateWorkflowListEntity.newDescription == '') {
-            newUpdateWorkflowListEntity = { ...updateWorkflowListEntity, newDescription: null }
-        } else {
-            newUpdateWorkflowListEntity = updateWorkflowListEntity
-        }
-        updateWorkflowList(workflowListUuid, newUpdateWorkflowListEntity).then((res) => {
-            if (res) {
-                fetchWorkflowLists()
-            }
-            return res
-        })
+        mutate(getWorkflowListsUrl(userApiId))
     }
 
     const moveWorkflowList = (destinationWorkflowList?: WorkflowList) => {
@@ -188,18 +140,10 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
         })
     }
 
-    const modifyResources = async (uuid: string, workflowListResource: WorkflowListResource) => {
-        postWorkflowListResource(uuid, workflowListResource).then((res) => {
-            if (res) {
-                fetchWorkflowLists()
-            }
-            return res
-        })
-    }
-
     const getTemporalQueryResult = (workflowListApiId: string) => {
         getTemporalQuery(workflowListApiId).then((res) => {
             if (res) {
+                // Use immer produce to create REAL clone
                 let newWorkflowLists = produce(workflowLists, draft => {
                     res.tasksResult.forEach((taskPlanningSolution) => {
                         recursiveSetField(
@@ -217,7 +161,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                     )
                 })
                 // Mutate only local cache
-                mutate(getWorkflowLists(userApiId), newWorkflowLists, false)
+                mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
             }
         })
     }
@@ -266,11 +210,9 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             workflowList={wl}
                                             userApiId={userApiId}
                                             workflowListToMove={workflowListToMove}
-                                            modifyWorkflowList={modifyWorkflowList}
                                             moveWorkflowList={moveWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                             showDropButton={showDropButton}
-                                            modifyResources={modifyResources}
                                             getTemporalQueryResult={getTemporalQueryResult}
                                         />
                                     )
@@ -283,11 +225,9 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             userApiId={userApiId}
                                             isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
-                                            modifyWorkflowList={modifyWorkflowList}
                                             moveWorkflowList={moveWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                             showDropButton={showDropButton}
-                                            modifyResources={modifyResources}
                                             getTemporalQueryResult={getTemporalQueryResult}
                                         />
                                     )
@@ -300,9 +240,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             userApiId={userApiId}
                                             isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
-                                            modifyWorkflowList={modifyWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
-                                            modifyResources={modifyResources}
                                         />
                                     )
                                 }

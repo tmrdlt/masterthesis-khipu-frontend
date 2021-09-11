@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
-import { getWorkflowLists, postWorkflowList } from 'utils/workflow-api'
+import { getWorkflowListsUrl } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 
 interface CreateWorkflowListModalProps {
@@ -34,18 +34,7 @@ const CreateWorkflowListModal = ({
   }
 
   const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
-    let newCreateWorkflowListEntity: CreateWorkflowListEntity
-    if (createWorkflowListEntity.description == '') {
-      newCreateWorkflowListEntity = { ...createWorkflowListEntity, description: null }
-    } else {
-      newCreateWorkflowListEntity = createWorkflowListEntity
-    }
-    postWorkflowList(newCreateWorkflowListEntity).then((res) => {
-      if (res) {
-        mutate(getWorkflowLists(userApiId))
-      }
-      return res
-    })
+
   }
 
   return (
@@ -122,6 +111,8 @@ const CreateWorkflowListModal = ({
               disabled={state.title === ''}
               onClick={() => {
                 createWorkflowList(state).then((_res) => {
+                  mutate(getWorkflowListsUrl(userApiId))
+
                   closeModal()
                 })
               }}
