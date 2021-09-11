@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
 
 interface CreateWorkflowListModalProps {
@@ -25,12 +25,6 @@ const CreateWorkflowListModal = ({
     userApiId: userApiId,
   }
   const [state, setState] = useState(initCreateWorkflowListEntity)
-
-  // needed because userApiId gets set asynchronously in parent component
-  useEffect(() => {
-    const newState = { ...state, userApiId: userApiId }
-    setState(newState)
-  }, [userApiId])
 
   // FUNCTIONS
   const handleFormChange = (event) => {
