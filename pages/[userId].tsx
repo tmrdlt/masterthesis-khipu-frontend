@@ -35,6 +35,7 @@ import { useRouter } from 'next/router'
 
 import axios from 'axios'
 import useSWR, { useSWRConfig } from 'swr'
+import produce from 'immer'
 
 const fetcher = (url) =>
   axios.get(url).then((res) => {
@@ -68,7 +69,10 @@ function useWorkflowLists(userApiId) {
   const { data, error } = useSWR(
     // TODO move to const file
     `http://localhost:5001/workflowlist?userApiId=${userApiId}`,
-    fetcher
+    fetcher,
+      {
+        revalidateOnFocus: false
+      }
   )
 
   return {
@@ -238,21 +242,22 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   const getTemporalQueryResult = (workflowListApiId: string) => {
     getTemporalQuery(workflowListApiId).then((res) => {
       if (res) {
-        let newWorkflowLists = [...workflowLists]
-        res.tasksResult.forEach((taskPlanningSolution) => {
+        let newWorkflowLists = produce(workflowLists, draft => {
+          res.tasksResult.forEach((taskPlanningSolution) => {
+            recursiveSetField(
+                draft,
+                taskPlanningSolution.apiId,
+                'temporalQueryResult',
+                taskPlanningSolution
+            )
+          })
           recursiveSetField(
-            newWorkflowLists,
-            taskPlanningSolution.apiId,
-            'temporalQueryResult',
-            taskPlanningSolution
+              draft,
+              workflowListApiId,
+              'temporalQueryResult',
+              res.boardResult
           )
         })
-        recursiveSetField(
-          newWorkflowLists,
-          workflowListApiId,
-          'temporalQueryResult',
-          res.boardResult
-        )
         mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`, newWorkflowLists, false)
       }
     })
