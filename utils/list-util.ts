@@ -1,101 +1,112 @@
-import {WorkflowList} from "utils/models";
-import {DraggableLocation} from "react-beautiful-dnd";
+import {WorkflowList} from 'utils/models'
+import {DraggableLocation} from 'react-beautiful-dnd'
 
 /**
  * Recursively reorder items inside a list.
  */
-export const recursiveReorder = (lists: Array<WorkflowList>,
-                                 listUUidToReorder: string,
-                                 startIndex: number,
-                                 endIndex: number) => {
-    if (listUUidToReorder == "ROOT") {
-        const [removed] = lists.splice(startIndex, 1);
-        lists.splice(endIndex, 0, removed);
-    } else {
-        lists.forEach(list => {
-            if (list.apiId == listUUidToReorder) {
-                const [removed] = list.children.splice(startIndex, 1);
-                list.children.splice(endIndex, 0, removed);
-            } else {
-                recursiveReorder(list.children, listUUidToReorder, startIndex, endIndex)
-            }
-        })
-    }
-};
+export const recursiveReorder = (
+  lists: Array<WorkflowList>,
+  listUUidToReorder: string,
+  startIndex: number,
+  endIndex: number
+) => {
+  if (listUUidToReorder == 'ROOT') {
+    const [removed] = lists.splice(startIndex, 1)
+    lists.splice(endIndex, 0, removed)
+  } else {
+    lists.forEach((list) => {
+      if (list.apiId == listUUidToReorder) {
+        const [removed] = list.children.splice(startIndex, 1)
+        list.children.splice(endIndex, 0, removed)
+      } else {
+        recursiveReorder(list.children, listUUidToReorder, startIndex, endIndex)
+      }
+    })
+  }
+}
 
 /**
  * Recursively move an item from one list to another list.
  */
-export const recursiveMove = (lists: Array<WorkflowList>,
-                              droppableSource: DraggableLocation,
-                              droppableDestination: DraggableLocation) => {
-    let elementToMove: WorkflowList;
-    if (droppableSource.droppableId == "ROOT") {
-        [elementToMove] = lists.splice(droppableSource.index, 1);
-    } else {
-        elementToMove = recursiveRemove(lists, droppableSource);
-    }
-    console.log("elementToMove", elementToMove)
-    if (droppableDestination.droppableId == "ROOT") {
-        lists.splice(droppableDestination.index, 0, elementToMove);
-    } else {
-        recursiveInsert(lists, droppableDestination, elementToMove);
-    }
-};
-
-/**
- * Helper function for recursiveMove
- */
-const recursiveRemove = (lists: Array<WorkflowList>,
-                         droppableSource: DraggableLocation): WorkflowList => {
-    for (let i = 0; i < lists.length; i++) {
-        if (lists[i].apiId == droppableSource.droppableId) {
-            const [elementToMove] = lists[i].children.splice(droppableSource.index, 1);
-            return elementToMove
-        }
-        const elementToMove = recursiveRemove(lists[i].children, droppableSource)
-        if (elementToMove) {
-            return elementToMove;
-        }
-    }
+export const recursiveMove = (
+  lists: Array<WorkflowList>,
+  droppableSource: DraggableLocation,
+  droppableDestination: DraggableLocation
+) => {
+  let elementToMove: WorkflowList
+  if (droppableSource.droppableId == 'ROOT') {
+    ;[elementToMove] = lists.splice(droppableSource.index, 1)
+  } else {
+    elementToMove = recursiveRemove(lists, droppableSource)
+  }
+  console.log('elementToMove', elementToMove)
+  if (droppableDestination.droppableId == 'ROOT') {
+    lists.splice(droppableDestination.index, 0, elementToMove)
+  } else {
+    recursiveInsert(lists, droppableDestination, elementToMove)
+  }
 }
 
 /**
  * Helper function for recursiveMove
  */
-const recursiveInsert = (lists: Array<WorkflowList>,
-                         droppableDestination: DraggableLocation,
-                         elementToMove: WorkflowList) => {
-    lists.forEach(list => {
-        if (list.apiId == droppableDestination.droppableId) {
-            list.children.splice(droppableDestination.index, 0, elementToMove);
-        } else {
-            recursiveInsert(list.children, droppableDestination, elementToMove)
-        }
-    })
+const recursiveRemove = (
+  lists: Array<WorkflowList>,
+  droppableSource: DraggableLocation
+): WorkflowList => {
+  for (let i = 0; i < lists.length; i++) {
+    if (lists[i].apiId == droppableSource.droppableId) {
+      const [elementToMove] = lists[i].children.splice(droppableSource.index, 1)
+      return elementToMove
+    }
+    const elementToMove = recursiveRemove(lists[i].children, droppableSource)
+    if (elementToMove) {
+      return elementToMove
+    }
+  }
+}
+
+/**
+ * Helper function for recursiveMove
+ */
+const recursiveInsert = (
+  lists: Array<WorkflowList>,
+  droppableDestination: DraggableLocation,
+  elementToMove: WorkflowList
+) => {
+  lists.forEach((list) => {
+    if (list.apiId == droppableDestination.droppableId) {
+      list.children.splice(droppableDestination.index, 0, elementToMove)
+    } else {
+      recursiveInsert(list.children, droppableDestination, elementToMove)
+    }
+  })
 }
 
 // @ts-ignore
-export const isSameLevelOfSameParent = (lists: Array<WorkflowList>, parent?: WorkflowList, potentialChild: WorkflowList): boolean => {
-    // We are on root
-    if (parent == null) {
-        return lists.map(list => list.apiId).includes(potentialChild.apiId)
-    } else {
-        return parent.children.map(list => list.apiId).includes(potentialChild.apiId)
-    }
+export const isSameLevelOfSameParent = (
+  lists: Array<WorkflowList>,
+  parent?: WorkflowList,
+  potentialChild: WorkflowList
+): boolean => {
+  // We are on root
+  if (parent == null) {
+    return lists.map((list) => list.apiId).includes(potentialChild.apiId)
+  } else {
+    return parent.children.map((list) => list.apiId).includes(potentialChild.apiId)
+  }
 }
 
 /**
  * Function to determine if in an Array of WorkflowList a child list is really a child list of some parent list
  */
 export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowList): boolean => {
-    // We are on root
-    if (parent == null || potentialChild == null) {
-        return false;
-    } else {
-        return recursiveContains(parent.children, potentialChild.apiId)
-
-    }
+  // We are on root
+  if (parent == null || potentialChild == null) {
+    return false
+  } else {
+    return recursiveContains(parent.children, potentialChild.apiId)
+  }
 }
 
 /**
@@ -105,36 +116,57 @@ export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowL
  */
 // TODO maybe write this nicer
 const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolean => {
-
-    let contains = false;
-    lists.some(list => {
-        if (list.apiId == listUuid) {
-            contains = true;
-            return;
-        } else if (list.children.length == 0) {
-            return;
-        } else {
-            contains = recursiveContains(list.children, listUuid)
-        }
-    })
-    return contains;
+  let contains = false
+  lists.some((list) => {
+    if (list.apiId == listUuid) {
+      contains = true
+      return
+    } else if (list.children.length == 0) {
+      return
+    } else {
+      contains = recursiveContains(list.children, listUuid)
+    }
+  })
+  return contains
 }
 
 /**
  * Recursively parses the due date to a Javascript Date() as this is not done by axios JSON.parse()
  */
 export const recursiveParseDate = (lists: Array<WorkflowList>) => {
-    lists.forEach(wl => {
-        if (wl.temporalResource) {
-            if (wl.temporalResource.startDate) {
-                wl.temporalResource.startDate = new Date(wl.temporalResource.startDate)
-            }
-            if (wl.temporalResource.endDate) {
-                wl.temporalResource.endDate = new Date(wl.temporalResource.endDate)
-            }
-        }
-        if (wl.children.length > 0) {
-            recursiveParseDate(wl.children)
-        }
-    })
-};
+  lists.forEach((wl) => {
+    if (wl.temporalResource) {
+      if (wl.temporalResource.startDate) {
+        wl.temporalResource.startDate = new Date(wl.temporalResource.startDate)
+      }
+      if (wl.temporalResource.endDate) {
+        wl.temporalResource.endDate = new Date(wl.temporalResource.endDate)
+      }
+    }
+    if (wl.children.length > 0) {
+      recursiveParseDate(wl.children)
+    }
+  })
+}
+
+/**
+ * Set data to a field of given workflow list in a list of nested workflowlists
+ * @param lists Nested workflowLists
+ * @param workflowListApiId workflowList to change
+ * @param fieldName field to set
+ * @param data data to bind to field
+ */
+export const recursiveSetField = (
+  lists: Array<WorkflowList>,
+  workflowListApiId: string,
+  fieldName: string,
+  data: any
+) => {
+  lists.forEach((list) => {
+    if (list.apiId == workflowListApiId) {
+      list[fieldName] = data
+    } else {
+      recursiveSetField(list.children, workflowListApiId, fieldName, data)
+    }
+  })
+}

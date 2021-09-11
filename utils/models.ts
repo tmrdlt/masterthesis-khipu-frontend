@@ -1,85 +1,105 @@
 // FROM BACKEND
 export type WorkflowList = {
-    apiId: string
-    title: string
-    description?: string
-    usageType: WorkflowListType
-    children: Array<WorkflowList>
-    level: number
-    position: number
-    isTemporalConstraintBoard: boolean,
-    temporalResource?: TemporalResource
-    userResource?: UserResource
-    numericResources: Array<NumericResource>
-    textualResources: Array<TextualResource>
+  apiId: string
+  title: string
+  description?: string
+  usageType: WorkflowListType
+  children: Array<WorkflowList>
+  level: number
+  position: number
+  isTemporalConstraintBoard: boolean
+  temporalResource?: TemporalResource
+  userResource?: UserResource
+  numericResources: Array<NumericResource>
+  textualResources: Array<TextualResource>
+  temporalQueryResult?: TaskPlanningSolution // not present in backend model
 }
 
 export type CreateWorkflowListEntity = {
-    title: string
-    description?: string
-    listType: WorkflowListType
-    parentApiId?: string
-    userApiId: string
+  title: string
+  description?: string
+  listType: WorkflowListType
+  parentApiId?: string
+  userApiId: string
 }
 
 export type UpdateWorkflowListEntity = {
-    newTitle: string,
-    newDescription?: string,
-    isTemporalConstraintBoard?: boolean,
+  newTitle: string
+  newDescription?: string
+  isTemporalConstraintBoard?: boolean
 }
 
 export type MoveWorkflowListEntity = {
-    newParentApiId?: string
-    newPosition?: number
-    userApiId: string
+  newParentApiId?: string
+  newPosition?: number
+  userApiId: string
 }
 
 export type ConvertWorkflowListEntity = {
-    newListType: WorkflowListType
+  newListType: WorkflowListType
 }
 
 export type ReorderWorkflowListEntity = {
-    newPosition: number
+  newPosition: number
 }
 
 export type WorkflowListResource = {
-    numeric?: Array<NumericResource>
-    textual?: Array<TextualResource>
-    temporal?: TemporalResource
-    user?: UserResource
+  numeric?: Array<NumericResource>
+  textual?: Array<TextualResource>
+  temporal?: TemporalResource
+  user?: UserResource
 }
 
 export type NumericResource = {
-    label: string,
-    value: number
+  label: string
+  value: number
 }
 
 export type TextualResource = {
-    label: string,
-    value?: string
+  label: string
+  value?: string
 }
 
 export type UserResource = {
-    username: string
+  username: string
 }
 
 export type TemporalResource = {
-    startDate?: Date,
-    endDate?: Date,
-    durationInMinutes?: number
+  startDate?: Date
+  endDate?: Date
+  durationInMinutes?: number
 }
 
 export enum WorkflowListType {
-    BOARD = "BOARD", LIST = "LIST", ITEM = "ITEM"
+  BOARD = 'BOARD',
+  LIST = 'LIST',
+  ITEM = 'ITEM',
 }
 
 export type User = {
-    apiId: string,
-    username: string,
-    createdAt: Date,
-    endDate: Date,
+  apiId: string
+  username: string
+  createdAt: Date
+  endDate: Date
 }
 
 export type CreateUserEntity = {
-    username: string
+  username: string
+}
+
+export type TaskPlanningSolution = {
+  apiId: string
+  title: string
+  startDate?: Date
+  dueDate?: Date
+  duration: number
+  startedAt: Date
+  finishedAt: Date
+  dueDateKept: boolean
+  index: number
+}
+
+export type TemporalQueryResult = {
+  boardResult: TaskPlanningSolution
+  tasksResult: Array<TaskPlanningSolution>
 }
