@@ -24,7 +24,6 @@ interface IItemProps {
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
   modifyWorkflowList
-  removeWorkflowList
   selectWorkflowListToMove
   modifyResources
 }
@@ -32,10 +31,10 @@ interface IItemProps {
 const ItemComponent = ({
   index,
   workflowList,
+  userApiId,
   isInsideTemporalConstraintBoard,
   workflowListToMove,
   modifyWorkflowList,
-  removeWorkflowList,
   selectWorkflowListToMove,
   modifyResources,
 }: IItemProps): JSX.Element => {
@@ -190,8 +189,8 @@ const ItemComponent = ({
               </div>
               <div className="flex flex-col items-center">
                 <ButtonsMenu
+                  userApiId={userApiId}
                   workflowList={workflowList}
-                  removeWorkflowList={removeWorkflowList}
                   selectWorkflowListToMove={selectWorkflowListToMove}
                   openModifyModal={openModifyModal}
                   openMoveModal={openMoveModal}

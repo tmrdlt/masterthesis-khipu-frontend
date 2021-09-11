@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import {
-  ConvertWorkflowListEntity,
   UpdateWorkflowListEntity,
   WorkflowList,
   WorkflowListResource,
@@ -17,10 +16,8 @@ import {
   recursiveSetField,
 } from 'utils/list-util'
 import {
-  deleteWorkflowList,
   getTemporalQuery,
   getWorkflowLists,
-  postWorkflowListConvert,
   postWorkflowListMove,
   postWorkflowListReorder,
   postWorkflowListResource,
@@ -176,25 +173,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
         })
     }
 
-    const removeWorkflowList = (uuid: string) => {
-        deleteWorkflowList(uuid).then((res) => {
-            if (res) {
-                fetchWorkflowLists()
-            }
-        })
-    }
-
-    const convertWorkflowList = (
-        uuid: string,
-        convertWorkflowListEntity: ConvertWorkflowListEntity
-    ) => {
-        postWorkflowListConvert(uuid, convertWorkflowListEntity).then((res) => {
-            if (res) {
-                fetchWorkflowLists()
-            }
-        })
-    }
-
     const moveWorkflowList = (destinationWorkflowList?: WorkflowList) => {
         let newParentUuid = null
         // We are not on root
@@ -289,8 +267,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             userApiId={userApiId}
                                             workflowListToMove={workflowListToMove}
                                             modifyWorkflowList={modifyWorkflowList}
-                                            removeWorkflowList={removeWorkflowList}
-                                            convertWorkflowList={convertWorkflowList}
                                             moveWorkflowList={moveWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                             showDropButton={showDropButton}
@@ -308,8 +284,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
                                             modifyWorkflowList={modifyWorkflowList}
-                                            removeWorkflowList={removeWorkflowList}
-                                            convertWorkflowList={convertWorkflowList}
                                             moveWorkflowList={moveWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                             showDropButton={showDropButton}
@@ -327,7 +301,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
                                             modifyWorkflowList={modifyWorkflowList}
-                                            removeWorkflowList={removeWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                             modifyResources={modifyResources}
                                         />

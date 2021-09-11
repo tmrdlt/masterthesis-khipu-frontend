@@ -17,8 +17,6 @@ interface IListProps {
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
   modifyWorkflowList
-  removeWorkflowList
-  convertWorkflowList
   moveWorkflowList
   selectWorkflowListToMove
   showDropButton
@@ -33,8 +31,6 @@ const ListComponent = ({
   isInsideTemporalConstraintBoard,
   workflowListToMove,
   modifyWorkflowList,
-  removeWorkflowList,
-  convertWorkflowList,
   moveWorkflowList,
   selectWorkflowListToMove,
   showDropButton,
@@ -90,9 +86,8 @@ const ListComponent = ({
                 {workflowList.title}
               </div>
               <ButtonsMenu
+                userApiId={userApiId}
                 workflowList={workflowList}
-                removeWorkflowList={removeWorkflowList}
-                convertWorkflowList={convertWorkflowList}
                 selectWorkflowListToMove={selectWorkflowListToMove}
                 openCreateModal={openCreateModal}
                 openModifyModal={openModifyModal}
@@ -120,8 +115,6 @@ const ListComponent = ({
                           userApiId={userApiId}
                           workflowListToMove={workflowListToMove}
                           modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
-                          convertWorkflowList={convertWorkflowList}
                           moveWorkflowList={moveWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                           showDropButton={showDropButton}
@@ -139,8 +132,6 @@ const ListComponent = ({
                           isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
                           modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
-                          convertWorkflowList={convertWorkflowList}
                           moveWorkflowList={moveWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                           showDropButton={showDropButton}
@@ -158,7 +149,6 @@ const ListComponent = ({
                           isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
                           modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                           modifyResources={modifyResources}
                         />

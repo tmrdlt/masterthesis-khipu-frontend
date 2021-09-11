@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
-import { postWorkflowList } from 'utils/workflow-api'
+import { getWorkflowLists, postWorkflowList } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 
 interface CreateWorkflowListModalProps {
@@ -40,10 +40,9 @@ const CreateWorkflowListModal = ({
     } else {
       newCreateWorkflowListEntity = createWorkflowListEntity
     }
-    console.log(newCreateWorkflowListEntity)
     postWorkflowList(newCreateWorkflowListEntity).then((res) => {
       if (res) {
-        mutate(`http://localhost:5001/workflowlist?userApiId=${userApiId}`)
+        mutate(getWorkflowLists(userApiId))
       }
       return res
     })
