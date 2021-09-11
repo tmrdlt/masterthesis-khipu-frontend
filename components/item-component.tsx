@@ -245,19 +245,21 @@ const ItemComponent = ({
               {workflowList.description}
             </div>
           </div>
-          <ModifyItemModal
-            show={showModifyModal}
-            closeModal={closeModifyModal}
-            workflowList={workflowList}
-            isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-            modifyWorkflowList={modifyWorkflowList}
-            modifyResources={modifyResources}
-          />
-          <MoveWorkflowListModal
-            show={showMoveModal}
-            closeModal={closeMoveModal}
-            selectWorkflowListToMove={selectWorkflowListToMove}
-          />
+          {showModifyModal && (
+            <ModifyItemModal
+              closeModal={closeModifyModal}
+              workflowList={workflowList}
+              isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
+              modifyWorkflowList={modifyWorkflowList}
+              modifyResources={modifyResources}
+            />
+          )}
+          {showMoveModal && (
+            <MoveWorkflowListModal
+              closeModal={closeMoveModal}
+              selectWorkflowListToMove={selectWorkflowListToMove}
+            />
+          )}
         </div>
       )}
     </Draggable>

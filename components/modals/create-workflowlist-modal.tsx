@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
 
 interface CreateWorkflowListModalProps {
-  show
   closeModal
   createType: WorkflowListType
   parentUuid: string
@@ -11,7 +10,6 @@ interface CreateWorkflowListModalProps {
 }
 
 const CreateWorkflowListModal = ({
-  show,
   closeModal,
   createType,
   parentUuid,
@@ -34,16 +32,13 @@ const CreateWorkflowListModal = ({
     setState(newState)
   }, [userApiId])
 
-  // DYNAMIC CLASSES
-  const showHideClass = show ? '' : 'hidden'
-
   // FUNCTIONS
   const handleFormChange = (event) => {
     const newState = { ...state, [event.target.id]: event.target.value }
     setState(newState)
   }
   return (
-    <div className={showHideClass}>
+    <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
       <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
         <div className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">

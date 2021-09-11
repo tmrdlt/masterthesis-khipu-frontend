@@ -7,7 +7,6 @@ import { compareDateOptions } from 'utils/date-util'
 import { getOptionalString } from 'utils/optional-util'
 
 interface ModifyBoardModalProps {
-  show
   closeModal
   workflowList: WorkflowList
   modifyWorkflowList
@@ -15,7 +14,6 @@ interface ModifyBoardModalProps {
 }
 
 const ModifyBoardModal = ({
-  show,
   closeModal,
   workflowList,
   modifyWorkflowList,
@@ -41,7 +39,6 @@ const ModifyBoardModal = ({
   }, [workflowList])
 
   // DYNAMIC CLASSES
-  const showHideClass = show ? '' : 'hidden'
   const opacityAndCursorNotAllowedClass = !updateBoardEntity.isTemporalConstraintBoard
     ? ' opacity-40 cursor-not-allowed'
     : ''
@@ -75,7 +72,7 @@ const ModifyBoardModal = ({
   }
 
   return (
-    <div className={showHideClass}>
+    <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
       <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
         <div className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">

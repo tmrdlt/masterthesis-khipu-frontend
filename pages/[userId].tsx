@@ -46,12 +46,12 @@ const Home: FunctionComponent = (): JSX.Element => {
 
   const router = useRouter()
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && userApiId == null) {
       const userApiId = router.query.userId.toString()
       setUserApiId(userApiId)
       init(userApiId)
     }
-  }, [router.isReady, router.query.userId])
+  }, [router.isReady, router.query.userId, userApiId])
 
   // FUNCTIONS
   const init = (userApiId: string) => {
@@ -353,14 +353,15 @@ const Home: FunctionComponent = (): JSX.Element => {
           )}
         </Droppable>
       </DragDropContext>
-      <CreateWorkflowListModal
-        show={showCreateModal}
-        closeModal={closeModal}
-        createType={WorkflowListType.BOARD}
-        parentUuid={null}
-        userApiId={userApiId}
-        createWorkflowList={createWorkflowList}
-      />
+      {showCreateModal && (
+        <CreateWorkflowListModal
+          closeModal={closeModal}
+          createType={WorkflowListType.BOARD}
+          parentUuid={null}
+          userApiId={userApiId}
+          createWorkflowList={createWorkflowList}
+        />
+      )}
     </div>
   )
 }

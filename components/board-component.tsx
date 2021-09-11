@@ -259,26 +259,29 @@ const BoardComponent = ({
               )}
             </Droppable>
           </div>
-          <CreateWorkflowListModal
-            show={showCreateModal}
-            closeModal={closeCreateModal}
-            createType={WorkflowListType.LIST}
-            parentUuid={workflowList.apiId}
-            userApiId={userApiId}
-            createWorkflowList={createWorkflowList}
-          />
-          <ModifyBoardModal
-            show={showModifyModal}
-            closeModal={closeModifyModal}
-            workflowList={workflowList}
-            modifyWorkflowList={modifyWorkflowList}
-            modifyResources={modifyResources}
-          />
-          <MoveWorkflowListModal
-            show={showMoveModal}
-            closeModal={closeMoveModal}
-            selectWorkflowListToMove={selectWorkflowListToMove}
-          />
+          {showCreateModal && (
+            <CreateWorkflowListModal
+              closeModal={closeCreateModal}
+              createType={WorkflowListType.LIST}
+              parentUuid={workflowList.apiId}
+              userApiId={userApiId}
+              createWorkflowList={createWorkflowList}
+            />
+          )}
+          {showModifyModal && (
+            <ModifyBoardModal
+              closeModal={closeModifyModal}
+              workflowList={workflowList}
+              modifyWorkflowList={modifyWorkflowList}
+              modifyResources={modifyResources}
+            />
+          )}
+          {showMoveModal && (
+            <MoveWorkflowListModal
+              closeModal={closeMoveModal}
+              selectWorkflowListToMove={selectWorkflowListToMove}
+            />
+          )}
         </div>
       )}
     </Draggable>

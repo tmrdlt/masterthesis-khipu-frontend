@@ -27,7 +27,6 @@ import CalendarIcon, {
 import { getUsers } from 'utils/workflow-api'
 
 interface ModifyItemModalProps {
-  show
   closeModal
   workflowList: WorkflowList
   isInsideTemporalConstraintBoard: boolean
@@ -36,7 +35,6 @@ interface ModifyItemModalProps {
 }
 
 const ModifyItemModal = ({
-  show,
   closeModal,
   workflowList,
   isInsideTemporalConstraintBoard,
@@ -79,19 +77,12 @@ const ModifyItemModal = ({
   const [users, setUsers] = useState(initUsers)
 
   useEffect(() => {
-    init()
-  }, [])
-
-  const init = () => {
     getUsers().then((users) => {
       if (users) {
         setUsers(users)
       }
     })
-  }
-
-  // DYNAMIC CLASSES
-  const showHideClass = show ? '' : 'hidden'
+  }, [])
 
   // FUNCTIONS
   const handleUpdateItemFormChange = (event) => {
@@ -214,7 +205,7 @@ const ModifyItemModal = ({
   }
 
   return (
-    <div className={showHideClass}>
+    <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
       <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
         <div className="bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -319,6 +310,9 @@ const ModifyItemModal = ({
                                 timeCaption="Time"
                                 timeFormat="HH:mm"
                                 dateFormat="dd.MM.yyyy, HH:mm"
+                                autocomplete="off"
+                                id="startDate"
+                                name="startDate"
                               />
                             </div>
                             <div className="grid">
@@ -354,6 +348,9 @@ const ModifyItemModal = ({
                                 timeCaption="Time"
                                 timeFormat="HH:mm"
                                 dateFormat="dd.MM.yyyy, HH:mm"
+                                autocomplete="off"
+                                id="endDate"
+                                name="endDate"
                               />
                             </div>
                             <label className="block">
@@ -557,7 +554,7 @@ const ModifyItemModal = ({
                   let temporalEntity: TemporalResource = null
                   let userEntity: UserResource = null
                   if (!isWorkflowListUnchanged()) {
-                    modifyWorkflowList(workflowList.apiId, updateItemEntity).then((res) => {
+                    modifyWorkflowList(workflowList.apiId, updateItemEntity).then((_res) => {
                       closeModal()
                     })
                   }
@@ -592,7 +589,7 @@ const ModifyItemModal = ({
                     temporal: temporalEntity,
                     user: userEntity,
                   }
-                  modifyResources(workflowList.apiId, entity).then((res) => {
+                  modifyResources(workflowList.apiId, entity).then((_res) => {
                     closeModal()
                   })
                 }}

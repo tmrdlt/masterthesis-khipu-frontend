@@ -7,6 +7,18 @@
     "build": "next build",
     "start": "next start"
   },
+  "browserslist": {
+    "production": [
+      ">1%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@reach/menu-button": "^0.16.1",
     "@tailwindcss/forms": "^0.3.3",
