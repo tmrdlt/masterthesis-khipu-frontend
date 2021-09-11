@@ -83,12 +83,18 @@ const recursiveInsert = (
   })
 }
 
-// @ts-ignore
-export const isSameLevelOfSameParent = (
-  lists: Array<WorkflowList>,
-  parent?: WorkflowList,
+interface IisSameLevelOfSameParent {
+  lists: Array<WorkflowList>
   potentialChild: WorkflowList
-): boolean => {
+  parent?: WorkflowList
+}
+
+// @ts-ignore
+export const isSameLevelOfSameParent = ({
+  lists,
+  potentialChild,
+  parent
+}: IisSameLevelOfSameParent): boolean => {
   // We are on root
   if (parent == null) {
     return lists.map((list) => list.apiId).includes(potentialChild.apiId)

@@ -23,21 +23,16 @@ interface IItemProps {
   userApiId: string
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
-  modifyWorkflowList
-  removeWorkflowList
   selectWorkflowListToMove
-  modifyResources
 }
 
 const ItemComponent = ({
   index,
   workflowList,
+  userApiId,
   isInsideTemporalConstraintBoard,
   workflowListToMove,
-  modifyWorkflowList,
-  removeWorkflowList,
   selectWorkflowListToMove,
-  modifyResources,
 }: IItemProps): JSX.Element => {
   // STATE
   const [showModifyModal, setShowModifyModal] = useState(false)
@@ -190,8 +185,8 @@ const ItemComponent = ({
               </div>
               <div className="flex flex-col items-center">
                 <ButtonsMenu
+                  userApiId={userApiId}
                   workflowList={workflowList}
-                  removeWorkflowList={removeWorkflowList}
                   selectWorkflowListToMove={selectWorkflowListToMove}
                   openModifyModal={openModifyModal}
                   openMoveModal={openMoveModal}
@@ -247,11 +242,10 @@ const ItemComponent = ({
           </div>
           {showModifyModal && (
             <ModifyItemModal
-              closeModal={closeModifyModal}
+              userApiId={userApiId}
               workflowList={workflowList}
               isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
-              modifyWorkflowList={modifyWorkflowList}
-              modifyResources={modifyResources}
+              closeModal={closeModifyModal}
             />
           )}
           {showMoveModal && (

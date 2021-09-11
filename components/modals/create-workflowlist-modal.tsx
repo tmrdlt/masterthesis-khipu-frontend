@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
+import { getWorkflowListsUrl } from 'utils/workflow-api'
+import { useSWRConfig } from 'swr'
 
 interface CreateWorkflowListModalProps {
   closeModal
   createType: WorkflowListType
   parentUuid: string
   userApiId: string
-  createWorkflowList
 }
 
 const CreateWorkflowListModal = ({
@@ -14,7 +15,6 @@ const CreateWorkflowListModal = ({
   createType,
   parentUuid,
   userApiId,
-  createWorkflowList,
 }: CreateWorkflowListModalProps): JSX.Element => {
   // STATE
   const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
@@ -25,12 +25,18 @@ const CreateWorkflowListModal = ({
     userApiId: userApiId,
   }
   const [state, setState] = useState(initCreateWorkflowListEntity)
+  const { mutate } = useSWRConfig()
 
   // FUNCTIONS
   const handleFormChange = (event) => {
     const newState = { ...state, [event.target.id]: event.target.value }
     setState(newState)
   }
+
+  const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
+
+  }
+
   return (
     <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
@@ -105,6 +111,8 @@ const CreateWorkflowListModal = ({
               disabled={state.title === ''}
               onClick={() => {
                 createWorkflowList(state).then((_res) => {
+                  mutate(getWorkflowListsUrl(userApiId))
+
                   closeModal()
                 })
               }}

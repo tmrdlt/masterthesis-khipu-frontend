@@ -16,14 +16,9 @@ interface IListProps {
   userApiId: string
   isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
-  createWorkflowList
-  modifyWorkflowList
-  removeWorkflowList
-  convertWorkflowList
   moveWorkflowList
   selectWorkflowListToMove
   showDropButton
-  modifyResources
   getTemporalQueryResult
 }
 
@@ -33,14 +28,9 @@ const ListComponent = ({
   userApiId,
   isInsideTemporalConstraintBoard,
   workflowListToMove,
-  createWorkflowList,
-  modifyWorkflowList,
-  removeWorkflowList,
-  convertWorkflowList,
   moveWorkflowList,
   selectWorkflowListToMove,
   showDropButton,
-  modifyResources,
   getTemporalQueryResult,
 }: IListProps): JSX.Element => {
   // STATE
@@ -92,9 +82,8 @@ const ListComponent = ({
                 {workflowList.title}
               </div>
               <ButtonsMenu
+                userApiId={userApiId}
                 workflowList={workflowList}
-                removeWorkflowList={removeWorkflowList}
-                convertWorkflowList={convertWorkflowList}
                 selectWorkflowListToMove={selectWorkflowListToMove}
                 openCreateModal={openCreateModal}
                 openModifyModal={openModifyModal}
@@ -121,14 +110,9 @@ const ListComponent = ({
                           workflowList={wl}
                           userApiId={userApiId}
                           workflowListToMove={workflowListToMove}
-                          createWorkflowList={createWorkflowList}
-                          modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
-                          convertWorkflowList={convertWorkflowList}
                           moveWorkflowList={moveWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                           showDropButton={showDropButton}
-                          modifyResources={modifyResources}
                           getTemporalQueryResult={getTemporalQueryResult}
                         />
                       )
@@ -141,14 +125,9 @@ const ListComponent = ({
                           userApiId={userApiId}
                           isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
-                          createWorkflowList={createWorkflowList}
-                          modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
-                          convertWorkflowList={convertWorkflowList}
                           moveWorkflowList={moveWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                           showDropButton={showDropButton}
-                          modifyResources={modifyResources}
                           getTemporalQueryResult={getTemporalQueryResult}
                         />
                       )
@@ -161,10 +140,7 @@ const ListComponent = ({
                           userApiId={userApiId}
                           isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
-                          modifyWorkflowList={modifyWorkflowList}
-                          removeWorkflowList={removeWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
-                          modifyResources={modifyResources}
                         />
                       )
                     }
@@ -185,14 +161,13 @@ const ListComponent = ({
               createType={WorkflowListType.ITEM}
               parentUuid={workflowList.apiId}
               userApiId={userApiId}
-              createWorkflowList={createWorkflowList}
             />
           )}
           {showModifyModal && (
             <ModifyListModal
-              closeModal={closeModifyModal}
+              userApiId={userApiId}
               workflowList={workflowList}
-              modifyWorkflowList={modifyWorkflowList}
+              closeModal={closeModifyModal}
             />
           )}
           {showMoveModal && (

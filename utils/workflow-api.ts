@@ -14,24 +14,46 @@ import {
 import { toLocalDateTimeString } from 'utils/date-util'
 import { recursiveParseDate } from 'utils/list-util'
 
-export const getWorkflowLists = async (userApiId: string): Promise<Array<WorkflowList> | null> => {
-  return axios
-    .get<Array<WorkflowList>>('http://localhost:5001/workflowlist?userApiId=' + userApiId)
-    .then((response) => {
-      const workflowLists = response.data
-      recursiveParseDate(workflowLists)
-      console.log(workflowLists)
-      return workflowLists
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
+export const getWorkflowListsUrl = (userApiId: String): string => {
+  return `http://localhost:5001/workflowlist?userApiId=${userApiId}`
+}
+
+export const getUsersUrl = (): string => {
+    return 'http://localhost:5001/user'
+}
+
+export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
+    return axios.get<Array<WorkflowList>>(url).then((res) => {
+        const workflowLists = res.data
+        recursiveParseDate(workflowLists)
+        return workflowLists
     })
 }
 
-export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
+export const getUsersFetcher = (url): Promise<Array<User>> => {
+    return axios
+        .get<Array<User>>(url)
+        .then((res) => {
+            return res.data
+        })
+}
+
+export const getUserFetcher = (userApiId): Promise<User | undefined> => {
+    return axios
+        .get<User>(`http://localhost:5001/user/${userApiId}`)
+        .then((res) => {
+            return res.data
+        })
+        .catch((error) => {
+            console.error(error)
+            return null
+        })
+}
+
+export const createWorkflowList = async (entity: CreateWorkflowListEntity) => {
+  const newEntity = { ...entity, newDescription: entity.description == '' ? null : entity.description }
   return axios
-    .post('http://localhost:5001/workflowlist', createWorkflowListEntity)
+    .post('http://localhost:5001/workflowlist', newEntity)
     .then((response) => {
       return response
     })
@@ -43,10 +65,11 @@ export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowL
 
 export const updateWorkflowList = async (
   uuid: string,
-  updateWorkflowListEntity: UpdateWorkflowListEntity
+  entity: UpdateWorkflowListEntity
 ) => {
+  const newEntity = { ...entity, newDescription: entity.newDescription == '' ? null : entity.newDescription }
   return axios
-    .patch('http://localhost:5001/workflowlist/' + uuid, updateWorkflowListEntity)
+    .patch('http://localhost:5001/workflowlist/' + uuid, newEntity)
     .then((response) => {
       return response
     })
@@ -117,7 +140,6 @@ export const postWorkflowListResource = async (
   uuid: string,
   workflowListResource: WorkflowListResource
 ) => {
-  console.log(workflowListResource)
   return axios
     .post('http://localhost:5001/workflowlist/' + uuid + '/resource', {
       ...workflowListResource,
@@ -138,31 +160,7 @@ export const postWorkflowListResource = async (
     })
 }
 
-export const getUsers = async (): Promise<Array<User> | null> => {
-  return axios
-    .get<Array<User>>('http://localhost:5001/user')
-    .then((response) => {
-      return response.data
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
-}
-
-export const getUser = async (userApiId): Promise<User | null> => {
-  return axios
-    .get<Array<User>>('http://localhost:5001/user/' + userApiId)
-    .then((response) => {
-      return response.data
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
-}
-
-export const postUser = async (createUserEntity: CreateUserEntity) => {
+export const createUser = async (createUserEntity: CreateUserEntity) => {
   return axios
     .post('http://localhost:5001/user', createUserEntity)
     .then((response) => {

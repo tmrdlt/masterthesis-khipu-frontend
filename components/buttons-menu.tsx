@@ -3,14 +3,19 @@ import React from 'react'
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button'
 import '@reach/menu-button/styles.css'
 import { ClockIcon } from 'components/icons'
+import {
+  deleteWorkflowList,
+  getWorkflowListsUrl,
+  postWorkflowListConvert,
+} from 'utils/workflow-api'
+import { useSWRConfig } from 'swr'
 
 interface IButtonsMenuProps {
+  userApiId: string
   workflowList: WorkflowList
-  removeWorkflowList
   selectWorkflowListToMove
   openModifyModal
   openMoveModal
-  convertWorkflowList?
   openCreateModal?
   getTemporalQueryResult?
   isLoadingQuery?: boolean
@@ -18,9 +23,8 @@ interface IButtonsMenuProps {
 }
 
 const ButtonsMenu = ({
+  userApiId,
   workflowList,
-  removeWorkflowList,
-  convertWorkflowList,
   selectWorkflowListToMove,
   openCreateModal,
   openModifyModal,
@@ -29,8 +33,23 @@ const ButtonsMenu = ({
   isLoadingQuery,
   startLoading,
 }: IButtonsMenuProps): JSX.Element => {
+  // STATE
+  const { mutate } = useSWRConfig()
+
   // DYNAMIC CLASSES
   const animationSpinClassName = isLoadingQuery ? ' animate-spin' : ''
+
+  // FUNCTIONS
+  const convertWorkflowList = (
+    uuid: string,
+    convertWorkflowListEntity: ConvertWorkflowListEntity
+  ) => {
+    postWorkflowListConvert(uuid, convertWorkflowListEntity).then((res) => {
+      if (res) {
+        mutate(getWorkflowListsUrl(userApiId))
+      }
+    })
+  }
 
   return (
     <div className="flex">
@@ -142,7 +161,9 @@ const ButtonsMenu = ({
             )}
             <MenuItem
               onSelect={() => {
-                removeWorkflowList(workflowList.apiId)
+                deleteWorkflowList(workflowList.apiId).then((res) => {
+                  mutate(getWorkflowListsUrl(userApiId))
+                })
               }}
             >
               Delete

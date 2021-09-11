@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { CreateUserEntity } from 'utils/models'
+import { createUser, getUsersUrl } from 'utils/workflow-api'
+import { useSWRConfig } from 'swr'
 
 interface CreateUserModalProps {
   show
   closeModal
-  createUser
 }
 
-const CreateUserModal = ({ show, closeModal, createUser }: CreateUserModalProps): JSX.Element => {
+const CreateUserModal = ({ show, closeModal }: CreateUserModalProps): JSX.Element => {
   // STATE
   const initCreateUserEntity: CreateUserEntity = {
     username: '',
   }
   const [state, setState] = useState(initCreateUserEntity)
+  const { mutate } = useSWRConfig()
 
   // DYNAMIC CLASSES
   const showHideClass = show ? '' : 'hidden'
@@ -38,7 +40,9 @@ const CreateUserModal = ({ show, closeModal, createUser }: CreateUserModalProps)
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   value={state.username}
                   onChange={handleFormChange}
+                  autoComplete="off"
                   id="username"
+                  name="username"
                 />
               </label>
             </div>
@@ -48,6 +52,7 @@ const CreateUserModal = ({ show, closeModal, createUser }: CreateUserModalProps)
                 disabled={state.username === ''}
                 onClick={() => {
                   createUser(state).then((_res) => {
+                    mutate(getUsersUrl())
                     closeModal()
                   })
                 }}

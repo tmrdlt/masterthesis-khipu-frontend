@@ -3,17 +3,19 @@ import { UpdateWorkflowListEntity, WorkflowList } from 'utils/models'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { getOptionalString } from 'utils/optional-util'
+import { useSWRConfig } from 'swr'
+import { getWorkflowListsUrl, updateWorkflowList } from 'utils/workflow-api'
 
 interface ModifyListModalProps {
-  closeModal
+  userApiId: string
   workflowList: WorkflowList
-  modifyWorkflowList
+  closeModal
 }
 
 const ModifyListModal = ({
-  closeModal,
+  userApiId,
   workflowList,
-  modifyWorkflowList,
+  closeModal,
 }: ModifyListModalProps): JSX.Element => {
   // STATE
   const initUpdateWorkflowListEntity: UpdateWorkflowListEntity = {
@@ -22,6 +24,7 @@ const ModifyListModal = ({
     isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard,
   }
   const [state, setState] = useState(initUpdateWorkflowListEntity)
+  const { mutate } = useSWRConfig()
 
   // FUNCTIONS
   const handleFormChange = (event) => {
@@ -70,7 +73,8 @@ const ModifyListModal = ({
                 state.newDescription === getOptionalString(workflowList.description)
               }
               onClick={() => {
-                modifyWorkflowList(workflowList.apiId, state).then((_res) => {
+                updateWorkflowList(workflowList.apiId, state).then((_res) => {
+                  mutate(getWorkflowListsUrl(userApiId))
                   closeModal()
                 })
               }}
