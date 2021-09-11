@@ -8,25 +8,12 @@ import {
   TemporalQueryResult,
   UpdateWorkflowListEntity,
   User,
-  WorkflowList,
   WorkflowListResource,
 } from 'utils/models'
 import { toLocalDateTimeString } from 'utils/date-util'
-import { recursiveParseDate } from 'utils/list-util'
 
-export const getWorkflowLists = async (userApiId: string): Promise<Array<WorkflowList> | null> => {
-  return axios
-    .get<Array<WorkflowList>>('http://localhost:5001/workflowlist?userApiId=' + userApiId)
-    .then((response) => {
-      const workflowLists = response.data
-      recursiveParseDate(workflowLists)
-      console.log(workflowLists)
-      return workflowLists
-    })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
+export const getWorkflowLists = (userApiId: String): string => {
+  return `http://localhost:5001/workflowlist?userApiId=${userApiId}`
 }
 
 export const postWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
