@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   NumericResource,
   TemporalResource,
   TextualResource,
   UpdateWorkflowListEntity,
-  User,
   UserResource,
   WorkflowList,
   WorkflowListResource,
@@ -25,12 +24,12 @@ import CalendarIcon, {
   UserIcon,
 } from 'components/icons'
 import {
-  getUsersFetcher,
   getWorkflowListsUrl,
   postWorkflowListResource,
   updateWorkflowList,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
+import { useUsers } from 'utils/swr-util'
 
 interface ModifyItemModalProps {
   userApiId: string
@@ -71,23 +70,14 @@ const ModifyItemModal = ({
     : {
         username: '',
       }
-  const initUsers: Array<User> = []
 
   const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
   const [tempResource, setTempResource] = useState(initTempResource)
   const [numericResources, setNumericResources] = useState(initNumericResources)
   const [textualResources, setTextualResources] = useState(initTextualResources)
   const [userResource, setUserResource] = useState(initUserResource)
-  const [users, setUsers] = useState(initUsers)
+  const {users, isLoading, isError} = useUsers()
   const { mutate } = useSWRConfig()
-
-  useEffect(() => {
-    getUsersFetcher().then((users) => {
-      if (users) {
-        setUsers(users)
-      }
-    })
-  }, [])
 
   // FUNCTIONS
   const handleUpdateItemFormChange = (event) => {

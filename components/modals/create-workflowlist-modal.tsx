@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
-import { getWorkflowListsUrl } from 'utils/workflow-api'
+import { createWorkflowList, getWorkflowListsUrl } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 
 interface CreateWorkflowListModalProps {
@@ -31,10 +31,6 @@ const CreateWorkflowListModal = ({
   const handleFormChange = (event) => {
     const newState = { ...state, [event.target.id]: event.target.value }
     setState(newState)
-  }
-
-  const createWorkflowList = async (createWorkflowListEntity: CreateWorkflowListEntity) => {
-
   }
 
   return (
