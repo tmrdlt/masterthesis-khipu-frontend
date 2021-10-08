@@ -76,7 +76,7 @@ const ModifyItemModal = ({
   const [numericResources, setNumericResources] = useState(initNumericResources)
   const [textualResources, setTextualResources] = useState(initTextualResources)
   const [userResource, setUserResource] = useState(initUserResource)
-  const {users, isLoading, isError} = useUsers()
+  const { users, isLoading, isError } = useUsers()
   const { mutate } = useSWRConfig()
 
   // FUNCTIONS
@@ -519,11 +519,12 @@ const ModifyItemModal = ({
                           <option className="opacity-40" key={0} value={''}>
                             None
                           </option>
-                          {users.map((user) => (
-                            <option key={user.username} value={user.username}>
-                              {user.username}
-                            </option>
-                          ))}
+                          {!isLoading && !isError &&
+                            users.map((user) => (
+                              <option key={user.username} value={user.username}>
+                                {user.username}
+                              </option>
+                            ))}
                         </select>
                       </label>
                     </TabPanel>
