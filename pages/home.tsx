@@ -52,8 +52,10 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
 
         if (sourceDroppableId === destinationDroppableId) {
             // It's a REORDER action
-            let newWorkflowLists = [...workflowLists]
-            recursiveReorder(newWorkflowLists, sourceDroppableId, source.index, destination.index)
+            // Use immer produce to create REAL clone
+            let newWorkflowLists = produce(workflowLists, draft => {
+                recursiveReorder(draft, sourceDroppableId, source.index, destination.index)
+            })
             // mutate cache first
             mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
@@ -63,8 +65,10 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
             }
         } else {
             // It's a MOVE action
-            let newWorkflowLists = [...workflowLists]
-            recursiveMove(newWorkflowLists, source, destination)
+            // Use immer produce to create REAL clone
+            let newWorkflowLists = produce(workflowLists, draft => {
+                recursiveMove(draft, source, destination)
+            })
             // mutate cache first
             mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
