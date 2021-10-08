@@ -14,7 +14,6 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>Khipu</title>
         </Head>
         <body>
           <Main />
