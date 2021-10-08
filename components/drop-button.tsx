@@ -12,9 +12,9 @@ const DropButton = ({
   moveWorkflowList,
   showDropButton,
 }: IDropButtonProps): JSX.Element => {
-  const showHideButton = showDropButton(workflowList) ? { display: 'block' } : { display: 'none' }
+  if (!showDropButton(workflowList)) return null
   return (
-    <div style={showHideButton} className="z-20 relative transition-all">
+    <div className="z-20 relative transition-all">
       <button
         type="button"
         onClick={() => {

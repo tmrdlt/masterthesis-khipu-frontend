@@ -145,11 +145,13 @@ const ListComponent = ({
                       )
                     }
                   })}
-                  <DropButton
-                    workflowList={workflowList}
-                    moveWorkflowList={moveWorkflowList}
-                    showDropButton={showDropButton}
-                  />
+                  {workflowListToMove && (
+                    <DropButton
+                      workflowList={workflowList}
+                      moveWorkflowList={moveWorkflowList}
+                      showDropButton={showDropButton}
+                    />
+                  )}
                   {provided.placeholder}
                 </div>
               )}

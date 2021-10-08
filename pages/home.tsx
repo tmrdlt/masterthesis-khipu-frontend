@@ -3,8 +3,8 @@ import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import { WorkflowList, WorkflowListType } from 'utils/models'
 import BoardComponent from 'components/board-component'
 import {
+  isChildOfParent,
   isInsideParent,
-  isSameLevelOfSameParent,
   recursiveMove,
   recursiveReorder,
   recursiveSetField,
@@ -105,13 +105,16 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
 
             // The following would be illegal moves or moves that doesn't make sense
             // Destination is already the list the element is in
-            const destinationIsSameLevelAsElementToMove = isSameLevelOfSameParent({
+            const destinationIsSameLevelAsElementToMove = isChildOfParent({
                 lists: workflowLists,
                 potentialChild: workflowListToMove,
                 parent: destinationToDropOn,
             })
             // The destination would be inside the element we want to move
-            const destinationInsideElementToMove = isInsideParent(workflowListToMove, destinationToDropOn)
+            const destinationInsideElementToMove = isInsideParent({
+                potentialChild: destinationToDropOn,
+                parent: workflowListToMove
+            })
             // The destination would be exactly the element we want to move
             const destinationIsElementToMove =
                 destinationToDropOn && destinationToDropOn.apiId == workflowListToMove.apiId

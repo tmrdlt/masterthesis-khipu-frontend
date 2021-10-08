@@ -83,18 +83,20 @@ const recursiveInsert = (
   })
 }
 
-interface IisSameLevelOfSameParent {
+
+interface IsChildOfParentParams {
   lists: Array<WorkflowList>
   potentialChild: WorkflowList
   parent?: WorkflowList
 }
-
-// @ts-ignore
-export const isSameLevelOfSameParent = ({
+/**
+ * Function to determine if in a WorkflowList is child of a parent workflowList
+ */
+export const isChildOfParent = ({
   lists,
   potentialChild,
-  parent
-}: IisSameLevelOfSameParent): boolean => {
+  parent,
+}: IsChildOfParentParams): boolean => {
   // We are on root
   if (parent == null) {
     return lists.map((list) => list.apiId).includes(potentialChild.apiId)
@@ -103,10 +105,14 @@ export const isSameLevelOfSameParent = ({
   }
 }
 
+interface IsInsideParentParams {
+  potentialChild?: WorkflowList
+  parent?: WorkflowList
+}
 /**
  * Function to determine if in an Array of WorkflowList a child list is really a child list of some parent list
  */
-export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowList): boolean => {
+export const isInsideParent = ({ potentialChild, parent }: IsInsideParentParams): boolean => {
   // We are on root
   if (parent == null || potentialChild == null) {
     return false
@@ -120,20 +126,16 @@ export const isInsideParent = (parent?: WorkflowList, potentialChild?: WorkflowL
  * @param lists: Array in which to search for
  * @param listUuid: Uuid to search for
  */
-// TODO maybe write this nicer
 const recursiveContains = (lists: Array<WorkflowList>, listUuid: string): boolean => {
-  let contains = false
-  lists.some((list) => {
+  return lists.some((list) => {
     if (list.apiId == listUuid) {
-      contains = true
-      return
+      return true
     } else if (list.children.length == 0) {
-      return
+      return false
     } else {
-      contains = recursiveContains(list.children, listUuid)
+      return recursiveContains(list.children, listUuid)
     }
   })
-  return contains
 }
 
 /**
