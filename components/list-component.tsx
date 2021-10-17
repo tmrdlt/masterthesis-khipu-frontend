@@ -9,6 +9,7 @@ import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
+import { ListTemporalQueryResult } from 'components/temporal-tooltips'
 
 interface IListProps {
   index: number
@@ -45,7 +46,7 @@ const ListComponent = ({
   }, [workflowListToMove])
 
   // DYNAMIC CLASSES
-  const moveClassName = showMoveModal ? ' z-20 relative transition-all' : ''
+  const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
 
   // FUNCTIONS
   const openCreateModal = () => {
@@ -72,23 +73,25 @@ const ListComponent = ({
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className="mb-2 mr-2">
           <div
-            className={
-              'bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-sm p-1' +
-              moveClassName
-            }
+            className={`bg-red-300 border border-gray-500 rounded shadow min-w-min max-w-sm p-1 ${moveClassName}`}
           >
             <div className="flex place-content-between">
               <div className="w-full font-bold m-1 hover:bg-red-200" {...provided.dragHandleProps}>
                 {workflowList.title}
               </div>
-              <ButtonsMenu
-                userApiId={userApiId}
-                workflowList={workflowList}
-                selectWorkflowListToMove={selectWorkflowListToMove}
-                openCreateModal={openCreateModal}
-                openModifyModal={openModifyModal}
-                openMoveModal={openMoveModal}
-              />
+              <div className="flex flex-col items-end">
+                <ButtonsMenu
+                  userApiId={userApiId}
+                  workflowList={workflowList}
+                  selectWorkflowListToMove={selectWorkflowListToMove}
+                  openCreateModal={openCreateModal}
+                  openModifyModal={openModifyModal}
+                  openMoveModal={openMoveModal}
+                />
+                {workflowList.temporalQueryResult != null && (
+                  <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult}/>
+                )}
+              </div>
             </div>
 
             <div className="m-1 text-sm whitespace-pre">{workflowList.description}</div>

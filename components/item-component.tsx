@@ -13,9 +13,8 @@ import CalendarIcon, {
   FlagIcon,
   UserIcon,
 } from 'components/icons'
-import { getNumberWithOrdinal } from 'utils/number-util'
 import 'react-popper-tooltip/dist/styles.css'
-import { usePopperTooltip } from 'react-popper-tooltip'
+import { ItemTemporalQueryResult } from 'components/temporal-tooltips'
 
 interface IItemProps {
   index: number
@@ -37,8 +36,6 @@ const ItemComponent = ({
   // STATE
   const [showModifyModal, setShowModifyModal] = useState(false)
   const [showMoveModal, setShowMoveModal] = useState(false)
-  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip()
 
   useEffect(() => {
     if (!workflowListToMove) {
@@ -47,13 +44,7 @@ const ItemComponent = ({
   }, [workflowListToMove])
 
   // DYNAMIC CLASSES
-  const moveClassName = showMoveModal ? ' z-20 relative transition-all' : ''
-  const temporalQueryLabelColor =
-    workflowList.temporalQueryResult != null
-      ? workflowList.temporalQueryResult.dueDateKept
-        ? ' bg-green-500'
-        : ' bg-red-500'
-      : ''
+  const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
 
   // FUNCTIONS
   const openModifyModal = () => {
@@ -171,9 +162,7 @@ const ItemComponent = ({
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className="mb-2 mr-2">
           <div
-            className={
-              'bg-white border border-gray-500 rounded shadow max-w-sm p-1' + moveClassName
-            }
+            className={`bg-white border border-gray-500 rounded shadow max-w-sm p-1 ${moveClassName}`}
           >
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-gray-200" {...provided.dragHandleProps}>
@@ -192,47 +181,7 @@ const ItemComponent = ({
                   openMoveModal={openMoveModal}
                 />
                 {workflowList.temporalQueryResult != null && (
-                  <div>
-                    <div
-                      className={
-                        'flex w-10 border border-gray-500 rounded p-1 text-xs justify-center items-center' +
-                        temporalQueryLabelColor
-                      }
-                      ref={setTriggerRef}
-                    >
-                      {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}
-                    </div>
-                    {visible && (
-                      <div
-                        ref={setTooltipRef}
-                        {...getTooltipProps({ className: 'tooltip-container text-xs' })}
-                      >
-                        <span>
-                          Optimal processing order:{' '}
-                          {getNumberWithOrdinal(workflowList.temporalQueryResult.index + 1)}
-                        </span>
-                        <span>
-                          Calculated start date:{' '}
-                          {formatDate(workflowList.temporalQueryResult.startedAt)}
-                        </span>
-                        <span>
-                          Calculated finish date:{' '}
-                          {formatDate(workflowList.temporalQueryResult.finishedAt)}
-                        </span>
-                        <span>
-                          Calculated remaining duration:{' '}
-                          {formatDuration(workflowList.temporalQueryResult.duration)}
-                        </span>
-                        {workflowList.temporalQueryResult.dueDate != null && (
-                          <span>
-                            Does {workflowList.temporalQueryResult.dueDateKept ? '' : 'NOT '}comply
-                            with due date
-                          </span>
-                        )}
-                        <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-                      </div>
-                    )}
-                  </div>
+                    <ItemTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult}/>
                 )}
               </div>
             </div>

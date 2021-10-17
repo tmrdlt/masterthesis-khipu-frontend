@@ -8,10 +8,10 @@ import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
-import { formatDate, formatDuration } from 'utils/date-util'
+import { formatDate } from 'utils/date-util'
 import ModifyBoardModal from 'components/modals/modify-board-modal'
-import { usePopperTooltip } from 'react-popper-tooltip'
 import { FlagIcon } from 'components/icons'
+import BoardTemporalQueryResult from 'components/temporal-tooltips'
 
 interface IBoardProps {
   index: number
@@ -39,8 +39,6 @@ const BoardComponent = ({
   const [showModifyModal, setShowModifyModal] = useState(false)
   const [showMoveModal, setShowMoveModal] = useState(false)
   const [isLoadingQuery, setIsLoadingQuery] = useState(false)
-  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip()
 
   useEffect(() => {
     if (!workflowListToMove) {
@@ -55,13 +53,7 @@ const BoardComponent = ({
   }, [workflowList.temporalQueryResult])
 
   // DYNAMIC CLASSES
-  const moveClassName = showMoveModal ? ' z-20 relative transition-all' : ''
-  const temporalQueryLabelColor =
-    workflowList.temporalQueryResult != null
-      ? workflowList.temporalQueryResult.dueDateKept
-        ? ' bg-green-500'
-        : ' bg-red-500'
-      : ''
+  const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
 
   // FUNCTIONS
   const openCreateModal = () => {
@@ -96,7 +88,7 @@ const BoardComponent = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className="mb-2 mr-2">
-          <div className={'bg-blue-300 border border-gray-500 rounded shadow p-1' + moveClassName}>
+          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 ${moveClassName}`}>
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-blue-200" {...provided.dragHandleProps}>
                 <span className="font-bold">{workflowList.title} </span>
@@ -111,45 +103,9 @@ const BoardComponent = ({
               </div>
               <div className="flex flex-row">
                 {workflowList.temporalQueryResult != null && (
-                  <div className="flex justify-center items-center h-8">
-                    <div
-                      className={
-                        'flex border border-gray-500 rounded w-48 h-6 text-xs justify-center items-center mr-1' +
-                        temporalQueryLabelColor
-                      }
-                      ref={setTriggerRef}
-                    >
-                      Remaining duration:{' '}
-                      {formatDuration(workflowList.temporalQueryResult.duration)}
-                    </div>
-                    {visible && (
-                      <div
-                        className="bg-blue-900 border border-gray-500 rounded shadow p-1 text-xs text-center"
-                        ref={setTooltipRef}
-                        {...getTooltipProps({ className: 'tooltip-container text-xs' })}
-                      >
-                        <span>
-                          Calculated start date:{' '}
-                          {formatDate(workflowList.temporalQueryResult.startedAt)}
-                        </span>
-                        <span>
-                          Calculated finish date:{' '}
-                          {formatDate(workflowList.temporalQueryResult.finishedAt)}
-                        </span>
-                        <span>
-                          Calculated total remaining duration:{' '}
-                          {formatDuration(workflowList.temporalQueryResult.duration)}
-                        </span>
-                        {workflowList.temporalQueryResult.dueDate != null && (
-                          <span>
-                            Does {workflowList.temporalQueryResult.dueDateKept ? '' : 'NOT '}comply
-                            with due date
-                          </span>
-                        )}
-                        <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-                      </div>
-                    )}
-                  </div>
+                  <BoardTemporalQueryResult
+                    temporalQueryResult={workflowList.temporalQueryResult}
+                  />
                 )}
                 <ButtonsMenu
                   userApiId={userApiId}
