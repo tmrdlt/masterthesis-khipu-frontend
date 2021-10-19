@@ -102,9 +102,10 @@ const BoardComponent = ({
                 )}
               </div>
               <div className="flex flex-row">
-                {workflowList.temporalQueryResult != null && (
+                {workflowList.temporalQueryResult != null && workflowList.workSchedule != null && (
                   <BoardTemporalQueryResult
                     temporalQueryResult={workflowList.temporalQueryResult}
+                    workSchedule={workflowList.workSchedule}
                   />
                 )}
                 <ButtonsMenu

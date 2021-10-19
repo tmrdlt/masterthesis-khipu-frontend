@@ -1,4 +1,4 @@
-import { TaskPlanningSolution } from 'utils/models'
+import { TaskPlanningSolution, WorkSchedule } from 'utils/models'
 import { formatDate, formatDuration } from 'utils/date-util'
 import React from 'react'
 import { usePopperTooltip } from 'react-popper-tooltip'
@@ -6,10 +6,12 @@ import { getNumberWithOrdinal } from 'utils/number-util'
 
 interface IBoardTemporalTooltipProps {
   temporalQueryResult: TaskPlanningSolution
+  workSchedule: WorkSchedule
 }
 
 const BoardTemporalQueryResult = ({
   temporalQueryResult,
+  workSchedule,
 }: IBoardTemporalTooltipProps): JSX.Element => {
   const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
     usePopperTooltip()
@@ -38,10 +40,54 @@ const BoardTemporalQueryResult = ({
           {temporalQueryResult.dueDate != null && (
             <span>Does {temporalQueryResult.dueDateKept ? '' : 'NOT '}comply with due date</span>
           )}
+          <span>Result is based on the following work schedule:</span>
+          <WorkScheduleTable workSchedule={workSchedule} />
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
         </div>
       )}
     </div>
+  )
+}
+
+interface WorkScheduleProps {
+  workSchedule: WorkSchedule
+}
+
+const WorkScheduleTable = ({ workSchedule }: WorkScheduleProps): JSX.Element => {
+  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  return (
+    <table className="table-fixes border-collapse border border-black">
+      <thead>
+        <tr>
+          {weekDays.map((day, index) => {
+            return (
+              <th className="border border-black w-20" key={index}>
+                {day}
+              </th>
+            )
+          })}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {weekDays.map((day, index) => {
+            if (workSchedule.workingDaysOfWeek.includes(day.toUpperCase())) {
+              return (
+                <td className="border border-black text-center" key={index}>
+                  {workSchedule.startWorkAtHour}-{workSchedule.stopWorkAtHour}h
+                </td>
+              )
+            } else {
+              return (
+                <td className="border border-black text-center" key={index}>
+                  no work
+                </td>
+              )
+            }
+          })}
+        </tr>
+      </tbody>
+    </table>
   )
 }
 
@@ -74,7 +120,9 @@ const ListTemporalQueryResult = ({
           <span>Calculated finish date: {formatDate(temporalQueryResult.finishedAt)}</span>
           <span>Calculated remaining duration: {formatDuration(temporalQueryResult.duration)}</span>
           {temporalQueryResult.dueDate != null && (
-            <span>Does {temporalQueryResult.dueDateKept ? '' : 'NOT '}comply with at least one due date</span>
+            <span>
+              Does {temporalQueryResult.dueDateKept ? '' : 'NOT '}comply with at least one due date
+            </span>
           )}
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
         </div>

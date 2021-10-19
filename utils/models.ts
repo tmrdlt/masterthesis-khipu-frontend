@@ -13,6 +13,7 @@ export type WorkflowList = {
   numericResources: Array<NumericResource>
   textualResources: Array<TextualResource>
   temporalQueryResult?: TaskPlanningSolution // not present in backend model
+  workSchedule?: WorkSchedule // not present in backend model
 }
 
 export type CreateWorkflowListEntity = {
@@ -100,7 +101,14 @@ export type TaskPlanningSolution = {
   index: number
 }
 
+export type WorkSchedule = {
+  startWorkAtHour: number
+  stopWorkAtHour: number
+  workingDaysOfWeek: Array<string>
+}
+
 export type TemporalQueryResult = {
   boardResult: TaskPlanningSolution
   tasksResult: Array<TaskPlanningSolution>
+  workSchedule: WorkSchedule
 }
