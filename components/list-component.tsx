@@ -15,7 +15,6 @@ interface IListProps {
   index: number
   workflowList: WorkflowList
   userApiId: string
-  isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
   moveWorkflowList
   selectWorkflowListToMove
@@ -27,7 +26,6 @@ const ListComponent = ({
   index,
   workflowList,
   userApiId,
-  isInsideTemporalConstraintBoard,
   workflowListToMove,
   moveWorkflowList,
   selectWorkflowListToMove,
@@ -126,7 +124,6 @@ const ListComponent = ({
                           index={index}
                           workflowList={wl}
                           userApiId={userApiId}
-                          isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
                           moveWorkflowList={moveWorkflowList}
                           selectWorkflowListToMove={selectWorkflowListToMove}
@@ -141,7 +138,6 @@ const ListComponent = ({
                           index={index}
                           workflowList={wl}
                           userApiId={userApiId}
-                          isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                           workflowListToMove={workflowListToMove}
                           selectWorkflowListToMove={selectWorkflowListToMove}
                         />

@@ -230,7 +230,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             index={index}
                                             workflowList={wl}
                                             userApiId={userApiId}
-                                            isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
                                             moveWorkflowList={moveWorkflowList}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
@@ -245,7 +244,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                                             index={index}
                                             workflowList={wl}
                                             userApiId={userApiId}
-                                            isInsideTemporalConstraintBoard={false}
                                             workflowListToMove={workflowListToMove}
                                             selectWorkflowListToMove={selectWorkflowListToMove}
                                         />

@@ -158,7 +158,6 @@ const BoardComponent = ({
                             index={index}
                             workflowList={wl}
                             userApiId={userApiId}
-                            isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                             workflowListToMove={workflowListToMove}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
@@ -173,7 +172,6 @@ const BoardComponent = ({
                             index={index}
                             workflowList={wl}
                             userApiId={userApiId}
-                            isInsideTemporalConstraintBoard={workflowList.isTemporalConstraintBoard}
                             workflowListToMove={workflowListToMove}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                           />

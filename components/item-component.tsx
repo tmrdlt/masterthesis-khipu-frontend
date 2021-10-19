@@ -20,7 +20,6 @@ interface IItemProps {
   index: number
   workflowList: WorkflowList
   userApiId: string
-  isInsideTemporalConstraintBoard: boolean
   workflowListToMove: WorkflowList
   selectWorkflowListToMove
 }
@@ -29,7 +28,6 @@ const ItemComponent = ({
   index,
   workflowList,
   userApiId,
-  isInsideTemporalConstraintBoard,
   workflowListToMove,
   selectWorkflowListToMove,
 }: IItemProps): JSX.Element => {
@@ -167,7 +165,7 @@ const ItemComponent = ({
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-gray-200" {...provided.dragHandleProps}>
                 <span className="font-bold">{workflowList.title} </span>
-                {isInsideTemporalConstraintBoard && getTemporalResourceText()}
+                {getTemporalResourceText()}
                 {getNumericResourcesText()}
                 {getTextualResourcesText()}
                 {getUserResourceText()}
@@ -193,7 +191,6 @@ const ItemComponent = ({
             <ModifyItemModal
               userApiId={userApiId}
               workflowList={workflowList}
-              isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
               closeModal={closeModifyModal}
             />
           )}

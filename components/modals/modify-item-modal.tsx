@@ -13,14 +13,12 @@ import { getInitWorkflowListResource } from 'utils/resource-util'
 interface ModifyItemModalProps {
   userApiId: string
   workflowList: WorkflowList
-  isInsideTemporalConstraintBoard: boolean // TODO not needed
   closeModal
 }
 
 const ModifyItemModal = ({
   userApiId,
   workflowList,
-  isInsideTemporalConstraintBoard,
   closeModal,
 }: ModifyItemModalProps): JSX.Element => {
   // STATE
