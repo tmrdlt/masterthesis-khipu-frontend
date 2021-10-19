@@ -1,13 +1,5 @@
 import React, { useState } from 'react'
-import {
-  CreateWorkflowListEntity,
-  NumericResource,
-  TemporalResource,
-  TextualResource,
-  UserResource,
-  WorkflowListResource,
-  WorkflowListType,
-} from 'utils/models'
+import { CreateWorkflowListEntity, WorkflowListResource, WorkflowListType } from 'utils/models'
 import {
   createWorkflowList,
   getWorkflowListsUrl,
@@ -18,6 +10,8 @@ import ItemResourcesForm from 'components/modals/item-resources-form'
 import { compareDateOptions } from 'utils/date-util'
 import { getOptionalNumber } from 'utils/optional-util'
 import { arraysEqual } from 'utils/compare-util'
+import { getInitWorkflowListResource } from 'utils/resource-util'
+import BoardResourcesForm from 'components/modals/board-resources-form'
 
 interface CreateWorkflowListModalProps {
   closeModal
@@ -39,29 +33,27 @@ const CreateWorkflowListModal = ({
     parentApiId: parentUuid,
     description: '',
     userApiId: userApiId,
+    isTemporalConstraintBoard: false,
   }
-  const initTemporalResource: TemporalResource = {
-    startDate: null,
-    endDate: null,
-    durationInMinutes: 0,
-  }
-  const initNumericResources: Array<NumericResource> = []
-  const initTextualResources: Array<TextualResource> = []
-  const initUserResource: UserResource = {
-    username: '',
-  }
+  const initResource = getInitWorkflowListResource()
+
   const [createWorkflowListEntity, setCreateWorkflowListEntity] = useState(
     initCreateWorkflowListEntity
   )
-  const [temporalResource, setTemporalResource] = useState(initTemporalResource)
-  const [numericResources, setNumericResources] = useState(initNumericResources)
-  const [textualResources, setTextualResources] = useState(initTextualResources)
-  const [userResource, setUserResource] = useState(initUserResource)
+  const [resource, setResource] = useState(initResource)
   const { mutate } = useSWRConfig()
 
   // FUNCTIONS
   const handleCreateWorkflowListEntityFormChange = (event) => {
     const newState = { ...createWorkflowListEntity, [event.target.id]: event.target.value }
+    setCreateWorkflowListEntity(newState)
+  }
+
+  const handleToggleChange = () => {
+    const newState = {
+      ...createWorkflowListEntity,
+      isTemporalConstraintBoard: !createWorkflowListEntity.isTemporalConstraintBoard,
+    }
     setCreateWorkflowListEntity(newState)
   }
 
@@ -71,33 +63,33 @@ const CreateWorkflowListModal = ({
 
   const isTemporalResourceUnchanged = (): boolean => {
     return (
-      compareDateOptions(temporalResource.startDate, initTemporalResource.startDate) &&
-      compareDateOptions(temporalResource.endDate, initTemporalResource.endDate) &&
-      temporalResource.durationInMinutes ==
-        getOptionalNumber(initTemporalResource.durationInMinutes)
+      compareDateOptions(resource.temporal.startDate, initResource.temporal.startDate) &&
+      compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate) &&
+      initResource.temporal.durationInMinutes ==
+        getOptionalNumber(initResource.temporal.durationInMinutes)
     )
   }
 
   const areNumericResourcesUnchanged = (): boolean => {
-    return arraysEqual(numericResources, initNumericResources)
+    return arraysEqual(resource.numeric, initResource.numeric)
   }
 
   const areTextualResourcesUnchanged = (): boolean => {
-    return arraysEqual(textualResources, initTextualResources)
+    return arraysEqual(resource.textual, initResource.textual)
   }
 
   const isUserResourceUnchanged = (): boolean => {
-    return userResource.username === initUserResource.username
+    return resource.user.username === initResource.user.username
   }
 
   const isNumericResourceFormInvalid = (): boolean => {
     // @ts-ignore
-    return numericResources.filter((nr) => nr.label === '' || nr.value === '').length !== 0
+    return resource.numeric.filter((nr) => nr.label === '' || nr.value === '').length !== 0
   }
 
   const isTextualResourceFormInvalid = (): boolean => {
     // @ts-ignore
-    return textualResources.filter((tr) => tr.label === '').length !== 0
+    return resource.textual.filter((tr) => tr.label === '').length !== 0
   }
 
   return (
@@ -146,7 +138,7 @@ const CreateWorkflowListModal = ({
                   </label>
                 </div>
                 <label className="block">
-                  <span className="text-gray-700">Title</span>
+                  <span className="text-gray-700">Title (required)</span>
                   <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
@@ -156,7 +148,7 @@ const CreateWorkflowListModal = ({
                   />
                 </label>
                 <label className="block">
-                  <span className="text-gray-700">Description</span>
+                  <span className="text-gray-700">Description (optional)</span>
                   <textarea
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                     rows={3}
@@ -165,17 +157,33 @@ const CreateWorkflowListModal = ({
                     id="description"
                   />
                 </label>
-                {createWorkflowListEntity.listType == WorkflowListType.ITEM && (
-                  <ItemResourcesForm
-                    temporalResource={temporalResource}
-                    numericResources={numericResources}
-                    textualResources={textualResources}
-                    userResource={userResource}
-                    setTemporalResource={setTemporalResource}
-                    setNumericResources={setNumericResources}
-                    setTextualResources={setTextualResources}
-                    setUserResource={setUserResource}
+                {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
+                  <div className="block">
+                    <div className="mt-2">
+                      <div>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            id="isTemporalConstraintBoard"
+                            checked={createWorkflowListEntity.isTemporalConstraintBoard}
+                            onChange={handleToggleChange}
+                          />
+                          <span className="ml-2">Is temporal constraint board</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
+                  <BoardResourcesForm
+                    isTemporalConstraintBoard={createWorkflowListEntity.isTemporalConstraintBoard}
+                    resource={resource}
+                    setResource={setResource}
                   />
+                )}
+                {createWorkflowListEntity.listType == WorkflowListType.ITEM && (
+                  <ItemResourcesForm resource={resource} setResource={setResource} />
                 )}
               </div>
             </div>
@@ -196,42 +204,31 @@ const CreateWorkflowListModal = ({
               }
               onClick={() => {
                 createWorkflowList(createWorkflowListEntity).then((res) => {
-                  if (res && createWorkflowListEntity.listType == WorkflowListType.ITEM) {
-                    let apiId = res
-                    let numericEntity: Array<NumericResource> = null
-                    let textualEntity: Array<TextualResource> = null
-                    let temporalEntity: TemporalResource = null
-                    let userEntity: UserResource = null
-                    if (!isTemporalResourceUnchanged()) {
-                      // @ts-ignore
-                      temporalEntity = {
-                        ...temporalResource,
-                        durationInMinutes:
-                          temporalResource.durationInMinutes === 0
-                            ? null
-                            : temporalResource.durationInMinutes,
-                      }
-                    }
-                    if (!areNumericResourcesUnchanged() && !isNumericResourceFormInvalid()) {
-                      numericEntity = numericResources
-                    }
-                    if (!areTextualResourcesUnchanged() && !isTextualResourceFormInvalid()) {
-                      textualEntity = textualResources
-                    }
-                    if (!isUserResourceUnchanged()) {
-                      if (userResource.username === '') {
-                        userEntity = {
-                          username: null,
-                        }
-                      } else {
-                        userEntity = userResource
-                      }
-                    }
+                  if (
+                    res &&
+                    (createWorkflowListEntity.listType == WorkflowListType.ITEM ||
+                      createWorkflowListEntity.listType == WorkflowListType.BOARD)
+                  ) {
+                    const apiId = res
                     const entity: WorkflowListResource = {
-                      numeric: numericEntity,
-                      textual: textualEntity,
-                      temporal: temporalEntity,
-                      user: userEntity,
+                      numeric: areNumericResourcesUnchanged() ? null : resource.numeric,
+                      textual: areTextualResourcesUnchanged() ? null : resource.textual,
+                      temporal: isTemporalResourceUnchanged()
+                        ? null
+                        : {
+                            ...resource.temporal,
+                            durationInMinutes:
+                              resource.temporal.durationInMinutes === 0
+                                ? null
+                                : resource.temporal.durationInMinutes,
+                          },
+                      user: isUserResourceUnchanged()
+                        ? null
+                        : resource.user.username === ''
+                        ? {
+                            username: null,
+                          }
+                        : resource.user,
                     }
                     postWorkflowListResource(apiId, entity).then((_res) => {
                       mutate(getWorkflowListsUrl(userApiId))

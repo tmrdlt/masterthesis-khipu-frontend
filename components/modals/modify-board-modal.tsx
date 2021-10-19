@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { UpdateWorkflowListEntity, WorkflowList, WorkflowListResource } from 'utils/models'
-import DatePicker from 'react-datepicker'
+import React, { useState } from 'react'
+import { UpdateWorkflowListEntity, WorkflowList } from 'utils/models'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { compareDateOptions } from 'utils/date-util'
@@ -11,6 +10,8 @@ import {
   updateWorkflowList,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
+import { getInitWorkflowListResourceBoard } from 'utils/resource-util'
+import BoardResourcesForm from 'components/modals/board-resources-form'
 
 interface ModifyBoardModalProps {
   userApiId: string
@@ -29,40 +30,28 @@ const ModifyBoardModal = ({
     newDescription: workflowList.description ? workflowList.description : '',
     isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard,
   }
-  const initDueDate: Date | null = workflowList.temporalResource
-    ? workflowList.temporalResource.endDate
-    : null
+  const initResource = getInitWorkflowListResourceBoard(workflowList)
 
   const [updateBoardEntity, setUpdateBoardEntity] = useState(initUpdateBoardEntity)
-  const [dueDate, setDueDate] = useState(initDueDate)
+  const [resource, setResource] = useState(initResource)
 
   const { mutate } = useSWRConfig()
 
-  useEffect(() => {
-    if (workflowList.temporalResource && workflowList.temporalResource.endDate) {
-      setDueDate(workflowList.temporalResource.endDate)
-    }
-  }, [workflowList])
-
-  // DYNAMIC CLASSES
-  const opacityAndCursorNotAllowedClass = !updateBoardEntity.isTemporalConstraintBoard
-    ? ' opacity-40 cursor-not-allowed'
-    : ''
-
   // FUNCTIONS
-  const toggleChange = () => {
+  const handleModifyBoardFormChange = (event) => {
+    const newState = { ...updateBoardEntity, [event.target.id]: event.target.value }
+    setUpdateBoardEntity(newState)
+  }
+
+  const handleToggleChange = () => {
     const newState = {
       ...updateBoardEntity,
       isTemporalConstraintBoard: !updateBoardEntity.isTemporalConstraintBoard,
     }
     setUpdateBoardEntity(newState)
   }
-  const handleFormChange = (event) => {
-    const newState = { ...updateBoardEntity, [event.target.id]: event.target.value }
-    setUpdateBoardEntity(newState)
-  }
 
-  const workflowListUnchanged = (): boolean => {
+  const isWorkflowListUnchanged = (): boolean => {
     return (
       updateBoardEntity.newTitle === workflowList.title &&
       updateBoardEntity.newDescription === getOptionalString(workflowList.description) &&
@@ -70,11 +59,8 @@ const ModifyBoardModal = ({
     )
   }
 
-  const temporalResourceUnchanged = (): boolean => {
-    return compareDateOptions(
-      dueDate,
-      workflowList.temporalResource ? workflowList.temporalResource.endDate : null
-    )
+  const isTemporalResourceUnchanged = (): boolean => {
+    return compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate)
   }
 
   return (
@@ -93,7 +79,7 @@ const ModifyBoardModal = ({
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                     value={updateBoardEntity.newTitle}
-                    onChange={handleFormChange}
+                    onChange={handleModifyBoardFormChange}
                     id="newTitle"
                   />
                 </label>
@@ -103,7 +89,7 @@ const ModifyBoardModal = ({
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                     rows={3}
                     value={updateBoardEntity.newDescription}
-                    onChange={handleFormChange}
+                    onChange={handleModifyBoardFormChange}
                     id="newDescription"
                   />
                 </label>
@@ -120,65 +106,34 @@ const ModifyBoardModal = ({
                               ? updateBoardEntity.isTemporalConstraintBoard
                               : false
                           }
-                          onChange={toggleChange}
+                          onChange={handleToggleChange}
                         />
                         <span className="ml-2">Is temporal constraint board</span>
                       </label>
                     </div>
                   </div>
                 </div>
-
-                <div className="grid">
-                  <div className="flex place-content-between">
-                    <span className={'text-gray-700' + opacityAndCursorNotAllowedClass}>
-                      Set due date for board
-                    </span>
-                    <button
-                      className={'text-gray-700' + opacityAndCursorNotAllowedClass}
-                      onClick={() => {
-                        setDueDate(null)
-                      }}
-                    >
-                      &#x2715; Clear date
-                    </button>
-                  </div>
-                  <DatePicker
-                    className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    selected={dueDate}
-                    onChange={(date) => setDueDate(date)}
-                    disabled={!updateBoardEntity.isTemporalConstraintBoard}
-                    placeholderText="No due date set"
-                    showTimeSelect
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    timeFormat="HH:mm"
-                    dateFormat="dd.MM.yyyy, HH:mm"
-                    autocomplete="off"
-                    id="dueDate"
-                    name="dueDate"
-                  />
-                </div>
+                <BoardResourcesForm
+                  isTemporalConstraintBoard={updateBoardEntity.isTemporalConstraintBoard}
+                  resource={resource}
+                  setResource={setResource}
+                />
               </div>
             </div>
           </div>
           <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
             <button
               type="button"
-              disabled={workflowListUnchanged() && temporalResourceUnchanged()}
+              disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged()}
               onClick={() => {
-                if (!workflowListUnchanged()) {
-                  updateWorkflowList(workflowList.apiId, updateBoardEntity).then((res) => {
+                if (!isWorkflowListUnchanged()) {
+                  updateWorkflowList(workflowList.apiId, updateBoardEntity).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })
                 }
-                if (!temporalResourceUnchanged()) {
-                  const entity: WorkflowListResource = {
-                    temporal: {
-                      endDate: dueDate,
-                    },
-                  }
-                  postWorkflowListResource(workflowList.apiId, entity).then((_res) => {
+                if (!isTemporalResourceUnchanged()) {
+                  postWorkflowListResource(workflowList.apiId, resource).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })

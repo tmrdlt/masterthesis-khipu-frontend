@@ -10,107 +10,115 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import DatePicker from 'react-datepicker'
 import { formatDuration } from 'utils/date-util'
 import React from 'react'
-import { NumericResource, TemporalResource, TextualResource, UserResource } from 'utils/models'
+import { NumericResource, TextualResource, WorkflowListResource } from 'utils/models'
 import { useUsers } from 'utils/swr-util'
 
 interface ItemResourcesFormProps {
-  temporalResource: TemporalResource
-  numericResources: Array<NumericResource>
-  textualResources: Array<TextualResource>
-  userResource: UserResource
-  setTemporalResource
-  setNumericResources
-  setTextualResources
-  setUserResource
+  resource: WorkflowListResource
+  setResource
 }
 
-const ItemResourcesForm = ({
-  temporalResource,
-  numericResources,
-  textualResources,
-  userResource,
-  setTemporalResource,
-  setNumericResources,
-  setTextualResources,
-  setUserResource,
-}: ItemResourcesFormProps): JSX.Element => {
+const ItemResourcesForm = ({ resource, setResource }: ItemResourcesFormProps): JSX.Element => {
   const { users, isLoading, isError } = useUsers()
 
   const handleDatePickerChange = (date, key) => {
-    const newState = { ...temporalResource, [key]: date }
-    setTemporalResource(newState)
+    const newState = {
+      ...resource,
+      temporal: {
+        ...resource.temporal,
+        [key]: date,
+      },
+    }
+    setResource(newState)
   }
 
   const handleTimeRequiredSelectionChange = (event) => {
     if (event.target.value === 0) {
-      const newState = { ...temporalResource, durationInMinutes: 0 }
-      setTemporalResource(newState)
+      const newState = {
+        ...resource,
+        temporal: {
+          ...resource.temporal,
+          durationInMinutes: 0,
+        },
+      }
+      setResource(newState)
     } else {
-      const newState = { ...temporalResource, durationInMinutes: parseInt(event.target.value) }
-      setTemporalResource(newState)
+      const newState = {
+        ...resource,
+        temporal: {
+          ...resource.temporal,
+          durationInMinutes: parseInt(event.target.value),
+        },
+      }
+      setResource(newState)
     }
   }
 
   const handleNumericResourceFormChange = (event, index) => {
-    const newState = [...numericResources]
+    const newState = { ...resource }
     let newElement: NumericResource
     if (event.target.id === 'label') {
-      newElement = { ...newState[index], label: event.target.value }
-      newState.splice(index, 1, newElement)
+      newElement = { ...newState.numeric[index], label: event.target.value }
+      newState.numeric.splice(index, 1, newElement)
     } else {
       const regex = /^[0-9\b]+$/
       if (regex.test(event.target.value)) {
-        newElement = { ...newState[index], value: parseFloat(event.target.value) }
+        newElement = { ...newState.numeric[index], value: parseFloat(event.target.value) }
         console.log(newElement)
-        newState.splice(index, 1, newElement)
+        newState.numeric.splice(index, 1, newElement)
       } else if (event.target.value === '') {
-        newElement = { ...newState[index], value: event.target.value }
-        newState.splice(index, 1, newElement)
+        newElement = { ...newState.numeric[index], value: event.target.value }
+        newState.numeric.splice(index, 1, newElement)
       }
     }
-    setNumericResources(newState)
+    setResource(newState)
   }
 
   const addEmptyNumericResource = () => {
-    const newState = [...numericResources]
+    const newState = { ...resource }
     // @ts-ignore
-    newState.push({ label: '', value: '' })
-    setNumericResources(newState)
+    newState.numeric.push({ label: '', value: '' })
+    setResource(newState)
   }
 
   const removeNumericResource = (index: number) => {
-    const newState = [...numericResources]
-    newState.splice(index, 1)
-    setNumericResources(newState)
+    const newState = { ...resource }
+    newState.numeric.splice(index, 1)
+    setResource(newState)
   }
 
   const handleTextualResourceFormChange = (event, index) => {
-    const newState = [...textualResources]
+    const newState = { ...resource }
     let newElement: TextualResource
     if (event.target.id === 'label') {
-      newElement = { ...newState[index], label: event.target.value }
+      newElement = { ...newState.textual[index], label: event.target.value }
     } else {
-      newElement = { ...newState[index], value: event.target.value }
+      newElement = { ...newState.textual[index], value: event.target.value }
     }
-    newState.splice(index, 1, newElement)
-    setTextualResources(newState)
-  }
-
-  const handleUserResourceFormChange = (event) => {
-    const newState = { ...userResource, username: event.target.value }
-    setUserResource(newState)
+    newState.textual.splice(index, 1, newElement)
+    setResource(newState)
   }
 
   const addEmptyTextualResource = () => {
-    const newState = [...textualResources]
-    newState.push({ label: '', value: '' })
-    setTextualResources(newState)
+    const newState = { ...resource }
+    newState.textual.push({ label: '', value: '' })
+    setResource(newState)
   }
 
   const removeTextualResource = (index: number) => {
-    const newState = [...textualResources]
-    newState.splice(index, 1)
-    setTextualResources(newState)
+    const newState = { ...resource }
+    newState.textual.splice(index, 1)
+    setResource(newState)
+  }
+
+  const handleUserResourceFormChange = (event) => {
+    const newState = {
+      ...resource,
+      user: {
+        username: event.target.value,
+      },
+    }
+    setResource(newState)
   }
 
   return (
@@ -172,13 +180,13 @@ const ItemResourcesForm = ({
               </div>
               <DatePicker
                 className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                selected={temporalResource ? temporalResource.startDate : null}
+                selected={resource.temporal ? resource.temporal.startDate : null}
                 onChange={(date) => handleDatePickerChange(date, 'startDate')}
                 selectsStart
-                startDate={temporalResource.startDate}
-                endDate={temporalResource.endDate}
-                maxDate={temporalResource.endDate}
-                disabled={!temporalResource}
+                startDate={resource.temporal.startDate}
+                endDate={resource.temporal.endDate}
+                maxDate={resource.temporal.endDate}
+                disabled={!resource.temporal}
                 placeholderText="No start date set"
                 showTimeSelect
                 timeIntervals={15}
@@ -210,13 +218,13 @@ const ItemResourcesForm = ({
               </div>
               <DatePicker
                 className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                selected={temporalResource ? temporalResource.endDate : null}
+                selected={resource.temporal ? resource.temporal.endDate : null}
                 onChange={(date) => handleDatePickerChange(date, 'endDate')}
                 selectsEnd
-                startDate={temporalResource.startDate}
-                endDate={temporalResource.endDate}
-                minDate={temporalResource.startDate}
-                disabled={!temporalResource}
+                startDate={resource.temporal.startDate}
+                endDate={resource.temporal.endDate}
+                minDate={resource.temporal.startDate}
+                disabled={!resource.temporal}
                 placeholderText="No due date set"
                 showTimeSelect
                 timeIntervals={15}
@@ -237,7 +245,7 @@ const ItemResourcesForm = ({
               </div>
               <select
                 className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                value={temporalResource.durationInMinutes}
+                value={resource.temporal.durationInMinutes}
                 onChange={handleTimeRequiredSelectionChange}
               >
                 <option className="opacity-40" key={0} value={0}>
@@ -255,7 +263,7 @@ const ItemResourcesForm = ({
       </TabPanel>
       <TabPanel>
         <div className="grid grid-cols-1 gap-4">
-          {numericResources.map((numericResource, index) => {
+          {resource.numeric.map((numericResource, index) => {
             return (
               <div className="flex items-end" key={index}>
                 <div className="grid grid-cols-2 gap-4">
@@ -322,7 +330,7 @@ const ItemResourcesForm = ({
       </TabPanel>
       <TabPanel>
         <div className="grid grid-cols-1 gap-4">
-          {textualResources.map((textualResource, index) => {
+          {resource.textual.map((textualResource, index) => {
             return (
               <div className="flex items-end" key={index}>
                 <div className="grid grid-cols-2 gap-4">
@@ -392,7 +400,7 @@ const ItemResourcesForm = ({
           <span className="text-gray-700">Assigned user</span>
           <select
             className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-            value={userResource.username}
+            value={resource.user.username}
             onChange={handleUserResourceFormChange}
           >
             <option className="opacity-40" key={0} value={''}>
