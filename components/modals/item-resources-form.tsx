@@ -14,7 +14,6 @@ import { NumericResource, TemporalResource, TextualResource, UserResource } from
 import { useUsers } from 'utils/swr-util'
 
 interface ItemResourcesFormProps {
-  isInsideTemporalConstraintBoard: boolean
   temporalResource: TemporalResource
   numericResources: Array<NumericResource>
   textualResources: Array<TextualResource>
@@ -26,7 +25,6 @@ interface ItemResourcesFormProps {
 }
 
 const ItemResourcesForm = ({
-  isInsideTemporalConstraintBoard,
   temporalResource,
   numericResources,
   textualResources,
@@ -118,16 +116,14 @@ const ItemResourcesForm = ({
   return (
     <Tabs>
       <TabList>
-        {isInsideTemporalConstraintBoard && (
-          <Tab>
-            <div className="inline-flex items-center">
-              <div className="w-4 h-4 mr-1">
-                <ClockIcon />
-              </div>
-              Temporal
+        <Tab>
+          <div className="inline-flex items-center">
+            <div className="w-4 h-4 mr-1">
+              <ClockIcon />
             </div>
-          </Tab>
-        )}
+            Temporal
+          </div>
+        </Tab>
         <Tab>
           <div className="inline-flex items-center">
             <div className="w-4 h-4 mr-1">
@@ -153,112 +149,110 @@ const ItemResourcesForm = ({
           </div>
         </Tab>
       </TabList>
-      {isInsideTemporalConstraintBoard && (
-        <TabPanel>
+      <TabPanel>
+        <div className="grid grid-cols-1 gap-4">
           <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-1 gap-4">
-              <div className="grid">
-                <div className="flex place-content-between">
-                  <div className="inline-flex items-center">
-                    <div className="w-4 h-4 mr-1">
-                      <CalendarIcon />
-                    </div>
-                    <span className="text-gray-700">Start date</span>
-                  </div>
-                  <button
-                    className="text-gray-700"
-                    onClick={(e) => {
-                      e.preventDefault() // needed so react doesn't reload page
-                      handleDatePickerChange(null, 'startDate')
-                    }}
-                  >
-                    &#x2715; Clear date
-                  </button>
-                </div>
-                <DatePicker
-                  className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  selected={temporalResource ? temporalResource.startDate : null}
-                  onChange={(date) => handleDatePickerChange(date, 'startDate')}
-                  selectsStart
-                  startDate={temporalResource.startDate}
-                  endDate={temporalResource.endDate}
-                  maxDate={temporalResource.endDate}
-                  disabled={!temporalResource}
-                  placeholderText="No start date set"
-                  showTimeSelect
-                  timeIntervals={15}
-                  timeCaption="Time"
-                  timeFormat="HH:mm"
-                  dateFormat="dd.MM.yyyy, HH:mm"
-                  autocomplete="off"
-                  id="startDate"
-                  name="startDate"
-                />
-              </div>
-              <div className="grid">
-                <div className="flex place-content-between">
-                  <div className="inline-flex items-center">
-                    <div className="w-4 h-4 mr-1">
-                      <FlagIcon />
-                    </div>
-                    <span className="text-gray-700">Due date</span>
-                  </div>
-                  <button
-                    className="text-gray-700"
-                    onClick={(e) => {
-                      e.preventDefault() // needed so react doesn't reload page
-                      handleDatePickerChange(null, 'endDate')
-                    }}
-                  >
-                    &#x2715; Clear date
-                  </button>
-                </div>
-                <DatePicker
-                  className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  selected={temporalResource ? temporalResource.endDate : null}
-                  onChange={(date) => handleDatePickerChange(date, 'endDate')}
-                  selectsEnd
-                  startDate={temporalResource.startDate}
-                  endDate={temporalResource.endDate}
-                  minDate={temporalResource.startDate}
-                  disabled={!temporalResource}
-                  placeholderText="No due date set"
-                  showTimeSelect
-                  timeIntervals={15}
-                  timeCaption="Time"
-                  timeFormat="HH:mm"
-                  dateFormat="dd.MM.yyyy, HH:mm"
-                  autocomplete="off"
-                  id="endDate"
-                  name="endDate"
-                />
-              </div>
-              <label className="block">
+            <div className="grid">
+              <div className="flex place-content-between">
                 <div className="inline-flex items-center">
                   <div className="w-4 h-4 mr-1">
-                    <ClockIcon />
+                    <CalendarIcon />
                   </div>
-                  <span className="text-gray-700">Estimated time required</span>
+                  <span className="text-gray-700">Start date</span>
                 </div>
-                <select
-                  className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  value={temporalResource.durationInMinutes}
-                  onChange={handleTimeRequiredSelectionChange}
+                <button
+                  className="text-gray-700"
+                  onClick={(e) => {
+                    e.preventDefault() // needed so react doesn't reload page
+                    handleDatePickerChange(null, 'startDate')
+                  }}
                 >
-                  <option className="opacity-40" key={0} value={0}>
-                    None
-                  </option>
-                  {timeDurationsInMinutes.map((durationInMinutes) => (
-                    <option key={durationInMinutes} value={durationInMinutes}>
-                      {formatDuration(durationInMinutes)}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  &#x2715; Clear date
+                </button>
+              </div>
+              <DatePicker
+                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                selected={temporalResource ? temporalResource.startDate : null}
+                onChange={(date) => handleDatePickerChange(date, 'startDate')}
+                selectsStart
+                startDate={temporalResource.startDate}
+                endDate={temporalResource.endDate}
+                maxDate={temporalResource.endDate}
+                disabled={!temporalResource}
+                placeholderText="No start date set"
+                showTimeSelect
+                timeIntervals={15}
+                timeCaption="Time"
+                timeFormat="HH:mm"
+                dateFormat="dd.MM.yyyy, HH:mm"
+                autocomplete="off"
+                id="startDate"
+                name="startDate"
+              />
             </div>
+            <div className="grid">
+              <div className="flex place-content-between">
+                <div className="inline-flex items-center">
+                  <div className="w-4 h-4 mr-1">
+                    <FlagIcon />
+                  </div>
+                  <span className="text-gray-700">Due date</span>
+                </div>
+                <button
+                  className="text-gray-700"
+                  onClick={(e) => {
+                    e.preventDefault() // needed so react doesn't reload page
+                    handleDatePickerChange(null, 'endDate')
+                  }}
+                >
+                  &#x2715; Clear date
+                </button>
+              </div>
+              <DatePicker
+                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                selected={temporalResource ? temporalResource.endDate : null}
+                onChange={(date) => handleDatePickerChange(date, 'endDate')}
+                selectsEnd
+                startDate={temporalResource.startDate}
+                endDate={temporalResource.endDate}
+                minDate={temporalResource.startDate}
+                disabled={!temporalResource}
+                placeholderText="No due date set"
+                showTimeSelect
+                timeIntervals={15}
+                timeCaption="Time"
+                timeFormat="HH:mm"
+                dateFormat="dd.MM.yyyy, HH:mm"
+                autocomplete="off"
+                id="endDate"
+                name="endDate"
+              />
+            </div>
+            <label className="block">
+              <div className="inline-flex items-center">
+                <div className="w-4 h-4 mr-1">
+                  <ClockIcon />
+                </div>
+                <span className="text-gray-700">Estimated time required</span>
+              </div>
+              <select
+                className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                value={temporalResource.durationInMinutes}
+                onChange={handleTimeRequiredSelectionChange}
+              >
+                <option className="opacity-40" key={0} value={0}>
+                  None
+                </option>
+                {timeDurationsInMinutes.map((durationInMinutes) => (
+                  <option key={durationInMinutes} value={durationInMinutes}>
+                    {formatDuration(durationInMinutes)}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-        </TabPanel>
-      )}
+        </div>
+      </TabPanel>
       <TabPanel>
         <div className="grid grid-cols-1 gap-4">
           {numericResources.map((numericResource, index) => {

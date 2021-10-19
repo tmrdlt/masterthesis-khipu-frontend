@@ -19,43 +19,28 @@ export const getWorkflowListsUrl = (userApiId: String): string => {
 }
 
 export const getUsersUrl = (): string => {
-    return 'http://localhost:5001/user'
+  return 'http://localhost:5001/user'
 }
 
 export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
-    return axios.get<Array<WorkflowList>>(url).then((res) => {
-        const workflowLists = res.data
-        recursiveParseDate(workflowLists)
-        return workflowLists
-    })
+  return axios.get<Array<WorkflowList>>(url).then((res) => {
+    const workflowLists = res.data
+    recursiveParseDate(workflowLists)
+    return workflowLists
+  })
 }
 
 export const getUsersFetcher = (url): Promise<Array<User>> => {
-    return axios
-        .get<Array<User>>(url)
-        .then((res) => {
-            return res.data
-        })
+  return axios.get<Array<User>>(url).then((res) => {
+    return res.data
+  })
 }
 
 export const getUserFetcher = (userApiId): Promise<User | undefined> => {
-    return axios
-        .get<User>(`http://localhost:5001/user/${userApiId}`)
-        .then((res) => {
-            return res.data
-        })
-        .catch((error) => {
-            console.error(error)
-            return null
-        })
-}
-
-export const createWorkflowList = async (entity: CreateWorkflowListEntity) => {
-  const newEntity = { ...entity, newDescription: entity.description == '' ? null : entity.description }
   return axios
-    .post('http://localhost:5001/workflowlist', newEntity)
-    .then((response) => {
-      return response
+    .get<User>(`http://localhost:5001/user/${userApiId}`)
+    .then((res) => {
+      return res.data
     })
     .catch((error) => {
       console.error(error)
@@ -63,11 +48,29 @@ export const createWorkflowList = async (entity: CreateWorkflowListEntity) => {
     })
 }
 
-export const updateWorkflowList = async (
-  uuid: string,
-  entity: UpdateWorkflowListEntity
-) => {
-  const newEntity = { ...entity, newDescription: entity.newDescription == '' ? null : entity.newDescription }
+export const createWorkflowList = async (
+  entity: CreateWorkflowListEntity
+): Promise<string | undefined> => {
+  const newEntity = {
+    ...entity,
+    newDescription: entity.description == '' ? null : entity.description,
+  }
+  return axios
+    .post<String>('http://localhost:5001/workflowlist', newEntity)
+    .then((res) => {
+      return res.data
+    })
+    .catch((error) => {
+      console.error(error)
+      return null
+    })
+}
+
+export const updateWorkflowList = async (uuid: string, entity: UpdateWorkflowListEntity) => {
+  const newEntity = {
+    ...entity,
+    newDescription: entity.newDescription == '' ? null : entity.newDescription,
+  }
   return axios
     .patch('http://localhost:5001/workflowlist/' + uuid, newEntity)
     .then((response) => {

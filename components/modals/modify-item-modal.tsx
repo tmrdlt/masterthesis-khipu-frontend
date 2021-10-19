@@ -24,7 +24,7 @@ import ItemResourcesForm from 'components/modals/item-resources-form'
 interface ModifyItemModalProps {
   userApiId: string
   workflowList: WorkflowList
-  isInsideTemporalConstraintBoard: boolean
+  isInsideTemporalConstraintBoard: boolean // TODO not needed
   closeModal
 }
 
@@ -145,7 +145,6 @@ const ModifyItemModal = ({
                   </label>
                   <span className="text-gray-700">Resources</span>
                   <ItemResourcesForm
-                    isInsideTemporalConstraintBoard={isInsideTemporalConstraintBoard}
                     temporalResource={temporalResource}
                     numericResources={numericResources}
                     textualResources={textualResources}
