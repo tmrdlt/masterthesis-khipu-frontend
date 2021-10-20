@@ -5,7 +5,11 @@ import { compareDateOptions } from 'utils/date-util'
 import { getOptionalNumber, getOptionalString } from 'utils/optional-util'
 import 'react-tabs/style/react-tabs.css'
 import { arraysEqual } from 'utils/compare-util'
-import { getWorkflowListsUrl, postWorkflowListResource } from 'utils/workflow-api'
+import {
+  getWorkflowListsUrl,
+  postWorkflowListResource,
+  updateWorkflowList,
+} from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import ItemResourcesForm from 'components/modals/item-resources-form'
 import { getInitWorkflowListResource } from 'utils/resource-util'
@@ -127,6 +131,12 @@ const ModifyItemModal = ({
                   isTextualResourceFormInvalid()
                 }
                 onClick={() => {
+                  if (!isWorkflowListUnchanged()) {
+                    updateWorkflowList(workflowList.apiId, updateItemEntity).then((_res) => {
+                      mutate(getWorkflowListsUrl(userApiId))
+                      closeModal()
+                    })
+                  }
                   const entity: WorkflowListResource = {
                     numeric: areNumericResourcesUnchanged() ? null : resource.numeric,
                     textual: areTextualResourcesUnchanged() ? null : resource.textual,
