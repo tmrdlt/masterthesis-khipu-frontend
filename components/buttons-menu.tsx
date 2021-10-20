@@ -37,7 +37,7 @@ const ButtonsMenu = ({
   const { mutate } = useSWRConfig()
 
   // DYNAMIC CLASSES
-  const animationSpinClassName = isLoadingQuery ? ' animate-spin' : ''
+  const animationSpinClassName = isLoadingQuery ? 'animate-spin' : ''
 
   // FUNCTIONS
   const convertWorkflowList = (
@@ -58,11 +58,12 @@ const ButtonsMenu = ({
           workflowList.isTemporalConstraintBoard && (
             <button
               type="button"
+              disabled={workflowList.children.filter(wl => wl.usageType != WorkflowListType.ITEM).length <= 1}
               onClick={() => {
                 startLoading()
                 getTemporalQueryResult(workflowList.apiId)
               }}
-              className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+              className="bg-transparent text-gray-600 hover:bg-gray-600 hover:text-white rounded p-1 w-6 h-6 disabled:opacity-50"
             >
               <div className={animationSpinClassName}>
                 <ClockIcon />
