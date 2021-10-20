@@ -14,7 +14,7 @@ import CalendarIcon, {
   UserIcon,
 } from 'components/icons'
 import 'react-popper-tooltip/dist/styles.css'
-import { ItemTemporalQueryResult } from 'components/temporal-tooltips'
+import { ItemTemporalQueryResult } from 'components/temporal-query-results'
 
 interface IItemProps {
   index: number

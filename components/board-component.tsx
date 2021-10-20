@@ -11,7 +11,7 @@ import ButtonsMenu from 'components/buttons-menu'
 import { formatDate } from 'utils/date-util'
 import ModifyBoardModal from 'components/modals/modify-board-modal'
 import { FlagIcon } from 'components/icons'
-import BoardTemporalQueryResult from 'components/temporal-tooltips'
+import BoardTemporalQueryResult from 'components/temporal-query-results'
 
 interface IBoardProps {
   index: number

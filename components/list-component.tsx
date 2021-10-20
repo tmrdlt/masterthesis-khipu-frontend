@@ -9,7 +9,7 @@ import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
-import { ListTemporalQueryResult } from 'components/temporal-tooltips'
+import { ListTemporalQueryResult } from 'components/temporal-query-results'
 
 interface IListProps {
   index: number
