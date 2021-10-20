@@ -77,22 +77,22 @@ const ListComponent = ({
               <div className="w-full font-bold m-1 hover:bg-red-200" {...provided.dragHandleProps}>
                 {workflowList.title}
               </div>
-              <div className="flex flex-col items-end">
-                <ButtonsMenu
-                  userApiId={userApiId}
-                  workflowList={workflowList}
-                  selectWorkflowListToMove={selectWorkflowListToMove}
-                  openCreateModal={openCreateModal}
-                  openModifyModal={openModifyModal}
-                  openMoveModal={openMoveModal}
-                />
-                {workflowList.temporalQueryResult != null && (
-                  <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult}/>
-                )}
-              </div>
+              <ButtonsMenu
+                userApiId={userApiId}
+                workflowList={workflowList}
+                selectWorkflowListToMove={selectWorkflowListToMove}
+                openCreateModal={openCreateModal}
+                openModifyModal={openModifyModal}
+                openMoveModal={openMoveModal}
+              />
             </div>
 
-            <div className="m-1 text-sm whitespace-pre">{workflowList.description}</div>
+            <div className="flex place-content-between">
+              <div className="m-1 text-sm whitespace-pre">{workflowList.description}</div>
+              {workflowList.temporalQueryResult != null && (
+                <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
+              )}
+            </div>
 
             <Droppable droppableId={workflowList.apiId} type={workflowList.level}>
               {(provided, snapshot) => (
