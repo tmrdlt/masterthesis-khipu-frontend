@@ -21,7 +21,7 @@ const BoardTemporalQueryResult = ({
   return (
     <div className="flex justify-center items-center h-8">
       <div
-        className={`flex border border-gray-500 rounded w-48 h-6 text-xs justify-center items-center mr-1 ${temporalQueryLabelColor}`}
+        className={`flex border border-gray-500 rounded w-max h-6 text-xs justify-center items-center mr-1 pl-1 pr-1 ${temporalQueryLabelColor}`}
         ref={setTriggerRef}
       >
         Remaining duration: {formatDuration(temporalQueryResult.duration)}
