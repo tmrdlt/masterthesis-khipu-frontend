@@ -2,7 +2,7 @@ import { ConvertWorkflowListEntity, WorkflowList, WorkflowListType } from 'utils
 import React from 'react'
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button'
 import '@reach/menu-button/styles.css'
-import { ClockIcon } from 'components/icons'
+import { ClockIcon, MenuIcon, PlusIcon, SelectorIcon } from 'components/icons'
 import {
   deleteWorkflowList,
   getWorkflowListsUrl,
@@ -58,7 +58,10 @@ const ButtonsMenu = ({
           workflowList.isTemporalConstraintBoard && (
             <button
               type="button"
-              disabled={workflowList.children.filter(wl => wl.usageType != WorkflowListType.ITEM).length <= 1}
+              disabled={
+                workflowList.children.filter((wl) => wl.usageType != WorkflowListType.ITEM)
+                  .length <= 1
+              }
               onClick={() => {
                 startLoading()
                 getTemporalQueryResult(workflowList.apiId)
@@ -79,19 +82,7 @@ const ButtonsMenu = ({
             }}
             className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
+            <PlusIcon />
           </button>
         )}
         <button
@@ -102,35 +93,11 @@ const ButtonsMenu = ({
           }}
           className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-            />
-          </svg>
+          <SelectorIcon />
         </button>
         <Menu>
           <MenuButton className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
+            <MenuIcon />
           </MenuButton>
           <MenuList>
             <MenuItem
