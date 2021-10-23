@@ -213,7 +213,7 @@ const MoveWorkflowListButton = ({
   selectWorkflowListToMove,
   openMoveModal,
 }: MoveWorkflowListButtonProps): JSX.Element => {
-  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible, update } =
     usePopperTooltip()
   return (
     <div>
@@ -222,6 +222,7 @@ const MoveWorkflowListButton = ({
         onClick={() => {
           selectWorkflowListToMove(workflowList)
           openMoveModal()
+          update()
         }}
         ref={setTriggerRef}
         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
