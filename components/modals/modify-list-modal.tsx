@@ -73,7 +73,7 @@ const ModifyListModal = ({
                 state.newDescription === getOptionalString(workflowList.description)
               }
               onClick={() => {
-                updateWorkflowList(workflowList.apiId, state).then((_res) => {
+                updateWorkflowList(workflowList.apiId, state, userApiId).then((_res) => {
                   mutate(getWorkflowListsUrl(userApiId))
                   closeModal()
                 })

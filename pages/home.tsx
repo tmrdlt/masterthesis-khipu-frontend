@@ -60,7 +60,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
       if (source.index != destination.index) {
-        await postWorkflowListReorder(draggableId, { newPosition: destination.index })
+        await postWorkflowListReorder(draggableId, { newPosition: destination.index }, userApiId)
         fetchWorkflowLists()
       }
     } else {
@@ -76,11 +76,14 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       if (!(destinationDroppableId === 'ROOT')) {
         newParentUuid = destinationDroppableId
       }
-      await postWorkflowListMove(draggableId, {
-        newParentApiId: newParentUuid,
-        newPosition: destination.index,
-        userApiId: userApiId,
-      })
+      await postWorkflowListMove(
+        draggableId,
+        {
+          newParentApiId: newParentUuid,
+          newPosition: destination.index,
+        },
+        userApiId
+      )
       fetchWorkflowLists()
     }
   }
@@ -138,17 +141,18 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     if (destinationWorkflowList) {
       newParentUuid = destinationWorkflowList.apiId
     }
-    postWorkflowListMove(workflowListToMove.apiId, {
-      newParentApiId: newParentUuid,
-      userApiId: userApiId,
-    }).then((_res) => {
+    postWorkflowListMove(
+      workflowListToMove.apiId,
+      { newParentApiId: newParentUuid },
+      userApiId
+    ).then((_res) => {
       fetchWorkflowLists()
       setWorkflowListToMove(null)
     })
   }
 
   const getTemporalQueryResult = (workflowListApiId: string) => {
-    getTemporalQuery(workflowListApiId).then((res) => {
+    getTemporalQuery(workflowListApiId, userApiId).then((res) => {
       if (res) {
         // Use immer produce to create REAL clone
         let newWorkflowLists = produce(workflowLists, (draft) => {

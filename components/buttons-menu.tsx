@@ -42,7 +42,7 @@ const ButtonsMenu = ({
     uuid: string,
     convertWorkflowListEntity: ConvertWorkflowListEntity
   ) => {
-    postWorkflowListConvert(uuid, convertWorkflowListEntity).then((res) => {
+    postWorkflowListConvert(uuid, convertWorkflowListEntity, userApiId).then((res) => {
       if (res) {
         mutate(getWorkflowListsUrl(userApiId))
       }
@@ -105,7 +105,7 @@ const ButtonsMenu = ({
             )}
             <MenuItem
               onSelect={() => {
-                deleteWorkflowList(workflowList.apiId).then((res) => {
+                deleteWorkflowList(workflowList.apiId, userApiId).then((res) => {
                   mutate(getWorkflowListsUrl(userApiId))
                 })
               }}

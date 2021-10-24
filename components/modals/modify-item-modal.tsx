@@ -132,7 +132,7 @@ const ModifyItemModal = ({
                 }
                 onClick={() => {
                   if (!isWorkflowListUnchanged()) {
-                    updateWorkflowList(workflowList.apiId, updateItemEntity).then((_res) => {
+                    updateWorkflowList(workflowList.apiId, updateItemEntity, userApiId).then((_res) => {
                       mutate(getWorkflowListsUrl(userApiId))
                       closeModal()
                     })
@@ -157,7 +157,7 @@ const ModifyItemModal = ({
                         }
                       : resource.user,
                   }
-                  postWorkflowListResource(workflowList.apiId, entity).then((_res) => {
+                  postWorkflowListResource(workflowList.apiId, entity, userApiId).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })

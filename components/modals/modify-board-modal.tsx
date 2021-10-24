@@ -127,13 +127,13 @@ const ModifyBoardModal = ({
               disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged()}
               onClick={() => {
                 if (!isWorkflowListUnchanged()) {
-                  updateWorkflowList(workflowList.apiId, updateBoardEntity).then((_res) => {
+                  updateWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })
                 }
                 if (!isTemporalResourceUnchanged()) {
-                  postWorkflowListResource(workflowList.apiId, resource).then((_res) => {
+                  postWorkflowListResource(workflowList.apiId, resource, userApiId).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })

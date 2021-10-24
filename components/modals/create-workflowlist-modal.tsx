@@ -32,7 +32,6 @@ const CreateWorkflowListModal = ({
     listType: createType,
     parentApiId: parentUuid,
     description: '',
-    userApiId: userApiId,
     isTemporalConstraintBoard: false,
   }
   const initResource = getInitWorkflowListResource()
@@ -203,7 +202,7 @@ const CreateWorkflowListModal = ({
                 isTextualResourceFormInvalid()
               }
               onClick={() => {
-                createWorkflowList(createWorkflowListEntity).then((res) => {
+                createWorkflowList(createWorkflowListEntity, userApiId).then((res) => {
                   if (
                     res &&
                     (createWorkflowListEntity.listType == WorkflowListType.ITEM ||
@@ -230,7 +229,7 @@ const CreateWorkflowListModal = ({
                           }
                         : resource.user,
                     }
-                    postWorkflowListResource(apiId, entity).then((_res) => {
+                    postWorkflowListResource(apiId, entity, userApiId).then((_res) => {
                       mutate(getWorkflowListsUrl(userApiId))
                       closeModal()
                     })

@@ -12,6 +12,9 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. I
 - [react-datepicker](https://github.com/Hacker0x01/react-datepicker)
 - [react-tabs](https://reactcommunity.org/react-tabs/)
 - [react-popper-tooltip](https://popper.js.org/react-popper/v2/)
+- [axios](https://github.com/axios/axios)
+- [swr](https://swr.vercel.app/)
+- [immer](https://immerjs.github.io/immer/)
 
 ## Requirements
 - Node.js v14.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
@@ -25,3 +28,8 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. I
 ```bash
 npm run dev
 ```
+
+- Expose via cloudflared tunnel:
+  - (if not already installed) `brew install cloudflare/cloudflare/cloudflared`
+  - Replace host in `workflow-api.ts` with cloudflared backend link 
+  - `cloudflared tunnel --url http://localhost:3000`

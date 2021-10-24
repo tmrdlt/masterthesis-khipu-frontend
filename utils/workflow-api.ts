@@ -14,12 +14,15 @@ import {
 import { toLocalDateTimeString } from 'utils/date-util'
 import { recursiveParseDate } from 'utils/list-util'
 
+const host = 'http://localhost:5001'
+// const host = "https://phenomenon-statements-discounted-accommodation.trycloudflare.com"
+
 export const getWorkflowListsUrl = (userApiId: String): string => {
-  return `http://localhost:5001/workflowlist?userApiId=${userApiId}`
+  return `${host}/workflowlist?userApiId=${userApiId}`
 }
 
 export const getUsersUrl = (): string => {
-  return 'http://localhost:5001/user'
+  return `${host}/user`
 }
 
 export const getWorkflowListsFetcher = (url): Promise<Array<WorkflowList>> => {
@@ -38,7 +41,7 @@ export const getUsersFetcher = (url): Promise<Array<User>> => {
 
 export const getUserFetcher = (userApiId): Promise<User | undefined> => {
   return axios
-    .get<User>(`http://localhost:5001/user/${userApiId}`)
+    .get<User>(`${host}/user/${userApiId}`)
     .then((res) => {
       return res.data
     })
@@ -49,14 +52,19 @@ export const getUserFetcher = (userApiId): Promise<User | undefined> => {
 }
 
 export const createWorkflowList = async (
-  entity: CreateWorkflowListEntity
+  entity: CreateWorkflowListEntity,
+  userApiId: string
 ): Promise<string | undefined> => {
   const newEntity = {
     ...entity,
     newDescription: entity.description == '' ? null : entity.description,
   }
   return axios
-    .post<String>('http://localhost:5001/workflowlist', newEntity)
+    .post<String>(`${host}/workflowlist`, newEntity, {
+      headers: {
+        Authorization: userApiId,
+      },
+    })
     .then((res) => {
       return res.data
     })
@@ -66,25 +74,40 @@ export const createWorkflowList = async (
     })
 }
 
-export const updateWorkflowList = async (uuid: string, entity: UpdateWorkflowListEntity) => {
+export const deleteWorkflowList = async (
+    workflowListApiId: string,
+    userApiId: string
+) => {
+  return axios
+      .delete(`${host}/workflowlist/${workflowListApiId}`, {
+        headers: {
+          Authorization: userApiId,
+        },
+      })
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        console.error(error)
+        return null
+      })
+}
+
+export const updateWorkflowList = async (
+  workflowListApiId: string,
+  entity: UpdateWorkflowListEntity,
+  userApiId: string
+) => {
   const newEntity = {
     ...entity,
     newDescription: entity.newDescription == '' ? null : entity.newDescription,
   }
   return axios
-    .patch('http://localhost:5001/workflowlist/' + uuid, newEntity)
-    .then((response) => {
-      return response
+    .patch(`${host}/workflowlist/${workflowListApiId}`, newEntity, {
+      headers: {
+        Authorization: userApiId,
+      },
     })
-    .catch((error) => {
-      console.error(error)
-      return null
-    })
-}
-
-export const deleteWorkflowList = async (uuid: string) => {
-  return axios
-    .delete('http://localhost:5001/workflowlist/' + uuid)
     .then((response) => {
       return response
     })
@@ -95,11 +118,16 @@ export const deleteWorkflowList = async (uuid: string) => {
 }
 
 export const postWorkflowListMove = async (
-  uuid: string,
-  moveWorkflowListEntity: MoveWorkflowListEntity
+  workflowListApiId: string,
+  entity: MoveWorkflowListEntity,
+  userApiId: string
 ) => {
   return axios
-    .post('http://localhost:5001/workflowlist/' + uuid + '/move', moveWorkflowListEntity)
+    .post(`${host}/workflowlist/${workflowListApiId}/move`, entity, {
+      headers: {
+        Authorization: userApiId,
+      },
+    })
     .then((response) => {
       return response
     })
@@ -110,11 +138,16 @@ export const postWorkflowListMove = async (
 }
 
 export const postWorkflowListConvert = async (
-  uuid: string,
-  convertWorkflowListEntity: ConvertWorkflowListEntity
+  workflowListApiId: string,
+  entity: ConvertWorkflowListEntity,
+  userApiId: string
 ) => {
   return axios
-    .post('http://localhost:5001/workflowlist/' + uuid + '/convert', convertWorkflowListEntity)
+    .post(`${host}/workflowlist/${workflowListApiId}/convert`, entity, {
+      headers: {
+        Authorization: userApiId,
+      },
+    })
     .then((response) => {
       return response
     })
@@ -125,11 +158,16 @@ export const postWorkflowListConvert = async (
 }
 
 export const postWorkflowListReorder = async (
-  uuid: string,
-  reorderWorkflowListEntity: ReorderWorkflowListEntity
+  workflowListApiId: string,
+  entity: ReorderWorkflowListEntity,
+  userApiId: string
 ) => {
   return axios
-    .post('http://localhost:5001/workflowlist/' + uuid + '/reorder', reorderWorkflowListEntity)
+    .post(`${host}/workflowlist/${workflowListApiId}/reorder`, entity, {
+      headers: {
+        Authorization: userApiId,
+      },
+    })
     .then((response) => {
       return response
     })
@@ -140,20 +178,29 @@ export const postWorkflowListReorder = async (
 }
 
 export const postWorkflowListResource = async (
-  uuid: string,
-  workflowListResource: WorkflowListResource
+  workflowListApiId: string,
+  workflowListResource: WorkflowListResource,
+  userApiId: string
 ) => {
   return axios
-    .post('http://localhost:5001/workflowlist/' + uuid + '/resource', {
-      ...workflowListResource,
-      temporal: workflowListResource.temporal
-        ? {
-            ...workflowListResource.temporal,
-            startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
-            endDate: toLocalDateTimeString(workflowListResource.temporal.endDate),
-          }
-        : null,
-    })
+    .post(
+      `${host}/workflowlist/${workflowListApiId}/resource`,
+      {
+        ...workflowListResource,
+        temporal: workflowListResource.temporal
+          ? {
+              ...workflowListResource.temporal,
+              startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
+              endDate: toLocalDateTimeString(workflowListResource.temporal.endDate),
+            }
+          : null,
+      },
+      {
+        headers: {
+          Authorization: userApiId,
+        },
+      }
+    )
     .then((response) => {
       return response
     })
@@ -165,7 +212,7 @@ export const postWorkflowListResource = async (
 
 export const createUser = async (createUserEntity: CreateUserEntity) => {
   return axios
-    .post('http://localhost:5001/user', createUserEntity)
+    .post(`${host}/user`, createUserEntity)
     .then((response) => {
       return response
     })
@@ -176,10 +223,15 @@ export const createUser = async (createUserEntity: CreateUserEntity) => {
 }
 
 export const getTemporalQuery = async (
-  workflowListApiId: String
+  workflowListApiId: String,
+  userApiId: string
 ): Promise<TemporalQueryResult | null> => {
   return axios
-    .get<TemporalQueryResult>('http://localhost:5001/workflowlist/' + workflowListApiId + '/query')
+    .get<TemporalQueryResult>(`${host}/workflowlist/${workflowListApiId}/query`, {
+      headers: {
+        Authorization: userApiId,
+      },
+    })
     .then((response) => {
       return response.data
     })

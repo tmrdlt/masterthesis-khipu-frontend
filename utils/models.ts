@@ -21,7 +21,6 @@ export type CreateWorkflowListEntity = {
   description?: string
   listType: WorkflowListType
   parentApiId?: string
-  userApiId: string
   isTemporalConstraintBoard: boolean
 }
 
@@ -34,7 +33,6 @@ export type UpdateWorkflowListEntity = {
 export type MoveWorkflowListEntity = {
   newParentApiId?: string
   newPosition?: number
-  userApiId: string
 }
 
 export type ConvertWorkflowListEntity = {
