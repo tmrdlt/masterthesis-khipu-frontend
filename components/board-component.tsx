@@ -136,7 +136,7 @@ const BoardComponent = ({
                   {...provided.droppableProps}
                   className="p-1"
                 >
-                  <div className="w-full h-auto min-h-full flex justify-start">
+                  <div className="w-full h-auto min-h-full flex justify-start overflow-x-scroll">
                     {workflowList.children.map((wl, index) => {
                       if (wl.usageType == WorkflowListType.BOARD) {
                         return (
