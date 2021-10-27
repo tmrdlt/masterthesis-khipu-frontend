@@ -162,14 +162,14 @@ const WorkflowlistItem = ({
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           <div
-            className={`bg-white border border-gray-500 rounded shadow min-w-[24rem] max-w-sm p-1 ${moveClassName}`}
+            className={`bg-white border border-gray-500 rounded shadow min-w-[18rem] max-w-[18rem] p-1 ${moveClassName}`}
           >
             <div className="flex place-content-between">
               <div
-                className="flex flex-col w-3/4 m-1 hover:bg-gray-200"
+                className="flex flex-col w-2/3 m-1 hover:bg-gray-200"
                 {...provided.dragHandleProps}
               >
-                <div className="truncate font-bold">{workflowList.title} </div>
+                <div className="break-all font-bold">{workflowList.title} </div>
                 {getTemporalResourceText()}
                 {getNumericResourcesText()}
                 {getTextualResourcesText()}
@@ -188,7 +188,7 @@ const WorkflowlistItem = ({
                 )}
               </div>
             </div>
-            <div className="m-1 text-sm whitespace-pre-line bg-gray-100 rounded p-1">
+            <div className="m-1 text-sm whitespace-pre-line break-words bg-gray-100 rounded p-1">
               {workflowList.description}
             </div>
           </div>
