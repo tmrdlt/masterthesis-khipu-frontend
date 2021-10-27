@@ -24,7 +24,7 @@ interface IItemProps {
   selectWorkflowListToMove
 }
 
-const ItemComponent = ({
+const WorkflowlistItem = ({
   index,
   workflowList,
   userApiId,
@@ -206,4 +206,4 @@ const ItemComponent = ({
   )
 }
 
-export default ItemComponent
+export default WorkflowlistItem

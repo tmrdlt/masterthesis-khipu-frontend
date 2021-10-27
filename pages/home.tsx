@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import { WorkflowList, WorkflowListType } from 'utils/models'
-import BoardComponent from 'components/board-component'
+import WorkflowlistBoard from 'components/workflowlist-board'
 import {
   isChildOfParent,
   isInsideParent,
@@ -16,8 +16,8 @@ import {
   postWorkflowListReorder,
 } from 'utils/workflow-api'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
-import ListComponent from 'components/list-component'
-import ItemComponent from 'components/item-component'
+import WorkflowlistList from 'components/workflowlist-list'
+import WorkflowlistItem from 'components/workflowlist-item'
 import { getDroppableStyle } from 'utils/style-elements'
 import DropButton from 'components/drop-button'
 import { useSWRConfig } from 'swr'
@@ -211,7 +211,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
               {workflowLists.map((wl, index) => {
                 if (wl.usageType == WorkflowListType.BOARD) {
                   return (
-                    <BoardComponent
+                    <WorkflowlistBoard
                       key={index}
                       index={index}
                       workflowList={wl}
@@ -225,7 +225,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                   )
                 } else if (wl.usageType == WorkflowListType.LIST) {
                   return (
-                    <ListComponent
+                    <WorkflowlistList
                       key={index}
                       index={index}
                       workflowList={wl}
@@ -239,7 +239,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                   )
                 } else {
                   return (
-                    <ItemComponent
+                    <WorkflowlistItem
                       key={index}
                       index={index}
                       workflowList={wl}

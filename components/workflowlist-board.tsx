@@ -1,9 +1,9 @@
 import { WorkflowList, WorkflowListType } from 'utils/models'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-import ListComponent from 'components/list-component'
+import WorkflowlistList from 'components/workflowlist-list'
 import React, { useEffect, useState } from 'react'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
-import ItemComponent from 'components/item-component'
+import WorkflowlistItem from 'components/workflowlist-item'
 import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
@@ -24,7 +24,7 @@ interface IBoardProps {
   getTemporalQueryResult
 }
 
-const BoardComponent = ({
+const WorkflowlistBoard = ({
   index,
   workflowList,
   userApiId,
@@ -140,7 +140,7 @@ const BoardComponent = ({
                     {workflowList.children.map((wl, index) => {
                       if (wl.usageType == WorkflowListType.BOARD) {
                         return (
-                          <BoardComponent
+                          <WorkflowlistBoard
                             key={index}
                             index={index}
                             workflowList={wl}
@@ -154,7 +154,7 @@ const BoardComponent = ({
                         )
                       } else if (wl.usageType == WorkflowListType.LIST) {
                         return (
-                          <ListComponent
+                          <WorkflowlistList
                             key={index}
                             index={index}
                             workflowList={wl}
@@ -168,7 +168,7 @@ const BoardComponent = ({
                         )
                       } else {
                         return (
-                          <ItemComponent
+                          <WorkflowlistItem
                             key={index}
                             index={index}
                             workflowList={wl}
@@ -219,4 +219,4 @@ const BoardComponent = ({
   )
 }
 
-export default BoardComponent
+export default WorkflowlistBoard

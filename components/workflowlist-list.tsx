@@ -1,10 +1,10 @@
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import React, { useEffect, useState } from 'react'
 import { WorkflowList, WorkflowListType } from 'utils/models'
-import ItemComponent from 'components/item-component'
+import WorkflowlistItem from 'components/workflowlist-item'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import ModifyListModal from 'components/modals/modify-list-modal'
-import BoardComponent from 'components/board-component'
+import WorkflowlistBoard from 'components/workflowlist-board'
 import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
@@ -22,7 +22,7 @@ interface IListProps {
   getTemporalQueryResult
 }
 
-const ListComponent = ({
+const WorkflowlistList = ({
   index,
   workflowList,
   userApiId,
@@ -105,7 +105,7 @@ const ListComponent = ({
                   {workflowList.children.map((wl, index) => {
                     if (wl.usageType == WorkflowListType.BOARD) {
                       return (
-                        <BoardComponent
+                        <WorkflowlistBoard
                           key={index}
                           index={index}
                           workflowList={wl}
@@ -119,7 +119,7 @@ const ListComponent = ({
                       )
                     } else if (wl.usageType == WorkflowListType.LIST) {
                       return (
-                        <ListComponent
+                        <WorkflowlistList
                           key={index}
                           index={index}
                           workflowList={wl}
@@ -133,7 +133,7 @@ const ListComponent = ({
                       )
                     } else {
                       return (
-                        <ItemComponent
+                        <WorkflowlistItem
                           key={index}
                           index={index}
                           workflowList={wl}
@@ -183,4 +183,4 @@ const ListComponent = ({
   )
 }
 
-export default ListComponent
+export default WorkflowlistList
