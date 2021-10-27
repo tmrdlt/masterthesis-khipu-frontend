@@ -1,18 +1,20 @@
 import React from 'react'
 import { WorkflowList } from 'utils/models'
+import { DownloadIcon } from 'components/icons'
+import { usePopperTooltip } from 'react-popper-tooltip'
 
 interface IDropButtonProps {
   workflowList?: WorkflowList
   moveWorkflowList
-  showDropButton
 }
 
 const DropButton = ({
   workflowList,
   moveWorkflowList,
-  showDropButton,
 }: IDropButtonProps): JSX.Element => {
-  if (!showDropButton(workflowList)) return null
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+    usePopperTooltip()
+
   return (
     <div className="z-20 relative transition-all">
       <button
@@ -20,25 +22,19 @@ const DropButton = ({
         onClick={() => {
           moveWorkflowList(workflowList)
         }}
-        className="flex items-center justify-center bg-green-400 hover:bg-green-600 text-gray-600 border border-gray-600 hover:border-transparent hover:text-white rounded mb-3 w-52 h-14"
+        ref={setTriggerRef}
+        className="flex items-center justify-center bg-green-400 hover:bg-green-600 text-gray-600 border border-gray-600 hover:border-white hover:text-white rounded w-10 h-8"
       >
-        <div className="w-8 h-8">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-            />
-          </svg>
+        <div className="w-4 h-4">
+          <DownloadIcon />
         </div>
-        <div> Drop here</div>
       </button>
+        {visible && (
+            <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
+                <div {...getArrowProps({ className: 'tooltip-arrow' })} />
+                Move to {workflowList ? workflowList.title : "root"}
+            </div>
+        )}
     </div>
   )
 }

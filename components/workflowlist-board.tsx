@@ -131,6 +131,11 @@ const WorkflowlistBoard = ({
               {workflowList.temporalQueryResult != null && (
                 <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
               )}
+              {showDropButton(workflowList) && (
+                <div className="mr-1">
+                  <DropButton workflowList={workflowList} moveWorkflowList={moveWorkflowList} />
+                </div>
+              )}
             </div>
             <Droppable
               droppableId={workflowList.apiId}
@@ -187,13 +192,6 @@ const WorkflowlistBoard = ({
                         )
                       }
                     })}
-                    {workflowListToMove && (
-                      <DropButton
-                        workflowList={workflowList}
-                        moveWorkflowList={moveWorkflowList}
-                        showDropButton={showDropButton}
-                      />
-                    )}
                     {provided.placeholder}
                   </div>
                 </div>

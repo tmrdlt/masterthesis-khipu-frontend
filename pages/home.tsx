@@ -24,6 +24,7 @@ import { useSWRConfig } from 'swr'
 import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
 import { getLowerWorkflowListType } from 'utils/models-util'
+import { PlusIcon } from 'components/icons'
 
 interface HomeProps {
   userApiId: string
@@ -184,28 +185,19 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   if (isLoading) return null
   if (isError) return null
   return (
-    <div className="bg-gray-200 h-screen p-3">
-      <button
-        type="button"
-        onClick={() => {
-          openModal()
-        }}
-        className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded m-1 mb-3 w-8 h-8"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div className="bg-gray-200 h-screen p-4">
+      <div className="flex gap-5 mb-3 m-1">
+        <button
+          type="button"
+          onClick={() => {
+            openModal()
+          }}
+          className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded w-8 h-8"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-      </button>
+          <PlusIcon />
+        </button>
+        {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="ROOT" type="ROOT">
           {(provided, snapshot) => (
@@ -257,7 +249,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                   )
                 }
               })}
-              <DropButton moveWorkflowList={moveWorkflowList} showDropButton={showDropButton} />
               {provided.placeholder}
             </div>
           )}
