@@ -99,6 +99,31 @@ const CreateWorkflowListModal = ({
     return createChildren.filter((cwe) => cwe.title === '').length !== 0
   }
 
+  const addKanbanBoardColumns = () => {
+    let newState = [...createChildren]
+    newState.push({
+      title: 'ToDo',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: '',
+      isTemporalConstraintBoard: false,
+    })
+    newState.push({
+      title: 'Doing',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: '',
+      isTemporalConstraintBoard: false,
+    })
+    newState.push({
+      title: 'Done',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: '',
+      isTemporalConstraintBoard: false,
+    })
+    setCreateChildren(newState)
+  }
   return (
     <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
@@ -108,7 +133,7 @@ const CreateWorkflowListModal = ({
           <div className="m-5">
             <h3 className="font-bold">Create a...</h3>
             <div className="mt-4 w-full text-sm">
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-5">
                 <div className="flex items-center">
                   <label className="inline-flex items-center mr-3">
                     <input
@@ -146,44 +171,51 @@ const CreateWorkflowListModal = ({
                 </div>
                 <input
                   type="text"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   placeholder="Title (required)"
                   value={createWorkflowListEntity.title}
                   onChange={handleCreateWorkflowListEntityFormChange}
                   id="title"
                 />
                 <textarea
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   rows={3}
                   placeholder="Description"
                   value={createWorkflowListEntity.description}
                   onChange={handleCreateWorkflowListEntityFormChange}
                   id="description"
                 />
+                {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addKanbanBoardColumns()
+                    }}
+                    className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Make Kanban Board
+                  </button>
+                )}
                 {(createWorkflowListEntity.listType == WorkflowListType.BOARD ||
-                    createWorkflowListEntity.listType == WorkflowListType.LIST) && (
-                    <CreateChildrenForm
-                        defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
-                        createChildren={createChildren}
-                        setCreateChildren={setCreateChildren}
-                    />
+                  createWorkflowListEntity.listType == WorkflowListType.LIST) && (
+                  <CreateChildrenForm
+                    defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
+                    createChildren={createChildren}
+                    setCreateChildren={setCreateChildren}
+                  />
                 )}
                 {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
                   <div className="block">
-                    <div className="mt-2">
-                      <div>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            id="isTemporalConstraintBoard"
-                            checked={createWorkflowListEntity.isTemporalConstraintBoard}
-                            onChange={handleToggleChange}
-                          />
-                          <span className="ml-2">Is temporal constraint board</span>
-                        </label>
-                      </div>
-                    </div>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        id="isTemporalConstraintBoard"
+                        checked={createWorkflowListEntity.isTemporalConstraintBoard}
+                        onChange={handleToggleChange}
+                      />
+                      <span className="ml-2">Is temporal constraint board</span>
+                    </label>
                   </div>
                 )}
                 {createWorkflowListEntity.listType == WorkflowListType.BOARD && (

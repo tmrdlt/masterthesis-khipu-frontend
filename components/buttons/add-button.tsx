@@ -1,22 +1,20 @@
-import { PlusIcon } from 'components/icons'
 import React from 'react'
 
 interface AddButtonProps {
+  addString: string
   addFunction
 }
 
-const AddButton = ({ addFunction }: AddButtonProps): JSX.Element => {
+const AddButton = ({ addString, addFunction }: AddButtonProps): JSX.Element => {
   return (
     <button
       type="button"
       onClick={() => {
         addFunction()
       }}
-      className="flex bg-transparent hover:bg-gray-100 text-gray-500 border border-gray-500 rounded w-8 h-8 items-center justify-center"
+      className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     >
-      <div className="w-6 h-6">
-        <PlusIcon />
-      </div>
+      Add {addString}
     </button>
   )
 }

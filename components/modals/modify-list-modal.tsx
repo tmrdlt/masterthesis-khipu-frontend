@@ -40,18 +40,18 @@ const ModifyListModal = ({
           {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
           <div className="m-5">
             <h3 className="font-bold">Modify List</h3>
-            <div className="mt-4 w-full">
-              <div className="grid grid-cols-1 gap-4 text-sm">
+            <div className="mt-4 w-full text-sm">
+              <div className="grid grid-cols-1 gap-5">
                 <input
                   type="text"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   placeholder="Title (required)"
                   value={state.newTitle}
                   onChange={handleFormChange}
                   id="newTitle"
                 />
                 <textarea
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   rows={3}
                   placeholder="Description"
                   value={state.newDescription}

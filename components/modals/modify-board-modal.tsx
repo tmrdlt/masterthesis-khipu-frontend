@@ -71,18 +71,18 @@ const ModifyBoardModal = ({
           {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
           <div className="m-5">
             <h3 className="font-bold">Modify Board</h3>
-            <div className="mt-4 w-full">
-              <div className="grid grid-cols-1 gap-4 text-sm">
+            <div className="mt-4 w-full text-sm">
+              <div className="grid grid-cols-1 gap-5">
                 <input
                   type="text"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   placeholder="Title (required)"
                   value={updateBoardEntity.newTitle}
                   onChange={handleModifyBoardFormChange}
                   id="newTitle"
                 />
                 <textarea
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   rows={3}
                   placeholder="Description"
                   value={updateBoardEntity.newDescription}
@@ -90,8 +90,6 @@ const ModifyBoardModal = ({
                   id="newDescription"
                 />
                 <div className="block">
-                  <div className="mt-2">
-                    <div>
                       <label className="inline-flex items-center">
                         <input
                           type="checkbox"
@@ -106,8 +104,6 @@ const ModifyBoardModal = ({
                         />
                         <span className="ml-2">Is temporal constraint board</span>
                       </label>
-                    </div>
-                  </div>
                 </div>
                 <ResourcesFormBoard
                   isTemporalConstraintBoard={updateBoardEntity.isTemporalConstraintBoard}

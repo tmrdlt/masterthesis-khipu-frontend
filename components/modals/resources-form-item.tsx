@@ -123,249 +123,252 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
   }
 
   return (
-    <Tabs>
-      <TabList>
-        <Tab>
-          <div className="inline-flex items-center">
-            <div className="w-4 h-4 mr-1">
-              <ClockIcon />
+    <div className="grid grid-cols-1 gap-2">
+      <span className="text-gray-700">Resources</span>
+      <Tabs>
+        <TabList>
+          <Tab>
+            <div className="inline-flex items-center">
+              <div className="w-4 h-4 mr-1">
+                <ClockIcon />
+              </div>
+              Temporal
             </div>
-            Temporal
-          </div>
-        </Tab>
-        <Tab>
-          <div className="inline-flex items-center">
-            <div className="w-4 h-4 mr-1">
-              <ChartBarIcon />
+          </Tab>
+          <Tab>
+            <div className="inline-flex items-center">
+              <div className="w-4 h-4 mr-1">
+                <ChartBarIcon />
+              </div>
+              Numeric
             </div>
-            Numeric
-          </div>
-        </Tab>
-        <Tab>
-          <div className="inline-flex items-center">
-            <div className="w-4 h-4 mr-1">
-              <DocumentTextIcon />
+          </Tab>
+          <Tab>
+            <div className="inline-flex items-center">
+              <div className="w-4 h-4 mr-1">
+                <DocumentTextIcon />
+              </div>
+              Textual
             </div>
-            Textual
-          </div>
-        </Tab>
-        <Tab>
-          <div className="inline-flex items-center">
-            <div className="w-4 h-4 mr-1">
-              <UserIcon />
+          </Tab>
+          <Tab>
+            <div className="inline-flex items-center">
+              <div className="w-4 h-4 mr-1">
+                <UserIcon />
+              </div>
+              User
             </div>
-            User
-          </div>
-        </Tab>
-      </TabList>
-      <TabPanel>
-        <div className="grid grid-cols-1 gap-4">
+          </Tab>
+        </TabList>
+        <TabPanel>
           <div className="grid grid-cols-1 gap-4">
-            <div className="grid">
-              <div className="flex place-content-between">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="grid">
+                <div className="flex place-content-between">
+                  <div className="inline-flex items-center">
+                    <div className="w-4 h-4 mr-1">
+                      <CalendarIcon />
+                    </div>
+                    <span className="text-gray-700">Start date</span>
+                  </div>
+                  <button
+                    className="text-gray-700"
+                    onClick={(e) => {
+                      e.preventDefault() // needed so react doesn't reload page
+                      handleDatePickerChange(null, 'startDate')
+                    }}
+                  >
+                    &#x2715; Clear date
+                  </button>
+                </div>
+                <DatePicker
+                  className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  selected={resource.temporal ? resource.temporal.startDate : null}
+                  onChange={(date) => handleDatePickerChange(date, 'startDate')}
+                  selectsStart
+                  startDate={resource.temporal.startDate}
+                  endDate={resource.temporal.endDate}
+                  maxDate={resource.temporal.endDate}
+                  disabled={!resource.temporal}
+                  placeholderText="No start date set"
+                  showTimeSelect
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  timeFormat="HH:mm"
+                  dateFormat="dd.MM.yyyy, HH:mm"
+                  autocomplete="off"
+                  id="startDate"
+                  name="startDate"
+                />
+              </div>
+              <div className="grid">
+                <div className="flex place-content-between">
+                  <div className="inline-flex items-center">
+                    <div className="w-4 h-4 mr-1">
+                      <FlagIcon />
+                    </div>
+                    <span className="text-gray-700">Due date</span>
+                  </div>
+                  <button
+                    className="text-gray-700"
+                    onClick={(e) => {
+                      e.preventDefault() // needed so react doesn't reload page
+                      handleDatePickerChange(null, 'endDate')
+                    }}
+                  >
+                    &#x2715; Clear date
+                  </button>
+                </div>
+                <DatePicker
+                  className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  selected={resource.temporal ? resource.temporal.endDate : null}
+                  onChange={(date) => handleDatePickerChange(date, 'endDate')}
+                  selectsEnd
+                  startDate={resource.temporal.startDate}
+                  endDate={resource.temporal.endDate}
+                  minDate={resource.temporal.startDate}
+                  disabled={!resource.temporal}
+                  placeholderText="No due date set"
+                  showTimeSelect
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  timeFormat="HH:mm"
+                  dateFormat="dd.MM.yyyy, HH:mm"
+                  autocomplete="off"
+                  id="endDate"
+                  name="endDate"
+                />
+              </div>
+              <label className="block">
                 <div className="inline-flex items-center">
                   <div className="w-4 h-4 mr-1">
-                    <CalendarIcon />
+                    <ClockIcon />
                   </div>
-                  <span className="text-gray-700">Start date</span>
+                  <span className="text-gray-700">Estimated time required</span>
                 </div>
-                <button
-                  className="text-gray-700"
-                  onClick={(e) => {
-                    e.preventDefault() // needed so react doesn't reload page
-                    handleDatePickerChange(null, 'startDate')
-                  }}
+                <select
+                  className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  value={resource.temporal.durationInMinutes}
+                  onChange={handleTimeRequiredSelectionChange}
                 >
-                  &#x2715; Clear date
-                </button>
-              </div>
-              <DatePicker
-                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                selected={resource.temporal ? resource.temporal.startDate : null}
-                onChange={(date) => handleDatePickerChange(date, 'startDate')}
-                selectsStart
-                startDate={resource.temporal.startDate}
-                endDate={resource.temporal.endDate}
-                maxDate={resource.temporal.endDate}
-                disabled={!resource.temporal}
-                placeholderText="No start date set"
-                showTimeSelect
-                timeIntervals={15}
-                timeCaption="Time"
-                timeFormat="HH:mm"
-                dateFormat="dd.MM.yyyy, HH:mm"
-                autocomplete="off"
-                id="startDate"
-                name="startDate"
-              />
+                  <option className="opacity-40" key={0} value={0}>
+                    None
+                  </option>
+                  {timeDurationsInMinutes.map((durationInMinutes) => (
+                    <option key={durationInMinutes} value={durationInMinutes}>
+                      {formatDuration(durationInMinutes)}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
-            <div className="grid">
-              <div className="flex place-content-between">
-                <div className="inline-flex items-center">
-                  <div className="w-4 h-4 mr-1">
-                    <FlagIcon />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className="grid grid-cols-1 gap-3">
+            {resource.numeric.map((numericResource, index) => {
+              return (
+                <div className="flex items-center justify-between" key={index}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      value={numericResource.label}
+                      placeholder="Label (required)"
+                      onChange={(event) => {
+                        handleNumericResourceFormChange(event, index)
+                      }}
+                      id="label"
+                    />
+                    <input
+                      type="text"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      value={numericResource.value}
+                      placeholder="Value (required)"
+                      onChange={(event) => {
+                        handleNumericResourceFormChange(event, index)
+                      }}
+                      id="value"
+                    />
                   </div>
-                  <span className="text-gray-700">Due date</span>
+                  <button
+                    className="text-gray-700"
+                    onClick={() => {
+                      removeNumericResource(index)
+                    }}
+                  >
+                    &#x2715;
+                  </button>
                 </div>
-                <button
-                  className="text-gray-700"
-                  onClick={(e) => {
-                    e.preventDefault() // needed so react doesn't reload page
-                    handleDatePickerChange(null, 'endDate')
-                  }}
-                >
-                  &#x2715; Clear date
-                </button>
-              </div>
-              <DatePicker
-                className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                selected={resource.temporal ? resource.temporal.endDate : null}
-                onChange={(date) => handleDatePickerChange(date, 'endDate')}
-                selectsEnd
-                startDate={resource.temporal.startDate}
-                endDate={resource.temporal.endDate}
-                minDate={resource.temporal.startDate}
-                disabled={!resource.temporal}
-                placeholderText="No due date set"
-                showTimeSelect
-                timeIntervals={15}
-                timeCaption="Time"
-                timeFormat="HH:mm"
-                dateFormat="dd.MM.yyyy, HH:mm"
-                autocomplete="off"
-                id="endDate"
-                name="endDate"
-              />
-            </div>
-            <label className="block">
-              <div className="inline-flex items-center">
-                <div className="w-4 h-4 mr-1">
-                  <ClockIcon />
+              )
+            })}
+            <AddButton addString={'numeric resource'} addFunction={addEmptyNumericResource} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className="grid grid-cols-1 gap-3">
+            {resource.textual.map((textualResource, index) => {
+              return (
+                <div className="flex items-center justify-between" key={index}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      value={textualResource.label}
+                      placeholder="Label (required)"
+                      onChange={(event) => {
+                        handleTextualResourceFormChange(event, index)
+                      }}
+                      id="label"
+                    />
+                    <input
+                      type="text"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      value={textualResource.value}
+                      placeholder="Value"
+                      onChange={(event) => {
+                        handleTextualResourceFormChange(event, index)
+                      }}
+                      id="value"
+                    />
+                  </div>
+                  <button
+                    className="text-gray-700"
+                    onClick={() => {
+                      removeTextualResource(index)
+                    }}
+                  >
+                    &#x2715;
+                  </button>
                 </div>
-                <span className="text-gray-700">Estimated time required</span>
-              </div>
-              <select
-                className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                value={resource.temporal.durationInMinutes}
-                onChange={handleTimeRequiredSelectionChange}
-              >
-                <option className="opacity-40" key={0} value={0}>
-                  None
-                </option>
-                {timeDurationsInMinutes.map((durationInMinutes) => (
-                  <option key={durationInMinutes} value={durationInMinutes}>
-                    {formatDuration(durationInMinutes)}
+              )
+            })}
+            <AddButton addString={'textual resource'} addFunction={addEmptyTextualResource} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <label className="block">
+            <span className="text-gray-700">Assigned user</span>
+            <select
+              className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+              value={resource.user.username}
+              onChange={handleUserResourceFormChange}
+            >
+              <option className="opacity-40" key={0} value={''}>
+                None
+              </option>
+              {!isLoading &&
+                !isError &&
+                users.map((user) => (
+                  <option key={user.username} value={user.username}>
+                    {user.username}
                   </option>
                 ))}
-              </select>
-            </label>
-          </div>
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <div className="grid grid-cols-1 gap-4">
-          {resource.numeric.map((numericResource, index) => {
-            return (
-              <div className="flex items-center justify-between" key={index}>
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={numericResource.label}
-                    placeholder="Label (required)"
-                    onChange={(event) => {
-                      handleNumericResourceFormChange(event, index)
-                    }}
-                    id="label"
-                  />
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={numericResource.value}
-                    placeholder="Value (required)"
-                    onChange={(event) => {
-                      handleNumericResourceFormChange(event, index)
-                    }}
-                    id="value"
-                  />
-                </div>
-                <button
-                  className="text-gray-700"
-                  onClick={() => {
-                    removeNumericResource(index)
-                  }}
-                >
-                  &#x2715;
-                </button>
-              </div>
-            )
-          })}
-          <AddButton addFunction={addEmptyNumericResource} />
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <div className="grid grid-cols-1 gap-4">
-          {resource.textual.map((textualResource, index) => {
-            return (
-              <div className="flex items-center justify-between" key={index}>
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={textualResource.label}
-                    placeholder="Label (required)"
-                    onChange={(event) => {
-                      handleTextualResourceFormChange(event, index)
-                    }}
-                    id="label"
-                  />
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={textualResource.value}
-                    placeholder="Value"
-                    onChange={(event) => {
-                      handleTextualResourceFormChange(event, index)
-                    }}
-                    id="value"
-                  />
-                </div>
-                <button
-                  className="text-gray-700"
-                  onClick={() => {
-                    removeTextualResource(index)
-                  }}
-                >
-                  &#x2715;
-                </button>
-              </div>
-            )
-          })}
-          <AddButton addFunction={addEmptyTextualResource} />
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <label className="block">
-          <span className="text-gray-700">Assigned user</span>
-          <select
-            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-            value={resource.user.username}
-            onChange={handleUserResourceFormChange}
-          >
-            <option className="opacity-40" key={0} value={''}>
-              None
-            </option>
-            {!isLoading &&
-              !isError &&
-              users.map((user) => (
-                <option key={user.username} value={user.username}>
-                  {user.username}
-                </option>
-              ))}
-          </select>
-        </label>
-      </TabPanel>
-    </Tabs>
+            </select>
+          </label>
+        </TabPanel>
+      </Tabs>
+    </div>
   )
 }
 
