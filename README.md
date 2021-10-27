@@ -8,13 +8,13 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. I
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
-- [ReachUI MenuButton](https://reach.tech/menu-button/)
 - [react-datepicker](https://github.com/Hacker0x01/react-datepicker)
 - [react-tabs](https://reactcommunity.org/react-tabs/)
 - [react-popper-tooltip](https://popper.js.org/react-popper/v2/)
 - [axios](https://github.com/axios/axios)
 - [swr](https://swr.vercel.app/)
 - [immer](https://immerjs.github.io/immer/)
+- Icons from [heroicons](https://heroicons.com/)
 
 ## Requirements
 - Node.js v14.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):

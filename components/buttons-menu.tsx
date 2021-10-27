@@ -1,8 +1,14 @@
 import { ConvertWorkflowListEntity, WorkflowList, WorkflowListType } from 'utils/models'
-import React from 'react'
-import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button'
-import '@reach/menu-button/styles.css'
-import { ClockIcon, MenuIcon, PlusIcon, SelectorIcon } from 'components/icons'
+import React, { useState } from 'react'
+import {
+  ClockIcon,
+  PencilAltIcon,
+  PlusIcon,
+  SelectorIcon,
+  SwitchHorizontalIcon,
+  SwitchVerticalIcon,
+  TrashIcon,
+} from 'components/icons'
 import {
   deleteWorkflowList,
   getWorkflowListsUrl,
@@ -10,6 +16,7 @@ import {
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import { usePopperTooltip } from 'react-popper-tooltip'
+import DeleteWorkflowListModal from 'components/modals/delete-workflowlist-modal'
 
 interface IButtonsMenuProps {
   userApiId: string
@@ -35,17 +42,23 @@ const ButtonsMenu = ({
   startLoading,
 }: IButtonsMenuProps): JSX.Element => {
   // STATE
-  const { mutate } = useSWRConfig()
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { mutate } = useSWRConfig()
 
   // FUNCTIONS
-  const convertWorkflowList = (
-    uuid: string,
-    convertWorkflowListEntity: ConvertWorkflowListEntity
-  ) => {
-    postWorkflowListConvert(uuid, convertWorkflowListEntity, userApiId).then((res) => {
-      if (res) {
-        mutate(getWorkflowListsUrl(userApiId))
+  const convertWorkflowList = (convertWorkflowListEntity: ConvertWorkflowListEntity) => {
+    postWorkflowListConvert(workflowList.apiId, convertWorkflowListEntity, userApiId).then(
+      (res) => {
+        if (res) {
+          mutate(getWorkflowListsUrl(userApiId))
+        }
       }
+    )
+  }
+
+  const deleteWorkflowListClick = () => {
+    deleteWorkflowList(workflowList.apiId, userApiId).then((_res) => {
+      mutate(getWorkflowListsUrl(userApiId))
     })
   }
 
@@ -70,51 +83,22 @@ const ButtonsMenu = ({
           selectWorkflowListToMove={selectWorkflowListToMove}
           openMoveModal={openMoveModal}
         />
-
-        <Menu>
-          <MenuButton className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6">
-            <MenuIcon />
-          </MenuButton>
-          <MenuList>
-            <MenuItem
-              onSelect={() => {
-                openModifyModal()
-              }}
-            >
-              Modify
-            </MenuItem>
-            {workflowList.usageType == WorkflowListType.BOARD && (
-              <MenuItem
-                onSelect={() => {
-                  const cwle: ConvertWorkflowListEntity = { newListType: WorkflowListType.LIST }
-                  convertWorkflowList(workflowList.apiId, cwle)
-                }}
-              >
-                Convert to list
-              </MenuItem>
-            )}
-            {workflowList.usageType == WorkflowListType.LIST && (
-              <MenuItem
-                onSelect={() => {
-                  const cwle: ConvertWorkflowListEntity = { newListType: WorkflowListType.BOARD }
-                  convertWorkflowList(workflowList.apiId, cwle)
-                }}
-              >
-                Convert to board
-              </MenuItem>
-            )}
-            <MenuItem
-              onSelect={() => {
-                deleteWorkflowList(workflowList.apiId, userApiId).then((res) => {
-                  mutate(getWorkflowListsUrl(userApiId))
-                })
-              }}
-            >
-              Delete
-            </MenuItem>
-          </MenuList>
-        </Menu>
+        <ModifyWorkflowListButton openModifyModal={openModifyModal} />
+        {workflowList.usageType == WorkflowListType.BOARD && (
+          <ConvertToListButton convertWorkflowList={convertWorkflowList} />
+        )}
+        {workflowList.usageType == WorkflowListType.LIST && (
+          <ConvertToBoardButton convertWorkflowList={convertWorkflowList} />
+        )}
+        <DeleteWorkflowListButton setShowDeleteModal={setShowDeleteModal} />
       </div>
+      {showDeleteModal && (
+        <DeleteWorkflowListModal
+          workflowList={workflowList}
+          setShowDeleteModal={setShowDeleteModal}
+          deleteWorkflowList={deleteWorkflowListClick}
+        />
+      )}
     </div>
   )
 }
@@ -159,7 +143,10 @@ const TemporalQueryButton = ({
         </div>
       </button>
       {visible && (
-        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container grid place-items-center text-xs' })}>
+        <div
+          ref={setTooltipRef}
+          {...getTooltipProps({ className: 'tooltip-container grid place-items-center text-xs' })}
+        >
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
           <span>Schedule board</span>
           {isDisabled && <span className="text-red-400">not enough sublists</span>}
@@ -232,7 +219,127 @@ const MoveWorkflowListButton = ({
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-          Move {workflowList.usageType.toLowerCase()}
+          Move
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface ModifyWorkflowListButtonProps {
+  openModifyModal
+}
+
+const ModifyWorkflowListButton = ({
+  openModifyModal,
+}: ModifyWorkflowListButtonProps): JSX.Element => {
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+    usePopperTooltip()
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          openModifyModal()
+        }}
+        ref={setTriggerRef}
+        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+      >
+        <PencilAltIcon />
+      </button>
+      {visible && (
+        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
+          <div {...getArrowProps({ className: 'tooltip-arrow' })} />
+          Modify
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface ConvertToBoardButtonProps {
+  convertWorkflowList
+}
+
+const ConvertToBoardButton = ({ convertWorkflowList }: ConvertToBoardButtonProps): JSX.Element => {
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+    usePopperTooltip()
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          convertWorkflowList({ newListType: WorkflowListType.BOARD })
+        }}
+        ref={setTriggerRef}
+        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+      >
+        <SwitchHorizontalIcon />
+      </button>
+      {visible && (
+        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
+          <div {...getArrowProps({ className: 'tooltip-arrow' })} />
+          Convert to board
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface ConvertToListButtonProps {
+  convertWorkflowList
+}
+
+const ConvertToListButton = ({ convertWorkflowList }: ConvertToListButtonProps): JSX.Element => {
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+    usePopperTooltip()
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          convertWorkflowList({ newListType: WorkflowListType.LIST })
+        }}
+        ref={setTriggerRef}
+        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+      >
+        <SwitchVerticalIcon />
+      </button>
+      {visible && (
+        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
+          <div {...getArrowProps({ className: 'tooltip-arrow' })} />
+          Convert to list
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface DeleteWorkflowListButtonProps {
+  setShowDeleteModal
+}
+
+const DeleteWorkflowListButton = ({
+  setShowDeleteModal,
+}: DeleteWorkflowListButtonProps): JSX.Element => {
+  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
+    usePopperTooltip()
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          setShowDeleteModal(true)
+        }}
+        ref={setTriggerRef}
+        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+      >
+        <TrashIcon />
+      </button>
+      {visible && (
+        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
+          <div {...getArrowProps({ className: 'tooltip-arrow' })} />
+          Delete
         </div>
       )}
     </div>
