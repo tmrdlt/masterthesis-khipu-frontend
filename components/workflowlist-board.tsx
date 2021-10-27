@@ -6,7 +6,7 @@ import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal
 import WorkflowlistItem from 'components/workflowlist-item'
 import { getDroppableStyle } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
-import DropButton from 'components/drop-button'
+import DropButton from 'components/buttons/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
 import { formatDate } from 'utils/date-util'
 import ModifyBoardModal from 'components/modals/modify-board-modal'

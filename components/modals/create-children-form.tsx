@@ -1,6 +1,6 @@
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
 import React, { ChangeEvent } from 'react'
-import { PlusIcon } from 'components/icons'
+import AddButton from 'components/buttons/add-button'
 
 interface CreateChildrenFormProps {
   defaultCreateType: WorkflowListType
@@ -49,7 +49,7 @@ const CreateChildrenForm = ({
         {createChildren.map((createEntity, index) => {
           return (
             <div className="flex items-center justify-between" key={index}>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-2 gap-4">
                 <input
                   type="text"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
@@ -113,15 +113,7 @@ const CreateChildrenForm = ({
             </div>
           )
         })}
-        <button
-          type="button"
-          onClick={() => {
-            addEmptyCreateChild()
-          }}
-          className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
-        >
-          <PlusIcon />
-        </button>
+        <AddButton addFunction={addEmptyCreateChild} />
       </div>
     </div>
   )

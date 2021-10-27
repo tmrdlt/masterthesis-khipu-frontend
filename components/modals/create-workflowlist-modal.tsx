@@ -144,26 +144,30 @@ const CreateWorkflowListModal = ({
                     <span className="ml-1">Item</span>
                   </label>
                 </div>
-                <label className="block">
-                  <span className="text-gray-700 text-sm">Title (required)</span>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={createWorkflowListEntity.title}
-                    onChange={handleCreateWorkflowListEntityFormChange}
-                    id="title"
-                  />
-                </label>
-                <label className="block">
-                  <span className="text-gray-700 text-sm">Description</span>
-                  <textarea
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    rows={3}
-                    value={createWorkflowListEntity.description}
-                    onChange={handleCreateWorkflowListEntityFormChange}
-                    id="description"
-                  />
-                </label>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  placeholder="Title (required)"
+                  value={createWorkflowListEntity.title}
+                  onChange={handleCreateWorkflowListEntityFormChange}
+                  id="title"
+                />
+                <textarea
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  rows={3}
+                  placeholder="Description"
+                  value={createWorkflowListEntity.description}
+                  onChange={handleCreateWorkflowListEntityFormChange}
+                  id="description"
+                />
+                {(createWorkflowListEntity.listType == WorkflowListType.BOARD ||
+                    createWorkflowListEntity.listType == WorkflowListType.LIST) && (
+                    <CreateChildrenForm
+                        defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
+                        createChildren={createChildren}
+                        setCreateChildren={setCreateChildren}
+                    />
+                )}
                 {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
                   <div className="block">
                     <div className="mt-2">
@@ -191,14 +195,6 @@ const CreateWorkflowListModal = ({
                 )}
                 {createWorkflowListEntity.listType == WorkflowListType.ITEM && (
                   <ResourcesFormItem resource={resource} setResource={setResource} />
-                )}
-                {(createWorkflowListEntity.listType == WorkflowListType.BOARD ||
-                  createWorkflowListEntity.listType == WorkflowListType.LIST) && (
-                  <CreateChildrenForm
-                    defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
-                    createChildren={createChildren}
-                    setCreateChildren={setCreateChildren}
-                  />
                 )}
               </div>
             </div>

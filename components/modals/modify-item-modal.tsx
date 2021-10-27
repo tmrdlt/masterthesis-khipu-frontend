@@ -93,26 +93,22 @@ const ModifyItemModal = ({
               <h3 className="font-bold">Modify Item</h3>
               <div className="mt-4 w-full">
                 <div className="grid grid-cols-1 gap-4 text-sm">
-                  <label className="block">
-                    <span className="text-gray-700 text-sm">Title</span>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      value={updateItemEntity.newTitle}
-                      onChange={handleUpdateItemFormChange}
-                      id="newTitle"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-gray-700 text-sm">Description</span>
-                    <textarea
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      rows={3}
-                      value={updateItemEntity.newDescription}
-                      onChange={handleUpdateItemFormChange}
-                      id="newDescription"
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    placeholder="Title (required)"
+                    value={updateItemEntity.newTitle}
+                    onChange={handleUpdateItemFormChange}
+                    id="newTitle"
+                  />
+                  <textarea
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    rows={3}
+                    placeholder="Description"
+                    value={updateItemEntity.newDescription}
+                    onChange={handleUpdateItemFormChange}
+                    id="newDescription"
+                  />
                   <span className="text-gray-700">Resources</span>
                   <ResourcesFormItem resource={resource} setResource={setResource} />
                 </div>
@@ -132,10 +128,12 @@ const ModifyItemModal = ({
                 }
                 onClick={() => {
                   if (!isWorkflowListUnchanged()) {
-                    updateWorkflowList(workflowList.apiId, updateItemEntity, userApiId).then((_res) => {
-                      mutate(getWorkflowListsUrl(userApiId))
-                      closeModal()
-                    })
+                    updateWorkflowList(workflowList.apiId, updateItemEntity, userApiId).then(
+                      (_res) => {
+                        mutate(getWorkflowListsUrl(userApiId))
+                        closeModal()
+                      }
+                    )
                   }
                   const entity: WorkflowListResource = {
                     numeric: areNumericResourcesUnchanged() ? null : resource.numeric,

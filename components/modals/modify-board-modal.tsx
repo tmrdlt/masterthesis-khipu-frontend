@@ -73,26 +73,22 @@ const ModifyBoardModal = ({
             <h3 className="font-bold">Modify Board</h3>
             <div className="mt-4 w-full">
               <div className="grid grid-cols-1 gap-4 text-sm">
-                <label className="block">
-                  <span className="text-gray-700 text-sm">Title</span>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    value={updateBoardEntity.newTitle}
-                    onChange={handleModifyBoardFormChange}
-                    id="newTitle"
-                  />
-                </label>
-                <label className="block">
-                  <span className="text-gray-700 text-sm">Description</span>
-                  <textarea
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    rows={3}
-                    value={updateBoardEntity.newDescription}
-                    onChange={handleModifyBoardFormChange}
-                    id="newDescription"
-                  />
-                </label>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  placeholder="Title (required)"
+                  value={updateBoardEntity.newTitle}
+                  onChange={handleModifyBoardFormChange}
+                  id="newTitle"
+                />
+                <textarea
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  rows={3}
+                  placeholder="Description"
+                  value={updateBoardEntity.newDescription}
+                  onChange={handleModifyBoardFormChange}
+                  id="newDescription"
+                />
                 <div className="block">
                   <div className="mt-2">
                     <div>
@@ -127,10 +123,12 @@ const ModifyBoardModal = ({
               disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged()}
               onClick={() => {
                 if (!isWorkflowListUnchanged()) {
-                  updateWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then((_res) => {
-                    mutate(getWorkflowListsUrl(userApiId))
-                    closeModal()
-                  })
+                  updateWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then(
+                    (_res) => {
+                      mutate(getWorkflowListsUrl(userApiId))
+                      closeModal()
+                    }
+                  )
                 }
                 if (!isTemporalResourceUnchanged()) {
                   postWorkflowListResource(workflowList.apiId, resource, userApiId).then((_res) => {

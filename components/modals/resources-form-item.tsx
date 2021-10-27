@@ -3,7 +3,6 @@ import CalendarIcon, {
   ClockIcon,
   DocumentTextIcon,
   FlagIcon,
-  PlusIcon,
   UserIcon,
 } from 'components/icons'
 import timeDurationsInMinutes from 'utils/globals'
@@ -13,6 +12,7 @@ import { formatDuration } from 'utils/date-util'
 import React from 'react'
 import { NumericResource, TextualResource, WorkflowListResource } from 'utils/models'
 import { useUsers } from 'utils/swr-util'
+import AddButton from 'components/buttons/add-button'
 
 interface ItemResourcesFormProps {
   resource: WorkflowListResource
@@ -266,34 +266,28 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
         <div className="grid grid-cols-1 gap-4">
           {resource.numeric.map((numericResource, index) => {
             return (
-              <div className="flex items-end" key={index}>
+              <div className="flex items-center justify-between" key={index}>
                 <div className="grid grid-cols-2 gap-4">
-                  <label className="block">
-                    <span className="text-gray-700">Label (required)</span>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      value={numericResource.label}
-                      placeholder="Label"
-                      onChange={(event) => {
-                        handleNumericResourceFormChange(event, index)
-                      }}
-                      id="label"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-gray-700">Value (required)</span>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      value={numericResource.value}
-                      placeholder="Value"
-                      onChange={(event) => {
-                        handleNumericResourceFormChange(event, index)
-                      }}
-                      id="value"
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    value={numericResource.label}
+                    placeholder="Label (required)"
+                    onChange={(event) => {
+                      handleNumericResourceFormChange(event, index)
+                    }}
+                    id="label"
+                  />
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    value={numericResource.value}
+                    placeholder="Value (required)"
+                    onChange={(event) => {
+                      handleNumericResourceFormChange(event, index)
+                    }}
+                    id="value"
+                  />
                 </div>
                 <button
                   className="text-gray-700"
@@ -301,54 +295,40 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                     removeNumericResource(index)
                   }}
                 >
-                  &#x2715; Delete
+                  &#x2715;
                 </button>
               </div>
             )
           })}
-          <button
-            type="button"
-            onClick={() => {
-              addEmptyNumericResource()
-            }}
-            className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
-          >
-            <PlusIcon />
-          </button>
+          <AddButton addFunction={addEmptyNumericResource} />
         </div>
       </TabPanel>
       <TabPanel>
         <div className="grid grid-cols-1 gap-4">
           {resource.textual.map((textualResource, index) => {
             return (
-              <div className="flex items-end" key={index}>
+              <div className="flex items-center justify-between" key={index}>
                 <div className="grid grid-cols-2 gap-4">
-                  <label className="block">
-                    <span className="text-gray-700">Label (required)</span>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      value={textualResource.label}
-                      placeholder="Label"
-                      onChange={(event) => {
-                        handleTextualResourceFormChange(event, index)
-                      }}
-                      id="label"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-gray-700">Value (optional)</span>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                      value={textualResource.value}
-                      placeholder="Value"
-                      onChange={(event) => {
-                        handleTextualResourceFormChange(event, index)
-                      }}
-                      id="value"
-                    />
-                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    value={textualResource.label}
+                    placeholder="Label (required)"
+                    onChange={(event) => {
+                      handleTextualResourceFormChange(event, index)
+                    }}
+                    id="label"
+                  />
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    value={textualResource.value}
+                    placeholder="Value"
+                    onChange={(event) => {
+                      handleTextualResourceFormChange(event, index)
+                    }}
+                    id="value"
+                  />
                 </div>
                 <button
                   className="text-gray-700"
@@ -356,20 +336,12 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                     removeTextualResource(index)
                   }}
                 >
-                  &#x2715; Delete
+                  &#x2715;
                 </button>
               </div>
             )
           })}
-          <button
-            type="button"
-            onClick={() => {
-              addEmptyTextualResource()
-            }}
-            className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
-          >
-            <PlusIcon />
-          </button>
+          <AddButton addFunction={addEmptyTextualResource} />
         </div>
       </TabPanel>
       <TabPanel>

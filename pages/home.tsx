@@ -19,7 +19,7 @@ import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal
 import WorkflowlistList from 'components/workflowlist-list'
 import WorkflowlistItem from 'components/workflowlist-item'
 import { getDroppableStyle } from 'utils/style-elements'
-import DropButton from 'components/drop-button'
+import DropButton from 'components/buttons/drop-button'
 import { useSWRConfig } from 'swr'
 import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
