@@ -185,7 +185,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   if (isLoading) return null
   if (isError) return null
   return (
-    <div className="bg-gray-200 h-screen p-4">
+    <div className="bg-gray-200 min-h-screen p-4">
       <div className="flex gap-5 mb-3 m-1">
         <button
           type="button"

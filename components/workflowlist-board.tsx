@@ -93,7 +93,7 @@ const WorkflowlistBoard = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
-          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 ${moveClassName}`}>
+          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 min-w-[14rem] ${moveClassName}`}>
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-blue-200" {...provided.dragHandleProps}>
                 <span className="font-bold">{workflowList.title} </span>

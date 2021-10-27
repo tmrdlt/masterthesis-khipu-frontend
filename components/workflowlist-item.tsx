@@ -162,7 +162,7 @@ const WorkflowlistItem = ({
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           <div
-            className={`bg-white border border-gray-500 rounded shadow max-w-sm p-1 ${moveClassName}`}
+            className={`bg-white border border-gray-500 rounded shadow min-w-min max-w-sm p-1 ${moveClassName}`}
           >
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-gray-200" {...provided.dragHandleProps}>
