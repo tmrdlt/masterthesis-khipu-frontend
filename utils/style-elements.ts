@@ -9,8 +9,7 @@ export const getDraggableStyle = (isDragging, draggableStyle) => ({
 })
 
 export const getDroppableStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? 'lightgreen' : 'transparent',
-  minHeight: 50,
+  background: isDraggingOver ? 'lightgreen' : 'transparent'
 })
 
 export const getMargin = (parentType: WorkflowListType): string => {

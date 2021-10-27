@@ -66,38 +66,38 @@ const WorkflowlistItem = ({
       const temp = workflowList.temporalResource
       if (temp.startDate) {
         elements.push(
-          <div key={0} className="inline-flex items-center">
+          <div key={0} className="flex flex-nowrap items-center">
             <div className="w-3 h-3 mr-1">
               <CalendarIcon />
             </div>
-            {'Start date: ' + formatDate(temp.startDate)}
+            <div className="flex-none">Start date: {formatDate(temp.startDate)}</div>
           </div>
         )
       }
       if (temp.endDate) {
         elements.push(
-          <div key={1} className="inline-flex items-center">
+          <div key={1} className="flex flex-nowrap items-center">
             <div className="w-3 h-3 mr-1">
               <FlagIcon />
             </div>
-            {'Due date: ' + formatDate(temp.endDate)}
+            <div className="flex-none">Due date: {formatDate(temp.endDate)}</div>
           </div>
         )
       }
       if (temp.durationInMinutes) {
         elements.push(
-          <div key={2} className="inline-flex items-center">
+          <div key={2} className="flex flex-nowrap items-center">
             <div className="w-3 h-3 mr-1">
               <ClockIcon />
             </div>
-            {'Takes ' + formatDuration(temp.durationInMinutes)}
+            <div className="flex-none">Takes {formatDuration(temp.durationInMinutes)}</div>
           </div>
         )
         elements.push()
       }
     }
     return (
-      <div className="grid text-xs">
+      <div className="text-xs">
         {!hasNoTemporalResource(workflowList.temporalResource) &&
           elements.map((element) => {
             return element
@@ -108,15 +108,15 @@ const WorkflowlistItem = ({
 
   const getNumericResourcesText = (): JSX.Element => {
     return (
-      <div className="grid text-xs">
+      <div className="text-xs">
         {workflowList.numericResources.map((numericResource, index) => {
           return (
-            <div key={index} className="inline-flex items-center">
+            <div key={index} className="flex flex-nowrap items-center">
               <div className="w-3 h-3 mr-1">
                 <ChartBarIcon />
               </div>
-              <span>{'' + numericResource.label}:&nbsp;</span>
-              <span>{numericResource.value}</span>
+              <span className="flex-none">{'' + numericResource.label}:&nbsp;</span>
+              <span className="flex-none">{numericResource.value}</span>
             </div>
           )
         })}
@@ -126,15 +126,15 @@ const WorkflowlistItem = ({
 
   const getTextualResourcesText = (): JSX.Element => {
     return (
-      <div className="grid text-xs">
+      <div className="text-xs">
         {workflowList.textualResources.map((textualResource, index) => {
           return (
-            <div key={index} className="inline-flex items-center">
+            <div key={index} className="flex flex-nowrap items-center">
               <div className="w-3 h-3 mr-1">
                 <DocumentTextIcon />
               </div>
-              <span>{textualResource.label}</span>
-              <span>{textualResource.value ? ': ' + textualResource.value : ''}</span>
+              <span className="flex-none">{textualResource.label}</span>
+              <span className="flex-none">{textualResource.value ? ': ' + textualResource.value : ''}</span>
             </div>
           )
         })}
@@ -162,11 +162,14 @@ const WorkflowlistItem = ({
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           <div
-            className={`bg-white border border-gray-500 rounded shadow min-w-min max-w-sm p-1 ${moveClassName}`}
+            className={`bg-white border border-gray-500 rounded shadow min-w-[24rem] max-w-sm p-1 ${moveClassName}`}
           >
             <div className="flex place-content-between">
-              <div className="grid w-full m-1 hover:bg-gray-200" {...provided.dragHandleProps}>
-                <span className="font-bold">{workflowList.title} </span>
+              <div
+                className="flex flex-col w-3/4 m-1 hover:bg-gray-200"
+                {...provided.dragHandleProps}
+              >
+                <div className="truncate font-bold">{workflowList.title} </div>
                 {getTemporalResourceText()}
                 {getNumericResourcesText()}
                 {getTextualResourcesText()}
@@ -185,7 +188,7 @@ const WorkflowlistItem = ({
                 )}
               </div>
             </div>
-            <div className="m-1 text-sm whitespace-pre bg-gray-100 rounded p-1">
+            <div className="m-1 text-sm whitespace-pre-line bg-gray-100 rounded p-1">
               {workflowList.description}
             </div>
           </div>

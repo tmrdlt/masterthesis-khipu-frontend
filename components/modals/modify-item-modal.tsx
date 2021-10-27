@@ -31,7 +31,7 @@ const ModifyItemModal = ({
     newDescription: getOptionalString(workflowList.description),
     isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard,
   }
-  const initResource = getInitWorkflowListResource()
+  const initResource = getInitWorkflowListResource(workflowList)
 
   const [updateItemEntity, setUpdateItemEntity] = useState(initUpdateItemEntity)
   const [resource, setResource] = useState(initResource)
