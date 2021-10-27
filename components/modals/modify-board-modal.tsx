@@ -11,7 +11,7 @@ import {
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import { getInitWorkflowListResourceBoard } from 'utils/resource-util'
-import BoardResourcesForm from 'components/modals/board-resources-form'
+import ResourcesFormBoard from 'components/modals/resources-form-board'
 
 interface ModifyBoardModalProps {
   userApiId: string
@@ -113,7 +113,7 @@ const ModifyBoardModal = ({
                     </div>
                   </div>
                 </div>
-                <BoardResourcesForm
+                <ResourcesFormBoard
                   isTemporalConstraintBoard={updateBoardEntity.isTemporalConstraintBoard}
                   resource={resource}
                   setResource={setResource}

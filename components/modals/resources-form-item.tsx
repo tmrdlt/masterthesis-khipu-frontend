@@ -18,7 +18,7 @@ interface ItemResourcesFormProps {
   setResource
 }
 
-const ItemResourcesForm = ({ resource, setResource }: ItemResourcesFormProps): JSX.Element => {
+const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): JSX.Element => {
   const { users, isLoading, isError } = useUsers()
 
   const handleDatePickerChange = (date, key) => {
@@ -420,4 +420,4 @@ const ItemResourcesForm = ({ resource, setResource }: ItemResourcesFormProps): J
   )
 }
 
-export default ItemResourcesForm
+export default ResourcesFormItem

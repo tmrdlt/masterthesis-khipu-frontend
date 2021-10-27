@@ -6,12 +6,12 @@ import {
   postWorkflowListResource,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
-import ItemResourcesForm from 'components/modals/item-resources-form'
+import ResourcesFormItem from 'components/modals/resources-form-item'
 import { compareDateOptions } from 'utils/date-util'
 import { getOptionalNumber } from 'utils/optional-util'
 import { arraysEqual } from 'utils/compare-util'
 import { getInitWorkflowListResource } from 'utils/resource-util'
-import BoardResourcesForm from 'components/modals/board-resources-form'
+import ResourcesFormBoard from 'components/modals/resources-form-board'
 
 interface CreateWorkflowListModalProps {
   closeModal
@@ -175,14 +175,14 @@ const CreateWorkflowListModal = ({
                   </div>
                 )}
                 {createWorkflowListEntity.listType == WorkflowListType.BOARD && (
-                  <BoardResourcesForm
+                  <ResourcesFormBoard
                     isTemporalConstraintBoard={createWorkflowListEntity.isTemporalConstraintBoard}
                     resource={resource}
                     setResource={setResource}
                   />
                 )}
                 {createWorkflowListEntity.listType == WorkflowListType.ITEM && (
-                  <ItemResourcesForm resource={resource} setResource={setResource} />
+                  <ResourcesFormItem resource={resource} setResource={setResource} />
                 )}
               </div>
             </div>

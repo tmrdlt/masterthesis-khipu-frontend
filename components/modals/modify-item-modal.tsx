@@ -11,7 +11,7 @@ import {
   updateWorkflowList,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
-import ItemResourcesForm from 'components/modals/item-resources-form'
+import ResourcesFormItem from 'components/modals/resources-form-item'
 import { getInitWorkflowListResource } from 'utils/resource-util'
 
 interface ModifyItemModalProps {
@@ -114,7 +114,7 @@ const ModifyItemModal = ({
                     />
                   </label>
                   <span className="text-gray-700">Resources</span>
-                  <ItemResourcesForm resource={resource} setResource={setResource} />
+                  <ResourcesFormItem resource={resource} setResource={setResource} />
                 </div>
               </div>
             </div>

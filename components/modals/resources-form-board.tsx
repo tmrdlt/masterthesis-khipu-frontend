@@ -8,7 +8,7 @@ interface BoardResourcesFormProps {
   setResource
 }
 
-const BoardResourcesForm = ({
+const ResourcesFormBoard = ({
                                 isTemporalConstraintBoard,
                                 resource,
                                 setResource
@@ -64,4 +64,4 @@ const BoardResourcesForm = ({
     )
 }
 
-export default BoardResourcesForm
+export default ResourcesFormBoard
