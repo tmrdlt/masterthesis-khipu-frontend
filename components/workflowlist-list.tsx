@@ -10,6 +10,7 @@ import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
 import { ListTemporalQueryResult } from 'components/temporal-query-results'
+import { getLowerWorkflowListType } from 'utils/models-util'
 
 interface IListProps {
   index: number
@@ -159,7 +160,7 @@ const WorkflowlistList = ({
           {showCreateModal && (
             <CreateWorkflowListModal
               closeModal={closeCreateModal}
-              createType={WorkflowListType.ITEM}
+              defaultCreateType={getLowerWorkflowListType(workflowList.usageType)}
               parentUuid={workflowList.apiId}
               userApiId={userApiId}
             />

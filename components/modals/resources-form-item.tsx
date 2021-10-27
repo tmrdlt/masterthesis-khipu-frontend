@@ -3,6 +3,7 @@ import CalendarIcon, {
   ClockIcon,
   DocumentTextIcon,
   FlagIcon,
+  PlusIcon,
   UserIcon,
 } from 'components/icons'
 import timeDurationsInMinutes from 'utils/globals'
@@ -312,19 +313,7 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
             }}
             className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
+            <PlusIcon />
           </button>
         </div>
       </TabPanel>
@@ -379,19 +368,7 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
             }}
             className="bg-transparent hover:bg-gray-50 text-gray-500 border border-gray-500 rounded w-8 h-8"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
+            <PlusIcon />
           </button>
         </div>
       </TabPanel>

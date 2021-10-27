@@ -43,7 +43,7 @@ const ModifyListModal = ({
             <div className="mt-4 w-full">
               <div className="grid grid-cols-1 gap-4 text-sm">
                 <label className="block">
-                  <span className="text-gray-700">New title</span>
+                  <span className="text-gray-700 text-sm">Title</span>
                   <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
@@ -53,7 +53,7 @@ const ModifyListModal = ({
                   />
                 </label>
                 <label className="block">
-                  <span className="text-gray-700">New description</span>
+                  <span className="text-gray-700 text-sm">Description</span>
                   <textarea
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                     rows={3}

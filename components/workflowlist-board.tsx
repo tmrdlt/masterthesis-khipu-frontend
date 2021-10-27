@@ -14,6 +14,7 @@ import { FlagIcon } from 'components/icons'
 import BoardTemporalQueryResult, {
   ListTemporalQueryResult,
 } from 'components/temporal-query-results'
+import { getLowerWorkflowListType } from 'utils/models-util'
 
 interface IBoardProps {
   index: number
@@ -202,7 +203,7 @@ const WorkflowlistBoard = ({
           {showCreateModal && (
             <CreateWorkflowListModal
               closeModal={closeCreateModal}
-              createType={WorkflowListType.LIST}
+              defaultCreateType={getLowerWorkflowListType(workflowList.usageType)}
               parentUuid={workflowList.apiId}
               userApiId={userApiId}
             />

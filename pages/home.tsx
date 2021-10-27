@@ -23,6 +23,7 @@ import DropButton from 'components/drop-button'
 import { useSWRConfig } from 'swr'
 import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
+import { getLowerWorkflowListType } from 'utils/models-util'
 
 interface HomeProps {
   userApiId: string
@@ -265,7 +266,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       {showCreateModal && (
         <CreateWorkflowListModal
           closeModal={closeModal}
-          createType={WorkflowListType.BOARD}
+          defaultCreateType={getLowerWorkflowListType(null)}
           parentUuid={null}
           userApiId={userApiId}
         />

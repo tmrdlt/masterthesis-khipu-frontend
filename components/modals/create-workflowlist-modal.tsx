@@ -12,24 +12,26 @@ import { getOptionalNumber } from 'utils/optional-util'
 import { arraysEqual } from 'utils/compare-util'
 import { getInitWorkflowListResource } from 'utils/resource-util'
 import ResourcesFormBoard from 'components/modals/resources-form-board'
+import CreateChildrenForm from 'components/modals/create-children-form'
+import { getLowerWorkflowListType } from 'utils/models-util'
 
 interface CreateWorkflowListModalProps {
   closeModal
-  createType: WorkflowListType
+  defaultCreateType: WorkflowListType
   parentUuid: string
   userApiId: string
 }
 
 const CreateWorkflowListModal = ({
   closeModal,
-  createType,
+  defaultCreateType,
   parentUuid,
   userApiId,
 }: CreateWorkflowListModalProps): JSX.Element => {
   // STATE
   const initCreateWorkflowListEntity: CreateWorkflowListEntity = {
     title: '',
-    listType: createType,
+    listType: defaultCreateType,
     parentApiId: parentUuid,
     description: '',
     isTemporalConstraintBoard: false,
@@ -40,6 +42,8 @@ const CreateWorkflowListModal = ({
     initCreateWorkflowListEntity
   )
   const [resource, setResource] = useState(initResource)
+  const initCreateChildren: Array<CreateWorkflowListEntity> = []
+  const [createChildren, setCreateChildren] = useState(initCreateChildren)
   const { mutate } = useSWRConfig()
 
   // FUNCTIONS
@@ -91,6 +95,10 @@ const CreateWorkflowListModal = ({
     return resource.textual.filter((tr) => tr.label === '').length !== 0
   }
 
+  const isChildrenFormInvalid = (): boolean => {
+    return createChildren.filter((cwe) => cwe.title === '').length !== 0
+  }
+
   return (
     <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
@@ -137,7 +145,7 @@ const CreateWorkflowListModal = ({
                   </label>
                 </div>
                 <label className="block">
-                  <span className="text-gray-700">Title (required)</span>
+                  <span className="text-gray-700 text-sm">Title (required)</span>
                   <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
@@ -147,7 +155,7 @@ const CreateWorkflowListModal = ({
                   />
                 </label>
                 <label className="block">
-                  <span className="text-gray-700">Description (optional)</span>
+                  <span className="text-gray-700 text-sm">Description</span>
                   <textarea
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                     rows={3}
@@ -184,6 +192,14 @@ const CreateWorkflowListModal = ({
                 {createWorkflowListEntity.listType == WorkflowListType.ITEM && (
                   <ResourcesFormItem resource={resource} setResource={setResource} />
                 )}
+                {(createWorkflowListEntity.listType == WorkflowListType.BOARD ||
+                  createWorkflowListEntity.listType == WorkflowListType.LIST) && (
+                  <CreateChildrenForm
+                    defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
+                    createChildren={createChildren}
+                    setCreateChildren={setCreateChildren}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -199,16 +215,26 @@ const CreateWorkflowListModal = ({
                   areTextualResourcesUnchanged() &&
                   isUserResourceUnchanged()) ||
                 isNumericResourceFormInvalid() ||
-                isTextualResourceFormInvalid()
+                isTextualResourceFormInvalid() ||
+                isChildrenFormInvalid()
               }
               onClick={() => {
-                createWorkflowList(createWorkflowListEntity, userApiId).then((res) => {
+                createWorkflowList(createWorkflowListEntity, userApiId).then((apiId) => {
+                  if (apiId && createChildren.length != 0) {
+                    Promise.all(
+                      createChildren.map((child) => {
+                        createWorkflowList({ ...child, parentApiId: apiId }, userApiId)
+                      })
+                    ).then((_res) => {
+                      mutate(getWorkflowListsUrl(userApiId))
+                      closeModal()
+                    })
+                  }
                   if (
-                    res &&
+                    apiId &&
                     (createWorkflowListEntity.listType == WorkflowListType.ITEM ||
                       createWorkflowListEntity.listType == WorkflowListType.BOARD)
                   ) {
-                    const apiId = res
                     const entity: WorkflowListResource = {
                       numeric: areNumericResourcesUnchanged() ? null : resource.numeric,
                       textual: areTextualResourcesUnchanged() ? null : resource.textual,
