@@ -16,11 +16,12 @@ import CalendarIcon, {
 import 'react-popper-tooltip/dist/styles.css'
 import { ItemTemporalQueryResult } from 'components/temporal-query-results'
 
-interface IItemProps {
+interface WorkflowlistItemProps {
   index: number
   workflowList: WorkflowList
   userApiId: string
   workflowListToMove: WorkflowList
+  marginClass: string
   selectWorkflowListToMove
 }
 
@@ -29,8 +30,9 @@ const WorkflowlistItem = ({
   workflowList,
   userApiId,
   workflowListToMove,
+  marginClass,
   selectWorkflowListToMove,
-}: IItemProps): JSX.Element => {
+}: WorkflowlistItemProps): JSX.Element => {
   // STATE
   const [showModifyModal, setShowModifyModal] = useState(false)
   const [showMoveModal, setShowMoveModal] = useState(false)
@@ -158,7 +160,7 @@ const WorkflowlistItem = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, _snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className="mb-2 mr-2">
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           <div
             className={`bg-white border border-gray-500 rounded shadow max-w-sm p-1 ${moveClassName}`}
           >
@@ -179,7 +181,7 @@ const WorkflowlistItem = ({
                   openMoveModal={openMoveModal}
                 />
                 {workflowList.temporalQueryResult != null && (
-                    <ItemTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult}/>
+                  <ItemTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
                 )}
               </div>
             </div>

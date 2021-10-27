@@ -4,7 +4,7 @@ import WorkflowlistList from 'components/workflowlist-list'
 import React, { useEffect, useState } from 'react'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import WorkflowlistItem from 'components/workflowlist-item'
-import { getDroppableStyle } from 'utils/style-elements'
+import { getDroppableStyle, getMargin } from 'utils/style-elements'
 import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/buttons/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
@@ -16,11 +16,12 @@ import BoardTemporalQueryResult, {
 } from 'components/temporal-query-results'
 import { getLowerWorkflowListType } from 'utils/models-util'
 
-interface IBoardProps {
+interface WorkflowListBoardProps {
   index: number
   workflowList: WorkflowList
   userApiId: string
   workflowListToMove: WorkflowList
+  marginClass: string
   moveWorkflowList
   selectWorkflowListToMove
   showDropButton
@@ -32,11 +33,12 @@ const WorkflowlistBoard = ({
   workflowList,
   userApiId,
   workflowListToMove,
+  marginClass,
   moveWorkflowList,
   selectWorkflowListToMove,
   showDropButton,
   getTemporalQueryResult,
-}: IBoardProps): JSX.Element => {
+}: WorkflowListBoardProps): JSX.Element => {
   // STATE
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showModifyModal, setShowModifyModal] = useState(false)
@@ -90,7 +92,7 @@ const WorkflowlistBoard = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className="mb-2 mr-2">
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 ${moveClassName}`}>
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-blue-200" {...provided.dragHandleProps}>
@@ -159,6 +161,7 @@ const WorkflowlistBoard = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
+                            marginClass={getMargin(workflowList.usageType)}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
@@ -173,6 +176,7 @@ const WorkflowlistBoard = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
+                            marginClass={getMargin(workflowList.usageType)}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
@@ -187,6 +191,7 @@ const WorkflowlistBoard = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
+                            marginClass={getMargin(workflowList.usageType)}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                           />
                         )

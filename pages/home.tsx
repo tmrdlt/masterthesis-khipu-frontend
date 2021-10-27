@@ -18,7 +18,7 @@ import {
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import WorkflowlistList from 'components/workflowlist-list'
 import WorkflowlistItem from 'components/workflowlist-item'
-import { getDroppableStyle } from 'utils/style-elements'
+import { getDroppableStyle, getMargin } from 'utils/style-elements'
 import DropButton from 'components/buttons/drop-button'
 import { useSWRConfig } from 'swr'
 import produce from 'immer'
@@ -216,6 +216,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                       workflowList={wl}
                       userApiId={userApiId}
                       workflowListToMove={workflowListToMove}
+                      marginClass={getMargin(WorkflowListType.LIST)}
                       moveWorkflowList={moveWorkflowList}
                       selectWorkflowListToMove={selectWorkflowListToMove}
                       showDropButton={showDropButton}
@@ -230,6 +231,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                       workflowList={wl}
                       userApiId={userApiId}
                       workflowListToMove={workflowListToMove}
+                      marginClass={getMargin(WorkflowListType.LIST)}
                       moveWorkflowList={moveWorkflowList}
                       selectWorkflowListToMove={selectWorkflowListToMove}
                       showDropButton={showDropButton}
@@ -244,6 +246,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                       workflowList={wl}
                       userApiId={userApiId}
                       workflowListToMove={workflowListToMove}
+                      marginClass={getMargin(WorkflowListType.LIST)}
                       selectWorkflowListToMove={selectWorkflowListToMove}
                     />
                   )
