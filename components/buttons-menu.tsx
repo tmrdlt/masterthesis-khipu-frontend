@@ -182,7 +182,7 @@ const CreateWorkflowListButton = ({
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-          Create child
+          Add
         </div>
       )}
     </div>
