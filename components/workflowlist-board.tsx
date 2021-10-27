@@ -11,7 +11,9 @@ import ButtonsMenu from 'components/buttons-menu'
 import { formatDate } from 'utils/date-util'
 import ModifyBoardModal from 'components/modals/modify-board-modal'
 import { FlagIcon } from 'components/icons'
-import BoardTemporalQueryResult from 'components/temporal-query-results'
+import BoardTemporalQueryResult, {
+  ListTemporalQueryResult,
+} from 'components/temporal-query-results'
 
 interface IBoardProps {
   index: number
@@ -47,10 +49,10 @@ const WorkflowlistBoard = ({
   }, [workflowListToMove])
 
   useEffect(() => {
-    if (workflowList.temporalQueryResult != null) {
+    if (workflowList.boardTemporalQueryResult != null || workflowList.temporalQueryError != null) {
       setIsLoadingQuery(false)
     }
-  }, [workflowList.temporalQueryResult])
+  }, [workflowList.boardTemporalQueryResult, workflowList.temporalQueryError])
 
   // DYNAMIC CLASSES
   const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
@@ -102,12 +104,13 @@ const WorkflowlistBoard = ({
                 )}
               </div>
               <div className="flex flex-row">
-                {workflowList.temporalQueryResult != null && workflowList.workSchedule != null && (
-                  <BoardTemporalQueryResult
-                    temporalQueryResult={workflowList.temporalQueryResult}
-                    workSchedule={workflowList.workSchedule}
-                  />
-                )}
+                {workflowList.boardTemporalQueryResult != null &&
+                  workflowList.workSchedule != null && (
+                    <BoardTemporalQueryResult
+                      temporalQueryResult={workflowList.boardTemporalQueryResult}
+                      workSchedule={workflowList.workSchedule}
+                    />
+                  )}
                 <ButtonsMenu
                   userApiId={userApiId}
                   workflowList={workflowList}
@@ -122,8 +125,12 @@ const WorkflowlistBoard = ({
               </div>
             </div>
 
-            <div className="m-1 text-sm whitespace-pre">{workflowList.description}</div>
-
+            <div className="flex place-content-between">
+              <div className="m-1 text-sm whitespace-pre">{workflowList.description}</div>
+              {workflowList.temporalQueryResult != null && (
+                <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
+              )}
+            </div>
             <Droppable
               droppableId={workflowList.apiId}
               direction="horizontal"

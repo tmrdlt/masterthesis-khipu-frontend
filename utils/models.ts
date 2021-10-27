@@ -13,7 +13,9 @@ export type WorkflowList = {
   numericResources: Array<NumericResource>
   textualResources: Array<TextualResource>
   temporalQueryResult?: TaskPlanningSolution // not present in backend model
+  boardTemporalQueryResult?: TaskPlanningSolution // not present in backend model
   workSchedule?: WorkSchedule // not present in backend model
+  temporalQueryError?: string // not present in backend model
 }
 
 export type CreateWorkflowListEntity = {

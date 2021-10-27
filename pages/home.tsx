@@ -164,8 +164,14 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
               taskPlanningSolution
             )
           })
-          recursiveSetField(draft, workflowListApiId, 'temporalQueryResult', res.boardResult)
+          recursiveSetField(draft, workflowListApiId, 'boardTemporalQueryResult', res.boardResult)
           recursiveSetField(draft, workflowListApiId, 'workSchedule', res.workSchedule)
+        })
+        // Mutate only local cache
+        mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
+      } else {
+        let newWorkflowLists = produce(workflowLists, (draft) => {
+          recursiveSetField(draft, workflowListApiId, 'temporalQueryError', 'error')
         })
         // Mutate only local cache
         mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)

@@ -118,10 +118,14 @@ const ListTemporalQueryResult = ({
           </span>
           <span>Calculated start date: {formatDate(temporalQueryResult.startedAt)}</span>
           <span>Calculated finish date: {formatDate(temporalQueryResult.finishedAt)}</span>
-          <span>Calculated remaining duration: {formatDuration(temporalQueryResult.duration)}</span>
+          <span>
+            Calculated total remaining duration: {formatDuration(temporalQueryResult.duration)}
+          </span>
           {temporalQueryResult.dueDate != null && (
             <span>
-              Does {temporalQueryResult.dueDateKept ? '' : 'NOT '}comply with at least one due date
+              {temporalQueryResult.dueDateKept
+                ? 'Does comply with all due dates'
+                : 'Does NOT comply with at least one due date'}
             </span>
           )}
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
