@@ -2,6 +2,8 @@ import React, { FunctionComponent, useState } from 'react'
 import Link from 'next/link'
 import CreateUserModal from 'components/modals/create-user-modal'
 import { useUsers } from 'utils/swr-util'
+import LoadingSpinner from 'components/modals/loading-spinner'
+import LoadingError from 'components/modals/loading-error'
 
 const Start: FunctionComponent = (): JSX.Element => {
   // STATE
@@ -16,9 +18,8 @@ const Start: FunctionComponent = (): JSX.Element => {
     setShowCreateModal(false)
   }
 
-  // TODO add Spinner
-  if (isLoading) return null
-  if (isError) return null
+  if (isLoading) return <LoadingSpinner />
+  if (isError) return <LoadingError />
   return (
     <div className="flex flex-col items-center align-top bg-gray-200 h-screen p-3 ">
       <p className="text-4xl mb-5">Welcome to Khipu</p>

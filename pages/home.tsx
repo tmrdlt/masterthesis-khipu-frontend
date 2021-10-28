@@ -25,6 +25,8 @@ import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
 import { getLowerWorkflowListType } from 'utils/models-util'
 import { PlusIcon } from 'components/icons'
+import LoadingSpinner from 'components/modals/loading-spinner'
+import LoadingError from 'components/modals/loading-error'
 
 interface HomeProps {
   userApiId: string
@@ -181,9 +183,8 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     })
   }
 
-  // TODO add Spinner
-  if (isLoading) return null
-  if (isError) return null
+  if (isLoading) return <LoadingSpinner/>
+  if (isError) return <LoadingError/>
   return (
     <div className="bg-gray-200 min-h-screen p-4">
       <div className="flex gap-5 mb-3 m-1">
