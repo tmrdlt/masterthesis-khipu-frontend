@@ -50,6 +50,13 @@ const CreateWorkflowListModal = ({
   const handleCreateWorkflowListEntityFormChange = (event) => {
     const newState = { ...createWorkflowListEntity, [event.target.id]: event.target.value }
     setCreateWorkflowListEntity(newState)
+    // Reset state on toggle change
+    if (event.target.id === "listType") {
+      setResource(initResource)
+      if (event.target.value === WorkflowListType.ITEM) {
+        setCreateChildren(initCreateChildren)
+      }
+    }
   }
 
   const handleToggleChange = () => {
@@ -199,7 +206,7 @@ const CreateWorkflowListModal = ({
                 {(createWorkflowListEntity.listType == WorkflowListType.BOARD ||
                   createWorkflowListEntity.listType == WorkflowListType.LIST) && (
                   <CreateChildrenForm
-                    defaultCreateType={getLowerWorkflowListType(defaultCreateType)}
+                    defaultCreateType={getLowerWorkflowListType(createWorkflowListEntity.listType)}
                     createChildren={createChildren}
                     setCreateChildren={setCreateChildren}
                   />
