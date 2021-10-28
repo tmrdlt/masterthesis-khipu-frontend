@@ -72,6 +72,10 @@ const ModifyItemModal = ({
     return resource.user.username === initResource.user.username
   }
 
+  const isWorkflowListInvalid = (): boolean => {
+    return (updateItemEntity.newTitle === '')
+  }
+
   const isNumericResourceFormInvalid = (): boolean => {
     // @ts-ignore
     return resource.numeric.filter((nr) => nr.label === '' || nr.value === '').length !== 0
@@ -122,6 +126,7 @@ const ModifyItemModal = ({
                     areNumericResourcesUnchanged() &&
                     areTextualResourcesUnchanged() &&
                     isUserResourceUnchanged()) ||
+                  isWorkflowListInvalid() ||
                   isNumericResourceFormInvalid() ||
                   isTextualResourceFormInvalid()
                 }

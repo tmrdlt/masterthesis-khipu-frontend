@@ -63,6 +63,10 @@ const ModifyBoardModal = ({
     return compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate)
   }
 
+  const isWorkflowListInvalid = (): boolean => {
+    return updateBoardEntity.newTitle === ''
+  }
+
   return (
     <div>
       {/* https://tailwindcomponents.com/component/modal-1 */}
@@ -90,20 +94,20 @@ const ModifyBoardModal = ({
                   id="newDescription"
                 />
                 <div className="block">
-                      <label className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                          id="isTemporalConstraintBoard"
-                          checked={
-                            updateBoardEntity.isTemporalConstraintBoard
-                              ? updateBoardEntity.isTemporalConstraintBoard
-                              : false
-                          }
-                          onChange={handleToggleChange}
-                        />
-                        <span className="ml-2">Is temporal constraint board</span>
-                      </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      id="isTemporalConstraintBoard"
+                      checked={
+                        updateBoardEntity.isTemporalConstraintBoard
+                          ? updateBoardEntity.isTemporalConstraintBoard
+                          : false
+                      }
+                      onChange={handleToggleChange}
+                    />
+                    <span className="ml-2">Is temporal constraint board</span>
+                  </label>
                 </div>
                 <ResourcesFormBoard
                   isTemporalConstraintBoard={updateBoardEntity.isTemporalConstraintBoard}
@@ -116,7 +120,10 @@ const ModifyBoardModal = ({
           <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
             <button
               type="button"
-              disabled={isWorkflowListUnchanged() && isTemporalResourceUnchanged()}
+              disabled={
+                (isWorkflowListUnchanged() && isTemporalResourceUnchanged()) ||
+                isWorkflowListInvalid()
+              }
               onClick={() => {
                 if (!isWorkflowListUnchanged()) {
                   updateWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then(

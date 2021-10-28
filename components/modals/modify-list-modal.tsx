@@ -23,13 +23,24 @@ const ModifyListModal = ({
     newDescription: workflowList.description ? workflowList.description : '',
     isTemporalConstraintBoard: workflowList.isTemporalConstraintBoard,
   }
-  const [state, setState] = useState(initUpdateWorkflowListEntity)
+  const [updateListEntity, setUpdateListEntity] = useState(initUpdateWorkflowListEntity)
   const { mutate } = useSWRConfig()
 
   // FUNCTIONS
   const handleFormChange = (event) => {
-    const newState = { ...state, [event.target.id]: event.target.value }
-    setState(newState)
+    const newState = { ...updateListEntity, [event.target.id]: event.target.value }
+    setUpdateListEntity(newState)
+  }
+
+  const isWorkflowListUnchanged = (): boolean => {
+    return (
+      updateListEntity.newTitle === workflowList.title &&
+      updateListEntity.newDescription === getOptionalString(workflowList.description)
+    )
+  }
+
+  const isWorkflowListInvalid = (): boolean => {
+    return updateListEntity.newTitle === ''
   }
 
   return (
@@ -46,7 +57,7 @@ const ModifyListModal = ({
                   type="text"
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   placeholder="Title (required)"
-                  value={state.newTitle}
+                  value={updateListEntity.newTitle}
                   onChange={handleFormChange}
                   id="newTitle"
                 />
@@ -54,7 +65,7 @@ const ModifyListModal = ({
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
                   rows={3}
                   placeholder="Description"
-                  value={state.newDescription}
+                  value={updateListEntity.newDescription}
                   onChange={handleFormChange}
                   id="newDescription"
                 />
@@ -64,12 +75,9 @@ const ModifyListModal = ({
           <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
             <button
               type="button"
-              disabled={
-                state.newTitle === workflowList.title &&
-                state.newDescription === getOptionalString(workflowList.description)
-              }
+              disabled={isWorkflowListUnchanged() || isWorkflowListInvalid()}
               onClick={() => {
-                updateWorkflowList(workflowList.apiId, state, userApiId).then((_res) => {
+                updateWorkflowList(workflowList.apiId, updateListEntity, userApiId).then((_res) => {
                   mutate(getWorkflowListsUrl(userApiId))
                   closeModal()
                 })
