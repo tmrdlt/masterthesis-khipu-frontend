@@ -1,16 +1,17 @@
 import { CreateWorkflowListEntity, WorkflowListType } from 'utils/models'
 import React, { ChangeEvent } from 'react'
 import AddButton from 'components/buttons/add-button'
-import { getRequiredClass } from 'utils/style-elements'
+import CreateTitleAndTypeForm from 'components/modals/create-title-and-type-form'
+import { getLowerWorkflowListType } from 'utils/models-util'
 
 interface CreateChildrenFormProps {
-  defaultCreateType: WorkflowListType
+  parentType: WorkflowListType
   createChildren: Array<CreateWorkflowListEntity>
   setCreateChildren
 }
 
 const CreateChildrenForm = ({
-  defaultCreateType,
+  parentType,
   createChildren,
   setCreateChildren,
 }: CreateChildrenFormProps): JSX.Element => {
@@ -29,10 +30,11 @@ const CreateChildrenForm = ({
     const newState = [...createChildren]
     newState.push({
       title: '',
-      listType: defaultCreateType,
+      listType: getLowerWorkflowListType(parentType),
       parentApiId: null,
-      description: '',
+      description: null,
       isTemporalConstraintBoard: false,
+      children: []
     })
     setCreateChildren(newState)
   }
@@ -43,64 +45,56 @@ const CreateChildrenForm = ({
     setCreateChildren(newState)
   }
 
+  const addKanbanBoardColumns = () => {
+    let newState = [...createChildren]
+    newState.push({
+      title: 'ToDo',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: null,
+      isTemporalConstraintBoard: false,
+      children: []
+    })
+    newState.push({
+      title: 'Doing',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: null,
+      isTemporalConstraintBoard: false,
+      children: []
+    })
+    newState.push({
+      title: 'Done',
+      listType: WorkflowListType.LIST,
+      parentApiId: null,
+      description: null,
+      isTemporalConstraintBoard: false,
+      children: []
+    })
+    setCreateChildren(newState)
+  }
+
   return (
     <div className="grid grid-cols-1 gap-3">
+      {parentType == WorkflowListType.BOARD && (
+        <button
+          type="button"
+          onClick={() => {
+            addKanbanBoardColumns()
+          }}
+          className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+        >
+          Make Kanban Board
+        </button>
+      )}
       {createChildren.map((createEntity, index) => {
         return (
           <div className="flex items-center justify-between gap-4" key={index}>
-            <div className="grid grid-cols-2 w-full gap-4">
-              <input
-                type="text"
-                className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring-opacity-50 text-sm ${getRequiredClass(createEntity.title === '')}`}
-                value={createEntity.title}
-                placeholder="Title (required)"
-                onChange={(event) => {
-                  handleFormChange(event, index)
-                }}
-                id="title"
-              />
-              <div className="flex items-center justify-center">
-                <label className="inline-flex items-center mr-3">
-                  <input
-                    type="radio"
-                    value={WorkflowListType.BOARD}
-                    id="listType"
-                    checked={createChildren[index].listType === WorkflowListType.BOARD}
-                    onChange={(event) => {
-                      handleFormChange(event, index)
-                    }}
-                    className="h-4 w-4"
-                  />
-                  <span className="ml-1">Board</span>
-                </label>
-                <label className="inline-flex items-center mr-3">
-                  <input
-                    type="radio"
-                    value={WorkflowListType.LIST}
-                    id="listType"
-                    checked={createChildren[index].listType === WorkflowListType.LIST}
-                    onChange={(event) => {
-                      handleFormChange(event, index)
-                    }}
-                    className="h-4 w-4"
-                  />
-                  <span className="ml-1">List</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    value={WorkflowListType.ITEM}
-                    id="listType"
-                    checked={createChildren[index].listType === WorkflowListType.ITEM}
-                    onChange={(event) => {
-                      handleFormChange(event, index)
-                    }}
-                    className="h-4 w-4"
-                  />
-                  <span className="ml-1">Item</span>
-                </label>
-              </div>
-            </div>
+            <CreateTitleAndTypeForm
+              index={index}
+              createEntity={createEntity}
+              handleFormChange={handleFormChange}
+            />
             <button
               className="text-gray-700"
               onClick={() => {

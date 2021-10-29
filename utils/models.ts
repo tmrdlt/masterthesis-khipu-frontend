@@ -23,7 +23,8 @@ export type CreateWorkflowListEntity = {
   description?: string
   listType: WorkflowListType
   parentApiId?: string
-  isTemporalConstraintBoard: boolean
+  isTemporalConstraintBoard: boolean,
+  children: Array<CreateWorkflowListEntity>
 }
 
 export type UpdateWorkflowListEntity = {

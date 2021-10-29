@@ -28,6 +28,22 @@ const ChartBarIcon = (): JSX.Element => {
   )
 }
 
+const ChevronDownIcon = (): JSX.Element => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  )
+}
+
+const ChevronRightIcon = (): JSX.Element => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  )
+}
+
 const ClockIcon = (): JSX.Element => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -173,6 +189,8 @@ const UserIcon = (): JSX.Element => {
 export default CalendarIcon
 export {
   ChartBarIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
   ClockIcon,
   DocumentTextIcon,
   DownloadIcon,
