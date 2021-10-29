@@ -14,6 +14,7 @@ import { useSWRConfig } from 'swr'
 import ResourcesFormItem from 'components/modals/resources-form-item'
 import { getInitWorkflowListResource } from 'utils/resource-util'
 import TextareaAutosize from 'react-textarea-autosize'
+import { getRequiredClass } from 'utils/style-elements'
 
 interface ModifyItemModalProps {
   userApiId: string
@@ -100,7 +101,7 @@ const ModifyItemModal = ({
                 <div className="grid grid-cols-1 gap-5">
                   <input
                     type="text"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                    className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(isWorkflowListInvalid())}`}
                     placeholder="Title (required)"
                     value={updateItemEntity.newTitle}
                     onChange={handleUpdateItemFormChange}

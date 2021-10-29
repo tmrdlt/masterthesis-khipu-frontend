@@ -13,6 +13,7 @@ import React from 'react'
 import { NumericResource, TextualResource, WorkflowListResource } from 'utils/models'
 import { useUsers } from 'utils/swr-util'
 import AddButton from 'components/buttons/add-button'
+import { getRequiredClass } from 'utils/style-elements'
 
 interface ItemResourcesFormProps {
   resource: WorkflowListResource
@@ -268,11 +269,11 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
           <div className="grid grid-cols-1 gap-3">
             {resource.numeric.map((numericResource, index) => {
               return (
-                <div className="flex items-center justify-between" key={index}>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-between gap-4" key={index}>
+                  <div className="grid grid-cols-2 w-full gap-4">
                     <input
                       type="text"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(numericResource.label === '')}`}
                       value={numericResource.label}
                       placeholder="Label (required)"
                       onChange={(event) => {
@@ -282,9 +283,9 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                     />
                     <input
                       type="text"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(numericResource.value.toString() === '')}`}
                       value={numericResource.value}
-                      placeholder="Value (required)"
+                      placeholder="Value (required, number)"
                       onChange={(event) => {
                         handleNumericResourceFormChange(event, index)
                       }}
@@ -309,11 +310,11 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
           <div className="grid grid-cols-1 gap-3">
             {resource.textual.map((textualResource, index) => {
               return (
-                <div className="flex items-center justify-between" key={index}>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-between gap-4" key={index}>
+                  <div className="grid grid-cols-2 w-full gap-4">
                     <input
                       type="text"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                      className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(textualResource.label === '')}`}
                       value={textualResource.label}
                       placeholder="Label (required)"
                       onChange={(event) => {

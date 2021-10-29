@@ -13,6 +13,7 @@ import { useSWRConfig } from 'swr'
 import { getInitWorkflowListResourceBoard } from 'utils/resource-util'
 import ResourcesFormBoard from 'components/modals/resources-form-board'
 import TextareaAutosize from 'react-textarea-autosize'
+import { getRequiredClass } from 'utils/style-elements'
 
 interface ModifyBoardModalProps {
   userApiId: string
@@ -80,7 +81,7 @@ const ModifyBoardModal = ({
               <div className="grid grid-cols-1 gap-5">
                 <input
                   type="text"
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(isWorkflowListInvalid())}`}
                   placeholder="Title (required)"
                   value={updateBoardEntity.newTitle}
                   onChange={handleModifyBoardFormChange}

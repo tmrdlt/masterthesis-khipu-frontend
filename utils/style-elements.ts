@@ -9,7 +9,7 @@ export const getDraggableStyle = (isDragging, draggableStyle) => ({
 })
 
 export const getDroppableStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? 'lightgreen' : 'transparent'
+  background: isDraggingOver ? 'lightgreen' : 'transparent',
 })
 
 export const getMargin = (parentType: WorkflowListType): string => {
@@ -18,4 +18,10 @@ export const getMargin = (parentType: WorkflowListType): string => {
   } else {
     return 'mb-2'
   }
+}
+
+export const getRequiredClass = (required: boolean): string => {
+  return required
+    ? 'ring ring-red-500 ring-opacity-50 focus:ring focus:ring-red-500'
+    : 'focus:ring focus:ring-indigo-200'
 }

@@ -15,6 +15,7 @@ import ResourcesFormBoard from 'components/modals/resources-form-board'
 import CreateChildrenForm from 'components/modals/create-children-form'
 import { getLowerWorkflowListType } from 'utils/models-util'
 import TextareaAutosize from 'react-textarea-autosize'
+import { getRequiredClass } from 'utils/style-elements'
 
 interface CreateWorkflowListModalProps {
   closeModal
@@ -46,7 +47,6 @@ const CreateWorkflowListModal = ({
   const initCreateChildren: Array<CreateWorkflowListEntity> = []
   const [createChildren, setCreateChildren] = useState(initCreateChildren)
   const { mutate } = useSWRConfig()
-
   // FUNCTIONS
   const handleCreateWorkflowListEntityFormChange = (event) => {
     const newState = { ...createWorkflowListEntity, [event.target.id]: event.target.value }
@@ -91,6 +91,10 @@ const CreateWorkflowListModal = ({
 
   const isUserResourceUnchanged = (): boolean => {
     return resource.user.username === initResource.user.username
+  }
+
+  const isWorkflowListInvalid = (): boolean => {
+    return (createWorkflowListEntity.title === '')
   }
 
   const isNumericResourceFormInvalid = (): boolean => {
@@ -179,7 +183,7 @@ const CreateWorkflowListModal = ({
                 </div>
                 <input
                   type="text"
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(isWorkflowListInvalid())}`}
                   placeholder="Title (required)"
                   value={createWorkflowListEntity.title}
                   onChange={handleCreateWorkflowListEntityFormChange}

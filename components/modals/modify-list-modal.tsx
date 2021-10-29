@@ -6,6 +6,7 @@ import { getOptionalString } from 'utils/optional-util'
 import { useSWRConfig } from 'swr'
 import { getWorkflowListsUrl, updateWorkflowList } from 'utils/workflow-api'
 import TextareaAutosize from 'react-textarea-autosize'
+import { getRequiredClass } from 'utils/style-elements'
 
 interface ModifyListModalProps {
   userApiId: string
@@ -56,7 +57,7 @@ const ModifyListModal = ({
               <div className="grid grid-cols-1 gap-5">
                 <input
                   type="text"
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                  className={`block w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-300 focus:ring-opacity-50 ${getRequiredClass(isWorkflowListInvalid())}`}
                   placeholder="Title (required)"
                   value={updateListEntity.newTitle}
                   onChange={handleFormChange}
