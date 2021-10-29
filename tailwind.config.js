@@ -3,6 +3,7 @@ module.exports = {
     purge: [
         './pages/**/*.tsx',
         './components/**/*.tsx',
+        './utils/*.ts'
         /**
          * if you decided to add more tsx files outsides this 2 folders,
          * don't forget to list it here,
