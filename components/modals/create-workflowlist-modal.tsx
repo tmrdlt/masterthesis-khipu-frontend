@@ -14,6 +14,7 @@ import { getInitWorkflowListResource } from 'utils/resource-util'
 import ResourcesFormBoard from 'components/modals/resources-form-board'
 import CreateChildrenForm from 'components/modals/create-children-form'
 import { getLowerWorkflowListType } from 'utils/models-util'
+import TextareaAutosize from 'react-textarea-autosize'
 
 interface CreateWorkflowListModalProps {
   closeModal
@@ -184,9 +185,9 @@ const CreateWorkflowListModal = ({
                   onChange={handleCreateWorkflowListEntityFormChange}
                   id="title"
                 />
-                <textarea
+                <TextareaAutosize
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  rows={3}
+                  minRows={3}
                   placeholder="Description"
                   value={createWorkflowListEntity.description}
                   onChange={handleCreateWorkflowListEntityFormChange}

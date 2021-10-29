@@ -12,6 +12,7 @@ import {
 import { useSWRConfig } from 'swr'
 import { getInitWorkflowListResourceBoard } from 'utils/resource-util'
 import ResourcesFormBoard from 'components/modals/resources-form-board'
+import TextareaAutosize from 'react-textarea-autosize'
 
 interface ModifyBoardModalProps {
   userApiId: string
@@ -85,9 +86,9 @@ const ModifyBoardModal = ({
                   onChange={handleModifyBoardFormChange}
                   id="newTitle"
                 />
-                <textarea
+                <TextareaAutosize
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  rows={3}
+                  minRows={3}
                   placeholder="Description"
                   value={updateBoardEntity.newDescription}
                   onChange={handleModifyBoardFormChange}

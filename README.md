@@ -11,6 +11,7 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. I
 - [react-datepicker](https://github.com/Hacker0x01/react-datepicker)
 - [react-tabs](https://reactcommunity.org/react-tabs/)
 - [react-popper-tooltip](https://popper.js.org/react-popper/v2/)
+- [react-textarea-autosize](https://github.com/Andarist/react-textarea-autosize)
 - [axios](https://github.com/axios/axios)
 - [swr](https://swr.vercel.app/)
 - [immer](https://immerjs.github.io/immer/)

@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getOptionalString } from 'utils/optional-util'
 import { useSWRConfig } from 'swr'
 import { getWorkflowListsUrl, updateWorkflowList } from 'utils/workflow-api'
+import TextareaAutosize from 'react-textarea-autosize'
 
 interface ModifyListModalProps {
   userApiId: string
@@ -61,9 +62,9 @@ const ModifyListModal = ({
                   onChange={handleFormChange}
                   id="newTitle"
                 />
-                <textarea
+                <TextareaAutosize
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  rows={3}
+                  minRows={3}
                   placeholder="Description"
                   value={updateListEntity.newDescription}
                   onChange={handleFormChange}

@@ -13,6 +13,7 @@ import {
 import { useSWRConfig } from 'swr'
 import ResourcesFormItem from 'components/modals/resources-form-item'
 import { getInitWorkflowListResource } from 'utils/resource-util'
+import TextareaAutosize from 'react-textarea-autosize'
 
 interface ModifyItemModalProps {
   userApiId: string
@@ -105,9 +106,9 @@ const ModifyItemModal = ({
                     onChange={handleUpdateItemFormChange}
                     id="newTitle"
                   />
-                  <textarea
+                  <TextareaAutosize
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                    rows={3}
+                    minRows={3}
                     placeholder="Description"
                     value={updateItemEntity.newDescription}
                     onChange={handleUpdateItemFormChange}
