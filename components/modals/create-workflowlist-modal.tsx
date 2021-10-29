@@ -17,6 +17,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import CreateTitleAndTypeForm from 'components/modals/create-title-and-type-form'
 import Collapsible from 'react-collapsible'
 import Trigger, { TriggerWhenOpen } from 'components/modals/collapsible-trigger'
+import produce from 'immer'
 
 interface CreateWorkflowListModalProps {
   closeModal
@@ -50,21 +51,23 @@ const CreateWorkflowListModal = ({
   const { mutate } = useSWRConfig()
   // FUNCTIONS
   const setCreateChildren = (children: Array<CreateWorkflowListEntity>) => {
-    console.log(children)
     const newState = { ...createWorkflowListEntity, children: [...children] }
     setCreateWorkflowListEntity(newState)
-
-    console.log(createWorkflowListEntity.children)
   }
   const handleCreateWorkflowListEntityFormChange = (event) => {
-    const newState = { ...createWorkflowListEntity, [event.target.id]: event.target.value }
+    let newState =
+      event.target.value === WorkflowListType.ITEM
+        ? produce(createWorkflowListEntity, (draft) => {
+            draft[event.target.id] = event.target.value
+            draft.children = initCreateChildren
+          })
+        : produce(createWorkflowListEntity, (draft) => {
+            draft[event.target.id] = event.target.value
+          })
     setCreateWorkflowListEntity(newState)
     // Reset state on toggle change
     if (event.target.id === 'listType') {
       setResource(initResource)
-      if (event.target.value === WorkflowListType.ITEM) {
-        setCreateChildren(initCreateChildren)
-      }
     }
   }
 
