@@ -24,8 +24,8 @@ export const hasNoUserResource = (userResource?: UserResource): boolean => {
 export const getInitWorkflowListResource = (workflowList?: WorkflowList): WorkflowListResource => {
   return workflowList
     ? {
-        numeric: workflowList.numericResources ? workflowList.numericResources : [],
-        textual: workflowList.textualResources ? workflowList.textualResources : [],
+        numeric: workflowList.numericResources ? [...workflowList.numericResources] : [], // cloning the array is important here!
+        textual: workflowList.textualResources ? [...workflowList.textualResources] : [], // cloning the array is important here!
         temporal: workflowList.temporalResource
           ? {
               startDate: workflowList.temporalResource.startDate,
