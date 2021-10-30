@@ -1,7 +1,9 @@
 import { Draggable } from 'react-beautiful-dnd'
 import React, { useEffect, useState } from 'react'
 import { WorkflowList } from 'utils/models'
-import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
+import MoveWorkflowListModal, {
+  MoveWorkflowListCoverElement,
+} from 'components/modals/move-workflowlist-modal'
 import ButtonsMenu from 'components/buttons-menu'
 import { formatDate, formatDuration } from 'utils/date-util'
 import ModifyItemModal from 'components/modals/modify-item-modal'
@@ -15,6 +17,7 @@ import CalendarIcon, {
 } from 'components/icons'
 import 'react-popper-tooltip/dist/styles.css'
 import { ItemTemporalQueryResult } from 'components/temporal-query-results'
+import { getMoveClass } from 'utils/style-elements'
 
 interface WorkflowlistItemProps {
   index: number
@@ -42,9 +45,6 @@ const WorkflowlistItem = ({
       closeMoveModal()
     }
   }, [workflowListToMove])
-
-  // DYNAMIC CLASSES
-  const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
 
   // FUNCTIONS
   const openModifyModal = () => {
@@ -134,7 +134,9 @@ const WorkflowlistItem = ({
                 <DocumentTextIcon />
               </div>
               <span className="flex-none">{textualResource.label}</span>
-              <span className="flex-none">{textualResource.value ? ': ' + textualResource.value : ''}</span>
+              <span className="flex-none">
+                {textualResource.value ? ': ' + textualResource.value : ''}
+              </span>
             </div>
           )
         })}
@@ -161,11 +163,11 @@ const WorkflowlistItem = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
-          {showMoveModal &&
-          <div className="z-30 bg-transparent absolute w-full h-full"/>
-          }
+          {showMoveModal && (
+              <MoveWorkflowListCoverElement/>
+          )}
           <div
-            className={`bg-white border border-gray-500 rounded shadow min-w-[18rem] max-w-[30rem] p-1 ${moveClassName}`}
+            className={`bg-white border border-gray-500 rounded shadow min-w-[18rem] max-w-[30rem] p-1 ${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
               <div

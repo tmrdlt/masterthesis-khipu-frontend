@@ -4,8 +4,10 @@ import WorkflowlistList from 'components/workflowlist-list'
 import React, { useEffect, useState } from 'react'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import WorkflowlistItem from 'components/workflowlist-item'
-import { getDroppableStyle, getMargin } from 'utils/style-elements'
-import MoveWorkflowListModal from 'components/modals/move-workflowlist-modal'
+import { getDroppableStyle, getMargin, getMoveClass } from 'utils/style-elements'
+import MoveWorkflowListModal, {
+  MoveWorkflowListCoverElement,
+} from 'components/modals/move-workflowlist-modal'
 import DropButton from 'components/buttons/drop-button'
 import ButtonsMenu from 'components/buttons-menu'
 import { formatDate } from 'utils/date-util'
@@ -57,9 +59,6 @@ const WorkflowlistBoard = ({
     }
   }, [workflowList.boardTemporalQueryResult, workflowList.temporalQueryError])
 
-  // DYNAMIC CLASSES
-  const moveClassName = showMoveModal ? 'z-20 relative transition-all' : ''
-
   // FUNCTIONS
   const openCreateModal = () => {
     setShowCreateModal(true)
@@ -93,10 +92,10 @@ const WorkflowlistBoard = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
-          {showMoveModal &&
-          <div className="z-30 bg-transparent absolute w-full h-full"/>
-          }
-          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 min-w-[18rem] min-h-[8rem] ${moveClassName}`}>
+          {showMoveModal && (
+              <MoveWorkflowListCoverElement/>
+          )}
+          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 min-w-[18rem] min-h-[8rem] ${getMoveClass(showMoveModal)}`}>
             <div className="flex place-content-between">
               <div className="grid w-full m-1 hover:bg-blue-200" {...provided.dragHandleProps}>
                 <span className="font-bold">{workflowList.title} </span>

@@ -25,3 +25,7 @@ export const getRequiredClass = (required: boolean): string => {
     ? 'ring ring-red-500 ring-opacity-50 focus:ring focus:ring-red-500'
     : 'focus:ring focus:ring-indigo-200'
 }
+
+export const getMoveClass = (showMoveModal: boolean): string => {
+  return showMoveModal ? 'z-20 relative transition-all' : ''
+}
