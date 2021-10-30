@@ -8,15 +8,12 @@ interface IDropButtonProps {
   moveWorkflowList
 }
 
-const DropButton = ({
-  workflowList,
-  moveWorkflowList,
-}: IDropButtonProps): JSX.Element => {
+const DropButton = ({ workflowList, moveWorkflowList }: IDropButtonProps): JSX.Element => {
   const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip()
+    usePopperTooltip({placement: 'left'} )
 
   return (
-    <div className="z-20 relative transition-all">
+    <div className="z-40 relative transition-all">
       <button
         type="button"
         onClick={() => {
@@ -29,12 +26,12 @@ const DropButton = ({
           <DownloadIcon />
         </div>
       </button>
-        {visible && (
-            <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
-                <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-                Move to {workflowList ? workflowList.title : "root"}
-            </div>
-        )}
+      {visible && (
+        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs'})}>
+          <div {...getArrowProps({ className: 'tooltip-arrow'})} />
+          Move to {workflowList ? workflowList.title : 'root'}
+        </div>
+      )}
     </div>
   )
 }

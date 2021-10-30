@@ -161,6 +161,9 @@ const WorkflowlistItem = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
+          {showMoveModal &&
+          <div className="z-30 bg-transparent absolute w-full h-full"/>
+          }
           <div
             className={`bg-white border border-gray-500 rounded shadow min-w-[18rem] max-w-[30rem] p-1 ${moveClassName}`}
           >
