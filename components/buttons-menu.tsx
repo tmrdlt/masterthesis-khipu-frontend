@@ -213,9 +213,7 @@ const MoveWorkflowListButton = ({
         ref={setTriggerRef}
         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
       >
-        <div className="h-[14px] w-[14px]">
           <ArrowsExpand />
-        </div>
       </button>
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>

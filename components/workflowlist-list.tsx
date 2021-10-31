@@ -5,7 +5,14 @@ import WorkflowlistItem from 'components/workflowlist-item'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import ModifyListModal from 'components/modals/modify-list-modal'
 import WorkflowlistBoard from 'components/workflowlist-board'
-import { getDroppableStyle, getMargin, getMoveClass } from 'utils/style-elements'
+import {
+  getBackgroundColorClass,
+  getBorderClass,
+  getDragHandleHoverClass,
+  getDroppableStyle,
+  getMargin,
+  getMoveClass,
+} from 'utils/style-elements'
 import MoveWorkflowListModal, {
   MoveWorkflowListCoverElement,
 } from 'components/modals/move-workflowlist-modal'
@@ -76,10 +83,10 @@ const WorkflowlistList = ({
               <MoveWorkflowListCoverElement/>
           )}
           <div
-            className={`bg-red-300 border border-gray-500 rounded shadow min-w-[18rem] min-h-[8rem] p-1 ${getMoveClass(showMoveModal)}`}
+            className={`${getBorderClass(workflowList.level)} ${getBackgroundColorClass(workflowList.level)} shadow-md rounded min-w-[18rem] min-h-[8rem] p-1 ${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
-              <div className="w-full font-bold m-1 hover:bg-red-200" {...provided.dragHandleProps}>
+              <div className={`w-full font-bold m-1 ${getDragHandleHoverClass(workflowList.level)} rounded pl-1`} {...provided.dragHandleProps}>
                 {workflowList.title}
               </div>
               <ButtonsMenu
@@ -108,9 +115,8 @@ const WorkflowlistList = ({
               {(provided, snapshot) => (
                 <div
                   ref={provided.innerRef}
-                  style={getDroppableStyle(snapshot.isDraggingOver)}
                   {...provided.droppableProps}
-                  className="p-1"
+                  className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
                 >
                   {workflowList.children.map((wl, index) => {
                     if (wl.usageType == WorkflowListType.BOARD) {

@@ -4,12 +4,12 @@ import React from 'react'
 
 const ArrowsExpand = (): JSX.Element => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
       <path
+        d="M22.5061 12L19.9428 14.5633M4.56326 14.5633L2 12L4.56326 14.5633ZM2 12L4.56326 9.43674L2 12ZM2 12H8.40816H2ZM14.8163 4.31021L12.253 1.74695L14.8163 4.31021ZM12.253 1.74695L9.68979 4.31021L12.253 1.74695ZM12.253 1.74695V8.15511V1.74695ZM9.68979 19.6898L12.253 22.253L9.68979 19.6898ZM12.253 22.253L14.8163 19.6898L12.253 22.253ZM12.253 22.253V15.8449V22.253ZM22.5061 12H16.0979H22.5061ZM22.5061 12L19.9428 9.43674L22.5061 12Z"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
       />
     </svg>
   )
@@ -90,6 +90,25 @@ const DownloadIcon = (): JSX.Element => {
         strokeLinejoin="round"
         strokeWidth={2}
         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+      />
+    </svg>
+  )
+}
+
+const ClipboardIcon = (): JSX.Element => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
       />
     </svg>
   )
@@ -215,4 +234,5 @@ export {
   SwitchVerticalIcon,
   TrashIcon,
   UserIcon,
+  ClipboardIcon,
 }

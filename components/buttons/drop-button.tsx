@@ -1,6 +1,6 @@
 import React from 'react'
 import { WorkflowList } from 'utils/models'
-import { DownloadIcon } from 'components/icons'
+import { ClipboardIcon } from 'components/icons'
 import { usePopperTooltip } from 'react-popper-tooltip'
 
 interface IDropButtonProps {
@@ -20,10 +20,10 @@ const DropButton = ({ workflowList, moveWorkflowList }: IDropButtonProps): JSX.E
           moveWorkflowList(workflowList)
         }}
         ref={setTriggerRef}
-        className="flex items-center justify-center bg-green-400 hover:bg-green-600 text-gray-600 border border-gray-600 hover:border-white hover:text-white rounded w-10 h-8"
+        className="flex items-center justify-center bg-blue-300 hover:bg-blue-600 text-gray-600 border border-gray-600 hover:border-white hover:text-white rounded w-10 h-8"
       >
-        <div className="w-4 h-4">
-          <DownloadIcon />
+        <div className="w-4 h-4 flex items-center">
+          <ClipboardIcon />
         </div>
       </button>
       {visible && (

@@ -74,6 +74,7 @@ export type TemporalResource = {
 }
 
 export enum WorkflowListType {
+  ROOT = 'ROOT',
   BOARD = 'BOARD',
   LIST = 'LIST',
   ITEM = 'ITEM',

@@ -183,90 +183,95 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     })
   }
 
-  if (isLoading) return <LoadingSpinner/>
-  if (isError) return <LoadingError/>
+  if (isLoading) return <LoadingSpinner />
+  if (isError) return <LoadingError />
   return (
-    <div className="bg-gray-200 min-h-screen p-4">
-      <div className="flex gap-5 mb-3 m-1">
+    <>
+      <div className="flex justify-between items-center px-6 py-3 w-full bg-white">
+        <span>Khipu - Task management</span>
         <button
           type="button"
           onClick={() => {
             openModal()
           }}
-          className="bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500 hover:border-transparent rounded w-8 h-8"
+          className="relative inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          <PlusIcon />
+          <span className="-ml-1 mr-2 h-5 w-5 text-gray-400">
+            <PlusIcon aria-hidden="true" />
+          </span>
+          <span>New Element</span>
         </button>
         {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
       </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="ROOT" type="ROOT">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={getDroppableStyle(snapshot.isDraggingOver)}
-              {...provided.droppableProps}
-              className="p-1"
-            >
-              {workflowLists.map((wl, index) => {
-                if (wl.usageType == WorkflowListType.BOARD) {
-                  return (
-                    <WorkflowlistBoard
-                      key={index}
-                      index={index}
-                      workflowList={wl}
-                      userApiId={userApiId}
-                      workflowListToMove={workflowListToMove}
-                      marginClass={getMargin(WorkflowListType.LIST)}
-                      moveWorkflowList={moveWorkflowList}
-                      selectWorkflowListToMove={selectWorkflowListToMove}
-                      showDropButton={showDropButton}
-                      getTemporalQueryResult={getTemporalQueryResult}
-                    />
-                  )
-                } else if (wl.usageType == WorkflowListType.LIST) {
-                  return (
-                    <WorkflowlistList
-                      key={index}
-                      index={index}
-                      workflowList={wl}
-                      userApiId={userApiId}
-                      workflowListToMove={workflowListToMove}
-                      marginClass={getMargin(WorkflowListType.LIST)}
-                      moveWorkflowList={moveWorkflowList}
-                      selectWorkflowListToMove={selectWorkflowListToMove}
-                      showDropButton={showDropButton}
-                      getTemporalQueryResult={getTemporalQueryResult}
-                    />
-                  )
-                } else {
-                  return (
-                    <WorkflowlistItem
-                      key={index}
-                      index={index}
-                      workflowList={wl}
-                      userApiId={userApiId}
-                      workflowListToMove={workflowListToMove}
-                      marginClass={getMargin(WorkflowListType.LIST)}
-                      selectWorkflowListToMove={selectWorkflowListToMove}
-                    />
-                  )
-                }
-              })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-      {showCreateModal && (
-        <CreateWorkflowListModal
-          closeModal={closeModal}
-          defaultCreateType={getLowerWorkflowListType(null)}
-          parentUuid={null}
-          userApiId={userApiId}
-        />
-      )}
-    </div>
+      <div className="min-h-screen p-4 bg-blue-300">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="ROOT" type="ROOT">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+              >
+                {workflowLists.map((wl, index) => {
+                  if (wl.usageType == WorkflowListType.BOARD) {
+                    return (
+                      <WorkflowlistBoard
+                        key={index}
+                        index={index}
+                        workflowList={wl}
+                        userApiId={userApiId}
+                        workflowListToMove={workflowListToMove}
+                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        moveWorkflowList={moveWorkflowList}
+                        selectWorkflowListToMove={selectWorkflowListToMove}
+                        showDropButton={showDropButton}
+                        getTemporalQueryResult={getTemporalQueryResult}
+                      />
+                    )
+                  } else if (wl.usageType == WorkflowListType.LIST) {
+                    return (
+                      <WorkflowlistList
+                        key={index}
+                        index={index}
+                        workflowList={wl}
+                        userApiId={userApiId}
+                        workflowListToMove={workflowListToMove}
+                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        moveWorkflowList={moveWorkflowList}
+                        selectWorkflowListToMove={selectWorkflowListToMove}
+                        showDropButton={showDropButton}
+                        getTemporalQueryResult={getTemporalQueryResult}
+                      />
+                    )
+                  } else {
+                    return (
+                      <WorkflowlistItem
+                        key={index}
+                        index={index}
+                        workflowList={wl}
+                        userApiId={userApiId}
+                        workflowListToMove={workflowListToMove}
+                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        selectWorkflowListToMove={selectWorkflowListToMove}
+                      />
+                    )
+                  }
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        {showCreateModal && (
+          <CreateWorkflowListModal
+            closeModal={closeModal}
+            defaultCreateType={getLowerWorkflowListType(null)}
+            parentUuid={null}
+            userApiId={userApiId}
+          />
+        )}
+      </div>
+    </>
   )
 }
 

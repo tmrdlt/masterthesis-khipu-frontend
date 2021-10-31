@@ -1,3 +1,4 @@
+const colors  = require('tailwindcss/colors')
 module.exports = {
     mode: 'jit',
     purge: [
@@ -16,6 +17,8 @@ module.exports = {
             center: true, // https://tailwindcss.com/docs/container#centering-by-default
         },
         extend: {},
+        colors: {...colors,
+        hypeGray: '#EFF2F7'}
     },
     variants: {
         extend: {

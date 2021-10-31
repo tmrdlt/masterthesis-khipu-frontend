@@ -4,7 +4,14 @@ import WorkflowlistList from 'components/workflowlist-list'
 import React, { useEffect, useState } from 'react'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import WorkflowlistItem from 'components/workflowlist-item'
-import { getDroppableStyle, getMargin, getMoveClass } from 'utils/style-elements'
+import {
+  getBackgroundColorClass,
+  getBorderClass,
+  getDragHandleHoverClass,
+  getDroppableStyle,
+  getMargin,
+  getMoveClass,
+} from 'utils/style-elements'
 import MoveWorkflowListModal, {
   MoveWorkflowListCoverElement,
 } from 'components/modals/move-workflowlist-modal'
@@ -95,9 +102,9 @@ const WorkflowlistBoard = ({
           {showMoveModal && (
               <MoveWorkflowListCoverElement/>
           )}
-          <div className={`bg-blue-300 border border-gray-500 rounded shadow p-1 min-w-[18rem] min-h-[8rem] ${getMoveClass(showMoveModal)}`}>
+          <div className={`shadow-md ${getBorderClass(workflowList.level)} ${getBackgroundColorClass(workflowList.level)} rounded p-1 min-w-[18rem] min-h-[8rem] ${getMoveClass(showMoveModal)}`}>
             <div className="flex place-content-between">
-              <div className="grid w-full m-1 hover:bg-blue-200" {...provided.dragHandleProps}>
+              <div className={`grid w-full m-1 ${getDragHandleHoverClass(workflowList.level)} rounded pl-1`} {...provided.dragHandleProps}>
                 <span className="font-bold">{workflowList.title} </span>
                 {workflowList.isTemporalConstraintBoard && (
                   <div className="inline-flex items-center text-xs">
@@ -149,9 +156,8 @@ const WorkflowlistBoard = ({
               {(provided, snapshot) => (
                 <div
                   ref={provided.innerRef}
-                  style={getDroppableStyle(snapshot.isDraggingOver)}
                   {...provided.droppableProps}
-                  className="p-1"
+                  className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
                 >
                   <div className="flex justify-start overflow-x-scroll">
                     {workflowList.children.map((wl, index) => {
