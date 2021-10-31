@@ -167,7 +167,7 @@ const WorkflowlistItem = ({
           <>
             <div
               className={
-                `bg-gray-100 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-3 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
+                `bg-blueGray-100 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-3 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
               }
               {...provided.dragHandleProps}
             >

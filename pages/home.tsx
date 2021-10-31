@@ -24,7 +24,7 @@ import { useSWRConfig } from 'swr'
 import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
 import { getLowerWorkflowListType } from 'utils/models-util'
-import { PlusIcon } from 'components/icons'
+import { KhipuIcon, PlusIcon } from 'components/icons'
 import LoadingSpinner from 'components/modals/loading-spinner'
 import LoadingError from 'components/modals/loading-error'
 
@@ -186,10 +186,11 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   if (isLoading) return <LoadingSpinner />
   if (isError) return <LoadingError />
   return (
-    <>
-      <div className="flex justify-between items-center px-6 py-3 w-full bg-white">
+    <div className="min-h-screen bg-blueGray-300">
+      <div className="flex justify-between shadow-md items-center px-6 py-3 w-full bg-blueGray-100">
         <div className="flex items-center">
-          <span className="mr-5">Khipu</span>
+          <div className="h-8 w-8 mr-2"><KhipuIcon/></div>
+          <span className="mr-5">khipu</span>
           {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
         </div>
         <button
@@ -205,7 +206,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
           <span>New Element</span>
         </button>
       </div>
-      <div className="min-h-screen p-4 bg-blueGray-300">
+      <div className="p-4">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="ROOT" type="ROOT">
             {(provided, snapshot) => (
@@ -273,7 +274,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
           />
         )}
       </div>
-    </>
+    </div>
   )
 }
 
