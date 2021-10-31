@@ -82,7 +82,6 @@ const DocumentTextIcon = (): JSX.Element => {
   )
 }
 
-
 const ClipboardIcon = (): JSX.Element => {
   return (
     <svg
@@ -205,12 +204,39 @@ const UserIcon = (): JSX.Element => {
   )
 }
 
+const ViewBoardsIcon = (): JSX.Element => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
+      />
+    </svg>
+  )
+}
+
+const ViewListIcon = (): JSX.Element => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 10h16M4 14h16M4 18h16"
+      />
+    </svg>
+  )
+}
+
 export default CalendarIcon
 export {
   ArrowsExpand,
   ChartBarIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  ClipboardIcon,
   ClockIcon,
   DocumentTextIcon,
   FlagIcon,
@@ -221,5 +247,6 @@ export {
   SwitchVerticalIcon,
   TrashIcon,
   UserIcon,
-  ClipboardIcon,
+  ViewBoardsIcon,
+  ViewListIcon,
 }
