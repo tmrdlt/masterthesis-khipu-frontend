@@ -1,10 +1,10 @@
 import { ConvertWorkflowListEntity, WorkflowList, WorkflowListType } from 'utils/models'
 import React, { useState } from 'react'
 import {
+  ArrowsExpand,
   ClockIcon,
   PencilAltIcon,
   PlusIcon,
-  SelectorIcon,
   SwitchHorizontalIcon,
   SwitchVerticalIcon,
   TrashIcon,
@@ -42,8 +42,8 @@ const ButtonsMenu = ({
   startLoading,
 }: IButtonsMenuProps): JSX.Element => {
   // STATE
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { mutate } = useSWRConfig()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const { mutate } = useSWRConfig()
 
   // FUNCTIONS
   const convertWorkflowList = (convertWorkflowListEntity: ConvertWorkflowListEntity) => {
@@ -213,7 +213,9 @@ const MoveWorkflowListButton = ({
         ref={setTriggerRef}
         className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
       >
-        <SelectorIcon />
+        <div className="h-[14px] w-[14px]">
+          <ArrowsExpand />
+        </div>
       </button>
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>

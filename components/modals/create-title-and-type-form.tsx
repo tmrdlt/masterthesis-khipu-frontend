@@ -24,6 +24,7 @@ const CreateTitleAndTypeForm = ({
         placeholder="Title (required)"
         onChange={(event) => handleFormChange(event, index)}
         id="title"
+        autoFocus
       />
       <div className="flex items-center justify-center gap-2">
         <label className="inline-flex items-center gap-1">

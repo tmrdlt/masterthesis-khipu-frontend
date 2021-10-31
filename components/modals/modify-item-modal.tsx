@@ -107,6 +107,7 @@ const ModifyItemModal = ({
                   value={updateItemEntity.newTitle}
                   onChange={handleUpdateItemFormChange}
                   id="newTitle"
+                  autoFocus
                 />
                 <TextareaAutosize
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
