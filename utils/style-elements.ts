@@ -10,8 +10,8 @@ export const getDraggableStyle = (isDragging, draggableStyle) => ({
 
 export const getDroppableStyle = (isDraggingOver): string =>
   isDraggingOver
-    ? 'border border-dashed rounded border-2 border-blueGray-500 border-opacity-100 transition duration-500 ease-in-out'
-    : 'border border-dashed border-2 border-blueGray-500 rounded border-opacity-0 transition duration-500 ease-in-out'
+    ? 'border border-dashed rounded border-2 border-blueGray-500 border-opacity-100 transition-opacity duration-500 ease-in-out'
+    : 'border border-dashed border-2 border-blueGray-500 rounded border-opacity-0 transition-opacity transition duration-500 ease-in-out'
 
 export const getMargin = (parentType: WorkflowListType): string => {
   if (parentType === WorkflowListType.ROOT) {
@@ -33,25 +33,33 @@ export const getMoveClass = (showMoveModal: boolean): string => {
   return showMoveModal ? 'z-20 relative transition-all' : ''
 }
 
-export const getBorderClass = (level: number): string => {
-  if (level > 1) {
-    return 'border-t-4 border-blue-300'
+
+export const getBorderClassBoard = (level: number): string => {
+  if (level >= 0) {
+    return 'border-t-4 border-blue-300 rounded-tr rounded-b'
+  } else {
+  }
+}
+
+export const getBorderClassList = (level: number): string => {
+  if (level >= 0) {
+    return 'border-t-4 border-red-200 rounded-tr rounded-b'
   } else {
   }
 }
 
 export const getBorderClassItem = (level: number): string => {
-  if (level > 0) {
-    return 'border-t-4 border-blue-300'
+  if (level >= 0) {
+    return 'border-t-4 border-gray-100 rounded-tr rounded-b'
   } else {
   }
 }
 
 export const getBackgroundColorClass = (level: number): string => {
-  if (level === 1) {
-    return 'bg-blueGray-200'
-  } else {
+  if (true) {
     return 'bg-white'
+  } else {
+      return 'bg-blueGray-200'
   }
 }
 

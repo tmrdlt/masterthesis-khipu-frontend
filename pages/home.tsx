@@ -188,7 +188,10 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   return (
     <>
       <div className="flex justify-between items-center px-6 py-3 w-full bg-white">
-        <span>Khipu - Task management</span>
+        <div className="flex items-center">
+          <span className="mr-5">Khipu</span>
+          {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
+        </div>
         <button
           type="button"
           onClick={() => {
@@ -201,9 +204,8 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
           </span>
           <span>New Element</span>
         </button>
-        {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
       </div>
-      <div className="min-h-screen p-4 bg-blue-300">
+      <div className="min-h-screen p-4 bg-blueGray-300">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="ROOT" type="ROOT">
             {(provided, snapshot) => (

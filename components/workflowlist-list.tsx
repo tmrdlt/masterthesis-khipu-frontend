@@ -6,9 +6,7 @@ import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal
 import ModifyListModal from 'components/modals/modify-list-modal'
 import WorkflowlistBoard from 'components/workflowlist-board'
 import {
-  getBackgroundColorClass,
-  getBorderClass,
-  getDragHandleHoverClass,
+  getBorderClassList,
   getDroppableStyle,
   getMargin,
   getMoveClass,
@@ -78,15 +76,24 @@ const WorkflowlistList = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass} overflow-visible`}>
           {showMoveModal && (
               <MoveWorkflowListCoverElement/>
           )}
+          <>
+            <div
+                className={
+                  `bg-red-200 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-4 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
+                }
+                {...provided.dragHandleProps}
+            >
+              List
+            </div>
           <div
-            className={`${getBorderClass(workflowList.level)} ${getBackgroundColorClass(workflowList.level)} shadow-md rounded min-w-[18rem] min-h-[8rem] p-1 ${getMoveClass(showMoveModal)}`}
+            className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1 overflow-visible ${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
-              <div className={`w-full font-bold m-1 ${getDragHandleHoverClass(workflowList.level)} rounded pl-1`} {...provided.dragHandleProps}>
+              <div className={`w-full font-bold m-1 pl-2`} >
                 {workflowList.title}
               </div>
               <ButtonsMenu
@@ -100,7 +107,7 @@ const WorkflowlistList = ({
             </div>
 
             <div className="flex place-content-between">
-              <div className="m-1 text-sm whitespace-pre-line">{workflowList.description}</div>
+              <div className="m-1 text-sm whitespace-pre-line pl-2">{workflowList.description}</div>
               {workflowList.temporalQueryResult != null && (
                 <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
               )}
@@ -116,7 +123,7 @@ const WorkflowlistList = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+                  className={`p-3 ${getDroppableStyle(snapshot.isDraggingOver)}`}
                 >
                   {workflowList.children.map((wl, index) => {
                     if (wl.usageType == WorkflowListType.BOARD) {
@@ -189,6 +196,7 @@ const WorkflowlistList = ({
               selectWorkflowListToMove={selectWorkflowListToMove}
             />
           )}
+          </>
         </div>
       )}
     </Draggable>

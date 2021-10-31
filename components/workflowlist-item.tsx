@@ -17,7 +17,7 @@ import CalendarIcon, {
 } from 'components/icons'
 import 'react-popper-tooltip/dist/styles.css'
 import { ItemTemporalQueryResult } from 'components/temporal-query-results'
-import { getBorderClassItem, getDragHandleHoverClass, getMoveClass } from 'utils/style-elements'
+import { getBackgroundColorClass, getBorderClassItem, getMoveClass } from 'utils/style-elements'
 
 interface WorkflowlistItemProps {
   index: number
@@ -163,53 +163,64 @@ const WorkflowlistItem = ({
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, _snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
-          {showMoveModal && (
-              <MoveWorkflowListCoverElement/>
-          )}
-          <div
-            className={`bg-white ${getBorderClassItem(workflowList.level)} shadow-md shadow rounded min-w-[18rem] max-w-[30rem] p-1 ${getMoveClass(showMoveModal)}`}
-          >
-            <div className="flex place-content-between">
-              <div
-                className={`flex flex-col w-2/3 m-1 ${getDragHandleHoverClass(workflowList.level)} rounded pl-1`}
-                {...provided.dragHandleProps}
-              >
-                <div className="break-all font-bold">{workflowList.title} </div>
-                {getTemporalResourceText()}
-                {getNumericResourcesText()}
-                {getTextualResourcesText()}
-                {getUserResourceText()}
+          {showMoveModal && <MoveWorkflowListCoverElement />}
+          <>
+            <div
+              className={
+                `bg-gray-100 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-3 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
+              }
+              {...provided.dragHandleProps}
+            >
+              Item
+            </div>
+            <div
+              className={`bg-white ${getBorderClassItem(
+                workflowList.level
+              )} ${getBackgroundColorClass(workflowList.level)} shadow-md shadow min-w-[18rem] max-w-[30rem] p-1 ${getMoveClass(showMoveModal)}`}
+            >
+              <div className="flex place-content-between">
+                <div
+                  className={`flex flex-col w-2/3 m-1 rounded pl-1`}
+                >
+                  <div className="break-all font-bold">{workflowList.title} </div>
+                  {getTemporalResourceText()}
+                  {getNumericResourcesText()}
+                  {getTextualResourcesText()}
+                  {getUserResourceText()}
+                </div>
+                <div className="flex flex-col items-center">
+                  <ButtonsMenu
+                    userApiId={userApiId}
+                    workflowList={workflowList}
+                    selectWorkflowListToMove={selectWorkflowListToMove}
+                    openModifyModal={openModifyModal}
+                    openMoveModal={openMoveModal}
+                  />
+                  {workflowList.temporalQueryResult != null && (
+                    <ItemTemporalQueryResult
+                      temporalQueryResult={workflowList.temporalQueryResult}
+                    />
+                  )}
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <ButtonsMenu
-                  userApiId={userApiId}
-                  workflowList={workflowList}
-                  selectWorkflowListToMove={selectWorkflowListToMove}
-                  openModifyModal={openModifyModal}
-                  openMoveModal={openMoveModal}
-                />
-                {workflowList.temporalQueryResult != null && (
-                  <ItemTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
-                )}
+              <div className="m-1 text-sm whitespace-pre-line break-words p-1">
+                {workflowList.description}
               </div>
             </div>
-            <div className="m-1 text-sm whitespace-pre-line break-words p-1">
-              {workflowList.description}
-            </div>
-          </div>
-          {showModifyModal && (
-            <ModifyItemModal
-              userApiId={userApiId}
-              workflowList={workflowList}
-              closeModal={closeModifyModal}
-            />
-          )}
-          {showMoveModal && (
-            <MoveWorkflowListModal
-              closeModal={closeMoveModal}
-              selectWorkflowListToMove={selectWorkflowListToMove}
-            />
-          )}
+            {showModifyModal && (
+              <ModifyItemModal
+                userApiId={userApiId}
+                workflowList={workflowList}
+                closeModal={closeModifyModal}
+              />
+            )}
+            {showMoveModal && (
+              <MoveWorkflowListModal
+                closeModal={closeMoveModal}
+                selectWorkflowListToMove={selectWorkflowListToMove}
+              />
+            )}
+          </>
         </div>
       )}
     </Draggable>
