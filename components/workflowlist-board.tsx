@@ -149,7 +149,7 @@ const WorkflowlistBoard = ({
               </div>
 
               <div className="flex place-content-between">
-                <div className="m-1 text-sm whitespace-pre pl-2">{workflowList.description}</div>
+                <div className="m-1 text-sm whitespace-pre-line break-words pl-2 pr-2">{workflowList.description}</div>
                 {workflowList.temporalQueryResult != null && (
                   <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
                 )}

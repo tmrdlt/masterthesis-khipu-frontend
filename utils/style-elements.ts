@@ -54,19 +54,3 @@ export const getBorderClassItem = (level: number): string => {
   } else {
   }
 }
-
-export const getBackgroundColorClass = (level: number): string => {
-  if (true) {
-    return 'bg-white'
-  } else {
-      return 'bg-blueGray-200'
-  }
-}
-
-export const getDragHandleHoverClass = (level: number): string => {
-  if (level === 1) {
-    return 'hover:bg-white'
-  } else {
-    return 'hover:bg-hypeGray'
-  }
-}

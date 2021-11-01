@@ -25,8 +25,8 @@ import produce from 'immer'
 import { useWorkflowLists } from 'utils/swr-util'
 import { getLowerWorkflowListType } from 'utils/models-util'
 import { KhipuIcon, PlusIcon } from 'components/icons'
-import LoadingSpinner from 'components/modals/loading-spinner'
-import LoadingError from 'components/modals/loading-error'
+import LoadingSpinner from 'components/loading-spinner'
+import LoadingError from 'components/loading-error'
 
 interface HomeProps {
   userApiId: string

@@ -2,8 +2,8 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { getUserFetcher } from 'utils/workflow-api'
 import { useRouter } from 'next/router'
 import Home from 'pages/home'
-import LoadingSpinner from 'components/modals/loading-spinner'
-import LoadingError from 'components/modals/loading-error'
+import LoadingSpinner from 'components/loading-spinner'
+import LoadingError from 'components/loading-error'
 
 const HomeWrapper: FunctionComponent = (): JSX.Element => {
   const [userApiId, setUserApiId] = useState(null)

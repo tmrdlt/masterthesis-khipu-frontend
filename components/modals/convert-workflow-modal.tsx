@@ -1,5 +1,6 @@
 import React from 'react'
-import { WorkflowList, WorkflowListType } from 'utils/models'
+import { WorkflowList } from 'utils/models'
+import { capitalizeFirstLetter } from 'utils/string-util'
 
 interface ConvertWorkflowListModalProps {
   workflowList: WorkflowList
@@ -21,11 +22,12 @@ const ConvertWorkflowListModal = ({
                     {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
                     <div className="m-5">
                         <h3 className="font-bold">
-                            Are you sure you want to convert
-                            the {workflowList.usageType.toLowerCase()} &quot;{workflowList.title}&quot; to
-                            an {WorkflowListType.ITEM.toLowerCase()}? You might loose information as only direct
-                            sub-elements will be preserved.
+                            Convert to Item
                         </h3>
+                        Do you really want to convert
+                        the {capitalizeFirstLetter(workflowList.usageType)} &quot;{workflowList.title}&quot; to
+                        be an Item? <br/> Be aware that you might loose information as only direct
+                        sub-elements will be preserved.
                     </div>
                     <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
                         <button

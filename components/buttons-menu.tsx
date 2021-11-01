@@ -301,7 +301,7 @@ const ConvertToBoardButton = ({ convertWorkflowList }: ConvertToBoardButtonProps
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-          Convert to board
+          Convert to Board
         </div>
       )}
     </div>
@@ -330,7 +330,7 @@ const ConvertToItemButton = ({ setShowConvertModal }: ConvertToItemButtonProps):
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-          Convert to item
+          Convert to Item
         </div>
       )}
     </div>
@@ -359,7 +359,7 @@ const ConvertToListButton = ({ convertWorkflowList }: ConvertToListButtonProps):
       {visible && (
         <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs' })}>
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
-          Convert to list
+          Convert to List
         </div>
       )}
     </div>

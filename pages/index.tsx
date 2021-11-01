@@ -2,8 +2,8 @@ import React, { FunctionComponent, useState } from 'react'
 import Link from 'next/link'
 import CreateUserModal from 'components/modals/create-user-modal'
 import { useUsers } from 'utils/swr-util'
-import LoadingSpinner from 'components/modals/loading-spinner'
-import LoadingError from 'components/modals/loading-error'
+import LoadingSpinner from 'components/loading-spinner'
+import LoadingError from 'components/loading-error'
 
 const Start: FunctionComponent = (): JSX.Element => {
   // STATE

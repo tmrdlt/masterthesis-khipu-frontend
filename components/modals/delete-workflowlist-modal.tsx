@@ -1,5 +1,6 @@
 import React from 'react'
 import { WorkflowList } from 'utils/models'
+import { capitalizeFirstLetter } from 'utils/string-util'
 
 interface DeleteWorkflowListModalProps {
   workflowList: WorkflowList
@@ -20,9 +21,10 @@ const DeleteWorkflowListModal = ({
           {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
           <div className="m-5">
             <h3 className="font-bold">
-              Are you sure you want to delete the {workflowList.usageType.toLowerCase()} &quot;
-              {workflowList.title}&quot;?
+              Delete element
             </h3>
+            Do you really want to delete the {capitalizeFirstLetter(workflowList.usageType)} &quot;
+            {workflowList.title}&quot;?
           </div>
           <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
             <button

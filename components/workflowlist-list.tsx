@@ -76,7 +76,7 @@ const WorkflowlistList = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass} overflow-visible`}>
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           {showMoveModal && (
               <MoveWorkflowListCoverElement/>
           )}
@@ -90,7 +90,7 @@ const WorkflowlistList = ({
               List
             </div>
           <div
-            className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1 overflow-visible ${getMoveClass(showMoveModal)}`}
+            className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
               <div className={`w-full font-bold m-1 pl-2`} >
@@ -107,7 +107,7 @@ const WorkflowlistList = ({
             </div>
 
             <div className="flex place-content-between">
-              <div className="m-1 text-sm whitespace-pre-line pl-2">{workflowList.description}</div>
+              <div className="m-1 text-sm whitespace-pre-line break-words pl-2 pr-2">{workflowList.description}</div>
               {workflowList.temporalQueryResult != null && (
                 <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
               )}
@@ -123,7 +123,7 @@ const WorkflowlistList = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className={`p-3 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+                  className={`p-3 w-full ${getDroppableStyle(snapshot.isDraggingOver)}`}
                 >
                   {workflowList.children.map((wl, index) => {
                     if (wl.usageType == WorkflowListType.BOARD) {
