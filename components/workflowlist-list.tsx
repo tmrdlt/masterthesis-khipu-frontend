@@ -90,7 +90,7 @@ const WorkflowlistList = ({
               List
             </div>
           <div
-            className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1${getMoveClass(showMoveModal)}`}
+            className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1 ${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
               <div className={`w-full font-bold m-1 pl-2`} >
