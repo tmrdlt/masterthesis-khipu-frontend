@@ -55,7 +55,7 @@ const CreateTitleAndTypeForm = ({
             value={WorkflowListType.ITEM}
             id="listType"
             checked={createEntity.listType === WorkflowListType.ITEM}
-            onChange={handleFormChange}
+            onChange={(event) => handleFormChange(event, index)}
             className="h-4 w-4"
           />
           <span>Item</span>

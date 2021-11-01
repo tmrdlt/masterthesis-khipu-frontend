@@ -57,7 +57,7 @@ const ModifyItemModal = ({
     return (
       compareDateOptions(resource.temporal.startDate, initResource.temporal.startDate) &&
       compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate) &&
-      initResource.temporal.durationInMinutes ==
+      resource.temporal.durationInMinutes ==
         getOptionalNumber(initResource.temporal.durationInMinutes)
     )
   }

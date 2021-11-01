@@ -15,11 +15,11 @@ export const getDroppableStyle = (isDraggingOver): string =>
 
 export const getMargin = (parentType: WorkflowListType): string => {
   if (parentType === WorkflowListType.ROOT) {
-    return 'mb-5'
+    return 'mb-2'
   } else if (parentType == WorkflowListType.BOARD) {
-    return 'mr-5'
+    return 'mr-2'
   } else {
-    return 'mb-5'
+    return 'mb-2'
   }
 }
 

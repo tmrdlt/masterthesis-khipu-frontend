@@ -182,7 +182,7 @@ const WorkflowlistItem = ({
                 <div
                   className={`flex flex-col w-2/3 m-1 rounded pl-1`}
                 >
-                  <div className="break-all font-bold">{workflowList.title} </div>
+                  <div className="overflow-ellipsis overflow-hidden font-bold">{workflowList.title} </div>
                   {getTemporalResourceText()}
                   {getNumericResourcesText()}
                   {getTextualResourcesText()}

@@ -116,7 +116,7 @@ const WorkflowlistBoard = ({
                 <div
                   className={`grid w-full m-1 pl-2`}
                 >
-                  <span className="font-bold">{workflowList.title} </span>
+                  <span className="overflow-ellipsis overflow-hidden font-bold">{workflowList.title} </span>
                   {workflowList.isTemporalConstraintBoard && (
                     <div className="inline-flex items-center text-xs">
                       <div className="w-3 h-3 mr-1">

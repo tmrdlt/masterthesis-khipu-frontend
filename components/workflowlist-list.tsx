@@ -93,7 +93,7 @@ const WorkflowlistList = ({
             className={`${getBorderClassList(workflowList.level)} bg-red-100 shadow-md min-w-[18rem] min-h-[8rem] p-1 ${getMoveClass(showMoveModal)}`}
           >
             <div className="flex place-content-between">
-              <div className={`w-full font-bold m-1 pl-2`} >
+              <div className={`w-full font-bold overflow-ellipsis overflow-hidden m-1 pl-2`} >
                 {workflowList.title}
               </div>
               <ButtonsMenu

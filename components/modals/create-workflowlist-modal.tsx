@@ -51,7 +51,7 @@ const CreateWorkflowListModal = ({
   const { mutate } = useSWRConfig()
   // FUNCTIONS
   const setCreateChildren = (children: Array<CreateWorkflowListEntity>) => {
-    const newState = { ...createWorkflowListEntity, children: [...children] }
+    const newState = produce(createWorkflowListEntity, (draft) => {draft.children = children})
     setCreateWorkflowListEntity(newState)
   }
   const handleCreateWorkflowListEntityFormChange = (event) => {
@@ -87,7 +87,7 @@ const CreateWorkflowListModal = ({
     return (
       compareDateOptions(resource.temporal.startDate, initResource.temporal.startDate) &&
       compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate) &&
-      initResource.temporal.durationInMinutes ==
+      resource.temporal.durationInMinutes ==
         getOptionalNumber(initResource.temporal.durationInMinutes)
     )
   }
