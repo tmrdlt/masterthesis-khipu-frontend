@@ -120,7 +120,7 @@ const CreateWorkflowListModal = ({
 
   // https://tailwindcomponents.com/component/modal-1
   return (
-    <div className="h-screen w-full overflow-scroll fixed left-0 top-0 flex justify-center items-start bg-gray-500 bg-opacity-75">
+    <div className="h-screen w-full overflow-auto fixed left-0 top-0 flex justify-center items-start bg-gray-500 bg-opacity-75">
       <div className="flex flex-col justify-between bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
         <div className="m-5">
