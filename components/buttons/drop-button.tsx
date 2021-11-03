@@ -18,7 +18,7 @@ const DropButton = ({ workflowList, moveWorkflowList }: IDropButtonProps): JSX.E
                 onClick={() => {
                     moveWorkflowList(workflowList)
                 }}
-                className="flex items-center bg-transparent group-hover:bg-white group-hover:bg-opacity-20 justify-center border border-dashed rounded border-2 text-white w-[18rem] h-[4rem]"
+                className="flex items-center bg-transparent group-hover:bg-white group-hover:bg-opacity-20 justify-center border border-dashed rounded border-2 text-white w-[20rem] h-[4rem]"
             >
                 <div className="text-sm">
                     Move to {workflowList ? `"${workflowList.title}"` : 'root'}

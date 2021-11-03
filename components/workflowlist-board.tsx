@@ -167,9 +167,9 @@ const WorkflowlistBoard = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`${getDroppableStyle(snapshot.isDraggingOver)} p-2`}
+                    className={`${getDroppableStyle(snapshot.isDraggingOver)} p-2 overflow-x-auto`}
                   >
-                    <div className="flex justify-start overflow-x-auto min-w-[20rem] min-h-[5rem]">
+                    <div className="flex justify-start overflow-visible min-w-[20rem] min-h-[5rem]">
                       {workflowList.children.map((wl, index) => {
                         if (wl.usageType == WorkflowListType.BOARD) {
                           return (
