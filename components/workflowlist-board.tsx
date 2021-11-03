@@ -96,7 +96,7 @@ const WorkflowlistBoard = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass} max-w-full`}>
           {showMoveModal && <MoveWorkflowListCoverElement />}
           <>
             <div className="flex shadow-md max-w-max">
@@ -167,9 +167,9 @@ const WorkflowlistBoard = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`${getDroppableStyle(snapshot.isDraggingOver)}`}
+                    className={`${getDroppableStyle(snapshot.isDraggingOver)} p-2`}
                   >
-                    <div className="flex justify-start overflow-x-auto min-w-[18rem] min-h-[5rem] p-2">
+                    <div className="flex justify-start overflow-x-auto min-w-[20rem] min-h-[5rem]">
                       {workflowList.children.map((wl, index) => {
                         if (wl.usageType == WorkflowListType.BOARD) {
                           return (

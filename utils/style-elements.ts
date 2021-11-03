@@ -14,16 +14,12 @@ export const getMargin = (
   position: number,
   parentLength: number
 ): string => {
-  if (position + 1 === parentLength) {
-    return ''
-  } else {
-    if (parentType === WorkflowListType.ROOT) {
-      return 'mb-2' + ' ' + position
-    } else if (parentType == WorkflowListType.BOARD) {
-      return 'mr-2' + ' ' + position
-    } else if (parentType == WorkflowListType.LIST) {
-      return 'mb-2' + ' ' + position
-    }
+  if (parentType === WorkflowListType.ROOT) {
+    return 'mb-2'
+  } else if (parentType == WorkflowListType.BOARD) {
+    return 'mr-2'
+  } else if (parentType == WorkflowListType.LIST) {
+    return 'mb-2'
   }
 }
 

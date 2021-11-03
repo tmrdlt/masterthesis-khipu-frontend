@@ -76,7 +76,7 @@ const WorkflowlistList = ({
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
+        <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass} max-w-full`}>
           {showMoveModal && <MoveWorkflowListCoverElement />}
           <>
             <div className="flex shadow-md max-w-max">
@@ -123,59 +123,74 @@ const WorkflowlistList = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`flex flex-col items-start p-2 min-w-[18rem] min-h-[5rem] ${getDroppableStyle(
-                      snapshot.isDraggingOver
-                    )}`}
+                    className={`${getDroppableStyle(snapshot.isDraggingOver)} p-2`}
                   >
-                    {workflowList.children.map((wl, index) => {
-                      if (wl.usageType == WorkflowListType.BOARD) {
-                        return (
-                          <WorkflowlistBoard
-                            key={index}
-                            index={index}
-                            workflowList={wl}
-                            userApiId={userApiId}
-                            workflowListToMove={workflowListToMove}
-                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
-                            moveWorkflowList={moveWorkflowList}
-                            selectWorkflowListToMove={selectWorkflowListToMove}
-                            showDropButton={showDropButton}
-                            getTemporalQueryResult={getTemporalQueryResult}
-                          />
-                        )
-                      } else if (wl.usageType == WorkflowListType.LIST) {
-                        return (
-                          <WorkflowlistList
-                            key={index}
-                            index={index}
-                            workflowList={wl}
-                            userApiId={userApiId}
-                            workflowListToMove={workflowListToMove}
-                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
-                            moveWorkflowList={moveWorkflowList}
-                            selectWorkflowListToMove={selectWorkflowListToMove}
-                            showDropButton={showDropButton}
-                            getTemporalQueryResult={getTemporalQueryResult}
-                          />
-                        )
-                      } else {
-                        return (
-                          <WorkflowlistItem
-                            key={index}
-                            index={index}
-                            workflowList={wl}
-                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
-                            userApiId={userApiId}
-                            workflowListToMove={workflowListToMove}
-                            selectWorkflowListToMove={selectWorkflowListToMove}
-                          />
-                        )
-                      }
-                    })}
-                    {provided.placeholder}
-                    {showDropButton(workflowList) && (
-                      <DropButton workflowList={workflowList} moveWorkflowList={moveWorkflowList} />
-                    )}
+                    <div className="flex flex-col items-start min-w-[20rem] min-h-[5rem]">
+                      {workflowList.children.map((wl, index) => {
+                        if (wl.usageType == WorkflowListType.BOARD) {
+                          return (
+                            <WorkflowlistBoard
+                              key={index}
+                              index={index}
+                              workflowList={wl}
+                              userApiId={userApiId}
+                              workflowListToMove={workflowListToMove}
+                              marginClass={getMargin(
+                                workflowList.usageType,
+                                index,
+                                workflowList.children.length
+                              )}
+                              moveWorkflowList={moveWorkflowList}
+                              selectWorkflowListToMove={selectWorkflowListToMove}
+                              showDropButton={showDropButton}
+                              getTemporalQueryResult={getTemporalQueryResult}
+                            />
+                          )
+                        } else if (wl.usageType == WorkflowListType.LIST) {
+                          return (
+                            <WorkflowlistList
+                              key={index}
+                              index={index}
+                              workflowList={wl}
+                              userApiId={userApiId}
+                              workflowListToMove={workflowListToMove}
+                              marginClass={getMargin(
+                                workflowList.usageType,
+                                index,
+                                workflowList.children.length
+                              )}
+                              moveWorkflowList={moveWorkflowList}
+                              selectWorkflowListToMove={selectWorkflowListToMove}
+                              showDropButton={showDropButton}
+                              getTemporalQueryResult={getTemporalQueryResult}
+                            />
+                          )
+                        } else {
+                          return (
+                            <WorkflowlistItem
+                              key={index}
+                              index={index}
+                              workflowList={wl}
+                              marginClass={getMargin(
+                                workflowList.usageType,
+                                index,
+                                workflowList.children.length
+                              )}
+                              userApiId={userApiId}
+                              workflowListToMove={workflowListToMove}
+                              selectWorkflowListToMove={selectWorkflowListToMove}
+                            />
+                          )
+                        }
+                      })}
+                      {provided.placeholder}
+                      {showDropButton(workflowList) && (
+                        <DropButton
+                          workflowList={workflowList}
+                          moveWorkflowList={moveWorkflowList}
+                        />
+                      )}
+                    </div>
                   </div>
                 )}
               </Droppable>

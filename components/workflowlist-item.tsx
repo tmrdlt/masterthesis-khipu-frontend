@@ -181,12 +181,12 @@ const WorkflowlistItem = ({
             <div
               className={`bg-white ${getBorderClassItem(
                 workflowList.level
-              )} shadow-md shadow min-w-[18rem] max-w-[30rem] p-1 ${getMoveClass(showMoveModal)}`}
+              )} shadow-md shadow min-w-[20rem] max-w-[20rem] p-1 ${getMoveClass(showMoveModal)}`}
             >
               <div className="flex place-content-between">
-                <div className={`flex flex-col w-2/3 m-1 rounded pl-1`}>
+                <div className={`flex flex-col m-1 rounded pl-1`}>
                   <div className="text-sm font-medium overflow-ellipsis overflow-hidden">
-                    {workflowList.title}{' '}
+                    {workflowList.title}
                   </div>
                   {getTemporalResourceText()}
                   {getNumericResourcesText()}
