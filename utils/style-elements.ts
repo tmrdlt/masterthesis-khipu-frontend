@@ -9,13 +9,21 @@ export const getDroppableStyle = (isDraggingOver): string =>
     ? 'border border-dashed rounded border-2 border-blueGray-500 border-opacity-100 transition-opacity duration-500 ease-in-out'
     : 'border border-dashed border-2 border-blueGray-500 rounded border-opacity-0 transition-opacity transition duration-500 ease-in-out'
 
-export const getMargin = (parentType: WorkflowListType): string => {
-  if (parentType === WorkflowListType.ROOT) {
-    return 'mb-2'
-  } else if (parentType == WorkflowListType.BOARD) {
-    return 'mr-2'
+export const getMargin = (
+  parentType: WorkflowListType,
+  position: number,
+  parentLength: number
+): string => {
+  if (position + 1 === parentLength) {
+    return ''
   } else {
-    return 'mb-2'
+    if (parentType === WorkflowListType.ROOT) {
+      return 'mb-2' + ' ' + position
+    } else if (parentType == WorkflowListType.BOARD) {
+      return 'mr-2' + ' ' + position
+    } else if (parentType == WorkflowListType.LIST) {
+      return 'mb-2' + ' ' + position
+    }
   }
 }
 

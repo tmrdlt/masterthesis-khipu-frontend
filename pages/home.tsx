@@ -219,7 +219,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+                className={`p-1 flex flex-col items-start ${getDroppableStyle(snapshot.isDraggingOver)}`}
               >
                 {workflowLists.map((wl, index) => {
                   if (wl.usageType == WorkflowListType.BOARD) {
@@ -230,7 +230,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                         workflowList={wl}
                         userApiId={userApiId}
                         workflowListToMove={workflowListToMove}
-                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        marginClass={getMargin(WorkflowListType.ROOT, index, workflowLists.length)}
                         moveWorkflowList={moveWorkflowList}
                         selectWorkflowListToMove={selectWorkflowListToMove}
                         showDropButton={showDropButton}
@@ -245,7 +245,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                         workflowList={wl}
                         userApiId={userApiId}
                         workflowListToMove={workflowListToMove}
-                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        marginClass={getMargin(WorkflowListType.ROOT, index, workflowLists.length)}
                         moveWorkflowList={moveWorkflowList}
                         selectWorkflowListToMove={selectWorkflowListToMove}
                         showDropButton={showDropButton}
@@ -260,7 +260,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                         workflowList={wl}
                         userApiId={userApiId}
                         workflowListToMove={workflowListToMove}
-                        marginClass={getMargin(WorkflowListType.ROOT)}
+                        marginClass={getMargin(WorkflowListType.ROOT, index, workflowLists.length)}
                         selectWorkflowListToMove={selectWorkflowListToMove}
                       />
                     )

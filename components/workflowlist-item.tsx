@@ -167,17 +167,15 @@ const WorkflowlistItem = ({
           <>
             <div className="flex shadow-md max-w-max">
               <div
-                  className={
-                    `bg-blueGray-100 h-5 w-20 rounded-t flex items-center tracking-wide pl-3 text-xs text-gray-700 ${getMoveClass(showMoveModal)}`
-                  }
-                  {...provided.dragHandleProps}
+                className={`bg-blueGray-100 h-5 w-20 rounded-t flex items-center tracking-wide pl-3 text-xs text-gray-700 ${getMoveClass(
+                  showMoveModal
+                )}`}
+                {...provided.dragHandleProps}
               >
                 Item
               </div>
               {workflowList.temporalQueryResult != null && (
-                  <ItemTemporalQueryResult
-                      temporalQueryResult={workflowList.temporalQueryResult}
-                  />
+                <ItemTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
               )}
             </div>
             <div
@@ -186,10 +184,10 @@ const WorkflowlistItem = ({
               )} shadow-md shadow min-w-[18rem] max-w-[30rem] p-1 ${getMoveClass(showMoveModal)}`}
             >
               <div className="flex place-content-between">
-                <div
-                  className={`flex flex-col w-2/3 m-1 rounded pl-1`}
-                >
-                  <div className="text-sm font-medium overflow-ellipsis overflow-hidden">{workflowList.title} </div>
+                <div className={`flex flex-col w-2/3 m-1 rounded pl-1`}>
+                  <div className="text-sm font-medium overflow-ellipsis overflow-hidden">
+                    {workflowList.title}{' '}
+                  </div>
                   {getTemporalResourceText()}
                   {getNumericResourcesText()}
                   {getTextualResourcesText()}
@@ -205,9 +203,11 @@ const WorkflowlistItem = ({
                   />
                 </div>
               </div>
-              <div className="mr-1 ml-1 mb-1 text-sm whitespace-pre-line break-words p-1">
-                {workflowList.description}
-              </div>
+              {workflowList.description !== null && (
+                <div className="text-sm whitespace-pre-line break-words mr-2 ml-2 mb-2">
+                  {workflowList.description}
+                </div>
+              )}
             </div>
             {showModifyModal && (
               <ModifyItemModal

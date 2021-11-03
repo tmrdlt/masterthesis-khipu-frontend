@@ -95,9 +95,7 @@ const WorkflowlistList = ({
             <div
               className={`${getBorderClassList(
                 workflowList.level
-              )} bg-red-100 shadow-md min-w-[18rem] w-auto max-w-max min-h-[8rem] p-1 ${getMoveClass(
-                showMoveModal
-              )}`}
+              )} bg-red-100 shadow-md p-1 ${getMoveClass(showMoveModal)}`}
             >
               <div className="flex place-content-between">
                 <div
@@ -114,16 +112,20 @@ const WorkflowlistList = ({
                   openMoveModal={openMoveModal}
                 />
               </div>
-              <div className="text-sm whitespace-pre-line border-2 border-opacity-0 break-words ml-2 mr-2">
-                {workflowList.description}
-              </div>
+              {workflowList.description != null && (
+                <div className="text-sm whitespace-pre-line break-words ml-2 mr-2">
+                  {workflowList.description}
+                </div>
+              )}
 
               <Droppable droppableId={workflowList.apiId} type={workflowList.level}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`p-2 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+                    className={`flex flex-col items-start p-2 min-w-[18rem] min-h-[5rem] ${getDroppableStyle(
+                      snapshot.isDraggingOver
+                    )}`}
                   >
                     {workflowList.children.map((wl, index) => {
                       if (wl.usageType == WorkflowListType.BOARD) {
@@ -134,7 +136,7 @@ const WorkflowlistList = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
-                            marginClass={getMargin(workflowList.usageType)}
+                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
@@ -149,7 +151,7 @@ const WorkflowlistList = ({
                             workflowList={wl}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
-                            marginClass={getMargin(workflowList.usageType)}
+                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
                             moveWorkflowList={moveWorkflowList}
                             selectWorkflowListToMove={selectWorkflowListToMove}
                             showDropButton={showDropButton}
@@ -162,7 +164,7 @@ const WorkflowlistList = ({
                             key={index}
                             index={index}
                             workflowList={wl}
-                            marginClass={getMargin(workflowList.usageType)}
+                            marginClass={getMargin(workflowList.usageType, index, workflowList.children.length)}
                             userApiId={userApiId}
                             workflowListToMove={workflowListToMove}
                             selectWorkflowListToMove={selectWorkflowListToMove}
