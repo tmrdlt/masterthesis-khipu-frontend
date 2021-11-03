@@ -27,6 +27,7 @@ import { getLowerWorkflowListType } from 'utils/models-util'
 import { KhipuIcon, PlusIcon } from 'components/icons'
 import LoadingSpinner from 'components/loading-spinner'
 import LoadingError from 'components/loading-error'
+import Link from 'next/link'
 
 interface HomeProps {
   userApiId: string
@@ -188,9 +189,15 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   return (
     <div className="min-h-screen bg-blueGray-300">
       <div className="flex justify-between shadow-md items-center px-6 py-3 w-full bg-blueGray-100">
-        <div className="flex items-center">
-          <div className="h-8 w-8 mr-2"><KhipuIcon/></div>
-          <span className="mr-5">khipu</span>
+        <div className="flex items-center gap-5">
+          <Link href={'/'}>
+            <a className="flex items-center">
+              <div className="h-8 w-8 mr-2">
+                <KhipuIcon />
+              </div>
+              <span>khipu</span>
+            </a>
+          </Link>
           {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
         </div>
         <button
