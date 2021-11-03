@@ -66,96 +66,93 @@ const WorkflowlistItem = ({
       const temp = workflowList.temporalResource
       if (temp.startDate) {
         elements.push(
-          <div key={0} className="flex flex-nowrap items-center">
-            <div className="w-3 h-3 mr-1">
+          <span key={0} className="flex items-center">
+            <span className="w-3 h-3 mr-1">
               <CalendarIcon />
-            </div>
-            <div className="flex-none">Start date: {formatDate(temp.startDate)}</div>
-          </div>
+            </span>
+            Start date: {formatDate(temp.startDate)}
+          </span>
         )
       }
       if (temp.endDate) {
         elements.push(
-          <div key={1} className="flex flex-nowrap items-center">
-            <div className="w-3 h-3 mr-1">
+          <span key={1} className="flex items-center">
+            <span className="w-3 h-3 mr-1">
               <FlagIcon />
-            </div>
-            <div className="flex-none">Due date: {formatDate(temp.endDate)}</div>
-          </div>
+            </span>
+            <span className="flex-none">Due date: {formatDate(temp.endDate)}</span>
+          </span>
         )
       }
       if (temp.durationInMinutes) {
         elements.push(
-          <div key={2} className="flex flex-nowrap items-center">
-            <div className="w-3 h-3 mr-1">
+          <span key={2} className="flex items-center">
+            <span className="w-3 h-3 mr-1">
               <ClockIcon />
-            </div>
-            <div className="flex-none">Takes {formatDuration(temp.durationInMinutes)}</div>
-          </div>
+            </span>
+            Takes {formatDuration(temp.durationInMinutes)}
+          </span>
         )
         elements.push()
       }
     }
     return (
-      <div className="text-xs">
-        {!hasNoTemporalResource(workflowList.temporalResource) &&
-          elements.map((element) => {
-            return element
-          })}
-      </div>
+      <>
+        {elements.map((element) => {
+          return element
+        })}
+      </>
     )
   }
 
   const getNumericResourcesText = (): JSX.Element => {
     return (
-      <div className="text-xs">
+      <>
         {workflowList.numericResources.map((numericResource, index) => {
           return (
-            <div key={index} className="flex flex-nowrap items-center">
-              <div className="w-3 h-3 mr-1">
+            <span key={index} className="flex items-center">
+              <span className="w-3 h-3 mr-1">
                 <ChartBarIcon />
-              </div>
-              <span className="flex-none">{'' + numericResource.label}:&nbsp;</span>
-              <span className="flex-none">{numericResource.value}</span>
-            </div>
+              </span>
+              {'' + numericResource.label}:&nbsp;
+              {numericResource.value}
+            </span>
           )
         })}
-      </div>
+      </>
     )
   }
 
   const getTextualResourcesText = (): JSX.Element => {
     return (
-      <div className="text-xs">
+      <>
         {workflowList.textualResources.map((textualResource, index) => {
           return (
-            <div key={index} className="flex flex-nowrap items-center">
-              <div className="w-3 h-3 mr-1">
+            <span key={index} className="flex items-centers">
+              <span className="w-3 h-3 mr-1">
                 <DocumentTextIcon />
-              </div>
-              <span className="flex-none">{textualResource.label}</span>
-              <span className="flex-none">
-                {textualResource.value ? ': ' + textualResource.value : ''}
               </span>
-            </div>
+              {textualResource.label}
+              {textualResource.value ? ': ' + textualResource.value : ''}
+            </span>
           )
         })}
-      </div>
+      </>
     )
   }
 
   const getUserResourceText = (): JSX.Element => {
     return (
-      <div className="grid text-xs">
+      <>
         {!hasNoUserResource(workflowList.userResource) && (
-          <div key={index} className="inline-flex items-center">
-            <div className="w-3 h-3 mr-1">
+          <span key={index} className="flex items-center">
+            <span className="w-3 h-3 mr-1">
               <UserIcon />
-            </div>
+            </span>
             <span>{workflowList.userResource.username}</span>
-          </div>
+          </span>
         )}
-      </div>
+      </>
     )
   }
 
@@ -181,17 +178,21 @@ const WorkflowlistItem = ({
             <div
               className={`bg-white ${getBorderClassItem(
                 workflowList.level
-              )} shadow-md shadow min-w-[20rem] max-w-[20rem] p-1 ${getMoveClass(showMoveModal)}`}
+              )} shadow-md shadow min-w-[20rem] max-w-[20rem] p-1 pb-2 ${getMoveClass(
+                showMoveModal
+              )}`}
             >
               <div className="flex place-content-between">
-                <div className={`flex flex-col m-1 rounded pl-1`}>
-                  <div className="text-sm font-medium overflow-ellipsis overflow-hidden">
+                <div className={`flex flex-col mt-1 ml-1 mr-1 rounded pl-1 gap-1`}>
+                  <div className="text-sm leading-tight font-medium overflow-ellipsis overflow-hidden">
                     {workflowList.title}
                   </div>
-                  {getTemporalResourceText()}
-                  {getNumericResourcesText()}
-                  {getTextualResourcesText()}
-                  {getUserResourceText()}
+                  <div className="text-xs">
+                    {getTemporalResourceText()}
+                    {getNumericResourcesText()}
+                    {getTextualResourcesText()}
+                    {getUserResourceText()}
+                  </div>
                 </div>
                 <div className="flex flex-col items-center">
                   <ButtonsMenu
@@ -204,7 +205,7 @@ const WorkflowlistItem = ({
                 </div>
               </div>
               {workflowList.description !== null && (
-                <div className="text-sm whitespace-pre-line break-words mr-2 ml-2 mb-2">
+                <div className="text-sm whitespace-pre-line break-words mt-1 mr-2 ml-2">
                   {workflowList.description}
                 </div>
               )}
