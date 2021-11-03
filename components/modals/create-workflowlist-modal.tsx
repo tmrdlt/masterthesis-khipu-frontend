@@ -124,7 +124,7 @@ const CreateWorkflowListModal = ({
       <div className="flex flex-col justify-between bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         {/* This div is taken from https://tailwindcss-forms.vercel.app/ simple --> */}
         <div className="m-5">
-          <h3 className="font-bold">Create</h3>
+          <h3 className="font-bold">New element</h3>
           <div className="mt-4 w-full text-sm">
             <div className="grid grid-cols-1 gap-5">
               <CreateTitleAndTypeForm

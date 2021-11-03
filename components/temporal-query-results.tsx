@@ -21,7 +21,7 @@ const BoardTemporalQueryResult = ({
   return (
     <div className="flex justify-center items-center h-8">
       <div
-        className={`flex border border-gray-500 rounded w-max h-6 text-xs justify-center items-center mr-1 pl-1 pr-1 ${temporalQueryLabelColor}`}
+        className={`flex rounded w-max h-6 text-xs justify-center items-center mr-1 pl-1 pr-1 ${temporalQueryLabelColor}`}
         ref={setTriggerRef}
       >
         Remaining duration: {formatDuration(temporalQueryResult.duration)}
@@ -99,14 +99,14 @@ const ListTemporalQueryResult = ({
   temporalQueryResult,
 }: IListTemporalTooltipProps): JSX.Element => {
   const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip()
+      usePopperTooltip({placement: 'right'} )
 
   const temporalQueryLabelColor = temporalQueryResult.dueDateKept ? 'bg-green-500' : 'bg-red-500'
 
   return (
-    <div className="mr-1">
+    <>
       <div
-        className={`flex w-10 border border-gray-500 rounded p-1 text-xs justify-center items-center ${temporalQueryLabelColor}`}
+        className={`flex w-10 h-5 rounded-t p-1 text-xs justify-center items-center ${temporalQueryLabelColor}`}
         ref={setTriggerRef}
       >
         {getNumberWithOrdinal(temporalQueryResult.index + 1)}
@@ -131,7 +131,7 @@ const ListTemporalQueryResult = ({
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
         </div>
       )}
-    </div>
+    </>
   )
 }
 
@@ -143,14 +143,14 @@ const ItemTemporalQueryResult = ({
   temporalQueryResult,
 }: IItemTemporalTooltipProps): JSX.Element => {
   const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip()
+      usePopperTooltip({placement: 'right'} )
 
   const temporalQueryLabelColor = temporalQueryResult.dueDateKept ? 'bg-green-500' : 'bg-red-500'
 
   return (
-    <div>
+    <>
       <div
-        className={`flex w-10 border border-gray-500 rounded p-1 text-xs justify-center items-center ${temporalQueryLabelColor}`}
+        className={`flex w-10 h-5 rounded-t p-1 text-xs justify-center items-center ${temporalQueryLabelColor}`}
         ref={setTriggerRef}
       >
         {getNumberWithOrdinal(temporalQueryResult.index + 1)}
@@ -169,7 +169,7 @@ const ItemTemporalQueryResult = ({
           <div {...getArrowProps({ className: 'tooltip-arrow' })} />
         </div>
       )}
-    </div>
+    </>
   )
 }
 export default BoardTemporalQueryResult

@@ -99,13 +99,18 @@ const WorkflowlistBoard = ({
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           {showMoveModal && <MoveWorkflowListCoverElement />}
           <>
-            <div
-              className={
-                `bg-blue-300 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-4 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
-              }
-              {...provided.dragHandleProps}
-            >
-              Board
+            <div className="flex shadow-md max-w-max">
+              <div
+                className={`bg-blue-300 h-5 w-20 rounded-t flex items-center tracking-wide pl-4 text-xs text-gray-700 ${getMoveClass(
+                  showMoveModal
+                )}`}
+                {...provided.dragHandleProps}
+              >
+                Board
+              </div>
+              {workflowList.temporalQueryResult != null && (
+                <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
+              )}
             </div>
             <div
               className={`shadow-md ${getBorderClassBoard(
@@ -113,10 +118,10 @@ const WorkflowlistBoard = ({
               )} bg-blue-200 p-1 min-w-[18rem] min-h-[8rem] ${getMoveClass(showMoveModal)}`}
             >
               <div className="flex place-content-between">
-                <div
-                  className={`grid w-full m-1 pl-2`}
-                >
-                  <span className="overflow-ellipsis overflow-hidden font-bold">{workflowList.title} </span>
+                <div className={`grid w-full  ml-3 mt-1`}>
+                  <div className="text-sm font-medium overflow-ellipsis overflow-hidden">
+                    {workflowList.title}{' '}
+                  </div>
                   {workflowList.isTemporalConstraintBoard && (
                     <div className="inline-flex items-center text-xs">
                       <div className="w-3 h-3 mr-1">
@@ -149,10 +154,9 @@ const WorkflowlistBoard = ({
               </div>
 
               <div className="flex place-content-between">
-                <div className="m-1 text-sm whitespace-pre-line break-words pl-2 pr-2">{workflowList.description}</div>
-                {workflowList.temporalQueryResult != null && (
-                  <ListTemporalQueryResult temporalQueryResult={workflowList.temporalQueryResult} />
-                )}
+                <div className="text-sm whitespace-pre-line break-words pl-2 pr-2">
+                  {workflowList.description}
+                </div>
                 {showDropButton(workflowList) && (
                   <div className="mr-1">
                     <DropButton workflowList={workflowList} moveWorkflowList={moveWorkflowList} />
@@ -168,9 +172,9 @@ const WorkflowlistBoard = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`p-1 ${getDroppableStyle(snapshot.isDraggingOver)}`}
+                    className={`${getDroppableStyle(snapshot.isDraggingOver)}`}
                   >
-                    <div className="flex justify-start overflow-x-scroll p-2">
+                    <div className="flex justify-start overflow-x-auto p-2">
                       {workflowList.children.map((wl, index) => {
                         if (wl.usageType == WorkflowListType.BOARD) {
                           return (

@@ -50,7 +50,7 @@ export const getBorderClassList = (level: number): string => {
 
 export const getBorderClassItem = (level: number): string => {
   if (level >= 0) {
-    return 'border-t-4 border-gray-100 rounded-tr rounded-b'
+    return 'border-t-4 border-blueGray-100 rounded-tr rounded-b'
   } else {
   }
 }

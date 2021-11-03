@@ -165,13 +165,20 @@ const WorkflowlistItem = ({
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           {showMoveModal && <MoveWorkflowListCoverElement />}
           <>
-            <div
-              className={
-                `bg-blueGray-100 h-5 w-20 shadow-md rounded-t flex items-center tracking-wide pl-3 text-sm text-gray-700 ${getMoveClass(showMoveModal)}`
-              }
-              {...provided.dragHandleProps}
-            >
-              Item
+            <div className="flex shadow-md max-w-max">
+              <div
+                  className={
+                    `bg-blueGray-100 h-5 w-20 rounded-t flex items-center tracking-wide pl-3 text-xs text-gray-700 ${getMoveClass(showMoveModal)}`
+                  }
+                  {...provided.dragHandleProps}
+              >
+                Item
+              </div>
+              {workflowList.temporalQueryResult != null && (
+                  <ItemTemporalQueryResult
+                      temporalQueryResult={workflowList.temporalQueryResult}
+                  />
+              )}
             </div>
             <div
               className={`bg-white ${getBorderClassItem(
@@ -182,7 +189,7 @@ const WorkflowlistItem = ({
                 <div
                   className={`flex flex-col w-2/3 m-1 rounded pl-1`}
                 >
-                  <div className="overflow-ellipsis overflow-hidden font-bold">{workflowList.title} </div>
+                  <div className="text-sm font-medium overflow-ellipsis overflow-hidden">{workflowList.title} </div>
                   {getTemporalResourceText()}
                   {getNumericResourcesText()}
                   {getTextualResourcesText()}
@@ -196,14 +203,9 @@ const WorkflowlistItem = ({
                     openModifyModal={openModifyModal}
                     openMoveModal={openMoveModal}
                   />
-                  {workflowList.temporalQueryResult != null && (
-                    <ItemTemporalQueryResult
-                      temporalQueryResult={workflowList.temporalQueryResult}
-                    />
-                  )}
                 </div>
               </div>
-              <div className="m-1 text-sm whitespace-pre-line break-words p-1">
+              <div className="mr-1 ml-1 mb-1 text-sm whitespace-pre-line break-words p-1">
                 {workflowList.description}
               </div>
             </div>
