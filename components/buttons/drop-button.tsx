@@ -1,7 +1,5 @@
 import React from 'react'
 import { WorkflowList } from 'utils/models'
-import { ClipboardIcon } from 'components/icons'
-import { usePopperTooltip } from 'react-popper-tooltip'
 
 interface IDropButtonProps {
   workflowList?: WorkflowList
@@ -9,29 +7,25 @@ interface IDropButtonProps {
 }
 
 const DropButton = ({ workflowList, moveWorkflowList }: IDropButtonProps): JSX.Element => {
-  const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip({placement: 'left'} )
-
   return (
     <div className="z-40 relative transition-all">
-      <button
-        type="button"
-        onClick={() => {
-          moveWorkflowList(workflowList)
-        }}
-        ref={setTriggerRef}
-        className="flex items-center justify-center bg-green-500 hover:bg-green-700 text-gray-600 border border-gray-600 hover:border-white hover:text-white rounded w-10 h-8"
-      >
-        <div className="w-4 h-4 flex items-center">
-          <ClipboardIcon />
+        <div className="group min-w-min max-w-min">
+            <div className="h-5 w-20 bg-transparent group-hover:bg-white group-hover:bg-opacity-20 text-gray-600 rounded-t border-l-2 border-r-2 border-dashed rounded border-t-2">
+
+            </div>
+            <button
+                type="button"
+                onClick={() => {
+                    moveWorkflowList(workflowList)
+                }}
+                className="flex items-center bg-transparent group-hover:bg-white group-hover:bg-opacity-20 justify-center border border-dashed rounded border-2 text-white w-[18rem] h-[4rem]"
+            >
+                <div className="text-sm">
+                    Move to {workflowList ? `"${workflowList.title}"` : 'root'}
+                </div>
+            </button>
         </div>
-      </button>
-      {visible && (
-        <div ref={setTooltipRef} {...getTooltipProps({ className: 'tooltip-container text-xs'})}>
-          <div {...getArrowProps({ className: 'tooltip-arrow'})} />
-          Move to {workflowList ? workflowList.title : 'root'}
-        </div>
-      )}
+
     </div>
   )
 }

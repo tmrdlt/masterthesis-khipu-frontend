@@ -2,11 +2,7 @@ import { WorkflowListType } from 'utils/models'
 
 const grid = 8
 
-export const getDraggableStyle = (isDragging, draggableStyle) => ({
-  userSelect: 'none',
-  width: isDragging ? 400 : 200,
-  ...draggableStyle,
-})
+export const getDraggableStyle = (isDragging): string => (isDragging ? '' : '')
 
 export const getDroppableStyle = (isDraggingOver): string =>
   isDraggingOver
@@ -32,7 +28,6 @@ export const getRequiredClass = (required: boolean): string => {
 export const getMoveClass = (showMoveModal: boolean): string => {
   return showMoveModal ? 'z-20 relative transition-all' : ''
 }
-
 
 export const getBorderClassBoard = (level: number): string => {
   if (level >= 0) {

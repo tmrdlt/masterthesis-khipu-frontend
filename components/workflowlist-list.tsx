@@ -114,16 +114,8 @@ const WorkflowlistList = ({
                   openMoveModal={openMoveModal}
                 />
               </div>
-
-              <div className="flex place-content-between">
-                <div className="text-sm whitespace-pre-line break-words pl-2 pr-2">
-                  {workflowList.description}
-                </div>
-                {showDropButton(workflowList) && (
-                  <div className="mr-1">
-                    <DropButton workflowList={workflowList} moveWorkflowList={moveWorkflowList} />
-                  </div>
-                )}
+              <div className="text-sm whitespace-pre-line border-2 border-opacity-0 break-words ml-2 mr-2">
+                {workflowList.description}
               </div>
 
               <Droppable droppableId={workflowList.apiId} type={workflowList.level}>
@@ -179,6 +171,9 @@ const WorkflowlistList = ({
                       }
                     })}
                     {provided.placeholder}
+                    {showDropButton(workflowList) && (
+                      <DropButton workflowList={workflowList} moveWorkflowList={moveWorkflowList} />
+                    )}
                   </div>
                 )}
               </Droppable>

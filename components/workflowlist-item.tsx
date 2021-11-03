@@ -161,7 +161,7 @@ const WorkflowlistItem = ({
 
   return (
     <Draggable key={workflowList.apiId} draggableId={workflowList.apiId} index={index}>
-      {(provided, _snapshot) => (
+      {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps} className={`${marginClass}`}>
           {showMoveModal && <MoveWorkflowListCoverElement />}
           <>

@@ -198,7 +198,6 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
               <span>khipu</span>
             </a>
           </Link>
-          {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
         </div>
         <button
           type="button"
@@ -268,6 +267,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
                   }
                 })}
                 {provided.placeholder}
+                {showDropButton(null) && <DropButton moveWorkflowList={moveWorkflowList} />}
               </div>
             )}
           </Droppable>
