@@ -18,7 +18,7 @@ Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. I
 - Icons from [heroicons](https://heroicons.com/)
 
 ## Requirements
-- Node.js v14.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
+- Node.js v16.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
   ```bash
   nvm install
   nvm use
