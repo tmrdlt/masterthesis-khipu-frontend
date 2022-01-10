@@ -7,8 +7,8 @@ import 'react-tabs/style/react-tabs.css'
 import { arraysEqual } from 'utils/compare-util'
 import {
   getWorkflowListsUrl,
-  postWorkflowListResource,
-  updateWorkflowList,
+  putWorkflowListResource,
+  putWorkflowList,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import ResourcesFormItem from 'components/modals/resources-form-item'
@@ -136,7 +136,7 @@ const ModifyItemModal = ({
               }
               onClick={() => {
                 if (!isWorkflowListUnchanged()) {
-                  updateWorkflowList(workflowList.apiId, updateItemEntity, userApiId).then(
+                  putWorkflowList(workflowList.apiId, updateItemEntity, userApiId).then(
                     (_res) => {
                       mutate(getWorkflowListsUrl(userApiId))
                       closeModal()
@@ -163,7 +163,7 @@ const ModifyItemModal = ({
                       }
                     : resource.user,
                 }
-                postWorkflowListResource(workflowList.apiId, entity, userApiId).then((_res) => {
+                putWorkflowListResource(workflowList.apiId, entity, userApiId).then((_res) => {
                   mutate(getWorkflowListsUrl(userApiId))
                   closeModal()
                 })

@@ -10,10 +10,10 @@ import {
   recursiveSetField,
 } from 'utils/list-util'
 import {
-  getTemporalQuery,
+  getWorkflowListScheduling,
   getWorkflowListsUrl,
-  postWorkflowListMove,
-  postWorkflowListReorder,
+  putWorkflowListParent,
+  putWorkflowListPosition,
 } from 'utils/workflow-api'
 import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal'
 import WorkflowlistList from 'components/workflowlist-list'
@@ -65,7 +65,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       mutate(getWorkflowListsUrl(userApiId), newWorkflowLists, false)
 
       if (source.index != destination.index) {
-        await postWorkflowListReorder(draggableId, { newPosition: destination.index }, userApiId)
+        await putWorkflowListPosition(draggableId, { newPosition: destination.index }, userApiId)
         fetchWorkflowLists()
       }
     } else {
@@ -81,7 +81,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
       if (!(destinationDroppableId === 'ROOT')) {
         newParentUuid = destinationDroppableId
       }
-      await postWorkflowListMove(
+      await putWorkflowListParent(
         draggableId,
         {
           newParentApiId: newParentUuid,
@@ -146,7 +146,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
     if (destinationWorkflowList) {
       newParentUuid = destinationWorkflowList.apiId
     }
-    postWorkflowListMove(
+    putWorkflowListParent(
       workflowListToMove.apiId,
       { newParentApiId: newParentUuid },
       userApiId
@@ -157,7 +157,7 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   }
 
   const getTemporalQueryResult = (workflowListApiId: string) => {
-    getTemporalQuery(workflowListApiId, userApiId).then((res) => {
+    getWorkflowListScheduling(workflowListApiId, userApiId).then((res) => {
       if (res) {
         // Use immer produce to create REAL clone
         let newWorkflowLists = produce(workflowLists, (draft) => {

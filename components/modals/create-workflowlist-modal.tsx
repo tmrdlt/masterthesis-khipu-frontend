@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { CreateWorkflowListEntity, WorkflowListResource, WorkflowListType } from 'utils/models'
 import {
-  createWorkflowList,
+  postWorkflowList,
   getWorkflowListsUrl,
-  postWorkflowListResource,
+  putWorkflowListResource,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import ResourcesFormItem from 'components/modals/resources-form-item'
@@ -211,7 +211,7 @@ const CreateWorkflowListModal = ({
               isChildrenFormInvalid()
             }
             onClick={() => {
-              createWorkflowList(createWorkflowListEntity, userApiId).then((apiId) => {
+              postWorkflowList(createWorkflowListEntity, userApiId).then((apiId) => {
                 if (
                   apiId &&
                   (createWorkflowListEntity.listType == WorkflowListType.ITEM ||
@@ -237,7 +237,7 @@ const CreateWorkflowListModal = ({
                         }
                       : resource.user,
                   }
-                  postWorkflowListResource(apiId, entity, userApiId).then((_res) => {
+                  putWorkflowListResource(apiId, entity, userApiId).then((_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
                   })

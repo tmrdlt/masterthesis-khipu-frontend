@@ -4,7 +4,7 @@ import { UpdateWorkflowListEntity, WorkflowList } from 'utils/models'
 import 'react-datepicker/dist/react-datepicker.css'
 import { getOptionalString } from 'utils/optional-util'
 import { useSWRConfig } from 'swr'
-import { getWorkflowListsUrl, updateWorkflowList } from 'utils/workflow-api'
+import { getWorkflowListsUrl, putWorkflowList } from 'utils/workflow-api'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getRequiredClass } from 'utils/style-elements'
 
@@ -81,7 +81,7 @@ const ModifyListModal = ({
             type="button"
             disabled={isWorkflowListUnchanged() || isWorkflowListInvalid()}
             onClick={() => {
-              updateWorkflowList(workflowList.apiId, updateListEntity, userApiId).then((_res) => {
+              putWorkflowList(workflowList.apiId, updateListEntity, userApiId).then((_res) => {
                 mutate(getWorkflowListsUrl(userApiId))
                 closeModal()
               })
