@@ -88,8 +88,8 @@ const WorkflowlistBoard = ({
   }
 
   const getTemporalResourceText = (): string => {
-    return workflowList.temporalResource && workflowList.temporalResource.endDate
-      ? 'Board due on: ' + formatDate(workflowList.temporalResource.endDate)
+    return workflowList.temporalResource && workflowList.temporalResource.dueDate
+      ? 'Board due on: ' + formatDate(workflowList.temporalResource.dueDate)
       : 'No due date configured'
   }
 

@@ -39,7 +39,7 @@ const ResourcesFormBoard = ({
                 <button
                     className={'text-gray-700' + opacityAndCursorNotAllowedClass}
                     onClick={() => {
-                        handleDatePickerChange(null, 'endDate')
+                        handleDatePickerChange(null, 'dueDate')
                     }}
                 >
                     &#x2715; Clear date
@@ -47,8 +47,8 @@ const ResourcesFormBoard = ({
             </div>
             <DatePicker
                 className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                selected={resource.temporal ? resource.temporal.endDate : null}
-                onChange={(date) => handleDatePickerChange(date, 'endDate')}
+                selected={resource.temporal ? resource.temporal.dueDate : null}
+                onChange={(date) => handleDatePickerChange(date, 'dueDate')}
                 disabled={!isTemporalConstraintBoard}
                 placeholderText="No due date set"
                 showTimeSelect

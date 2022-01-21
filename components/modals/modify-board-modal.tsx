@@ -62,7 +62,7 @@ const ModifyBoardModal = ({
   }
 
   const isTemporalResourceUnchanged = (): boolean => {
-    return compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate)
+    return compareDateOptions(resource.temporal.dueDate, initResource.temporal.dueDate)
   }
 
   const isWorkflowListInvalid = (): boolean => {

@@ -191,7 +191,7 @@ export const putWorkflowListResource = async (
           ? {
               ...workflowListResource.temporal,
               startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
-              endDate: toLocalDateTimeString(workflowListResource.temporal.endDate),
+              dueDate: toLocalDateTimeString(workflowListResource.temporal.dueDate),
             }
           : null,
       },

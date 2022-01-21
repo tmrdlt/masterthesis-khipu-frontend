@@ -69,7 +69,7 @@ export type UserResource = {
 
 export type TemporalResource = {
   startDate?: Date
-  endDate?: Date
+  dueDate?: Date
   durationInMinutes?: number
 }
 
@@ -84,7 +84,7 @@ export type User = {
   apiId: string
   username: string
   createdAt: Date
-  endDate: Date
+  dueDate: Date
 }
 
 export type CreateUserEntity = {

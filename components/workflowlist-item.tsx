@@ -74,13 +74,13 @@ const WorkflowlistItem = ({
           </span>
         )
       }
-      if (temp.endDate) {
+      if (temp.dueDate) {
         elements.push(
           <span key={1} className="flex items-center">
             <span className="w-3 h-3 mr-1">
               <FlagIcon />
             </span>
-            <span className="flex-none">Due date: {formatDate(temp.endDate)}</span>
+            <span className="flex-none">Due date: {formatDate(temp.dueDate)}</span>
           </span>
         )
       }
