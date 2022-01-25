@@ -183,16 +183,8 @@ const WorkflowlistItem = ({
               )}`}
             >
               <div className="flex place-content-between">
-                <div className={`flex flex-col mt-1 ml-1 mr-1 rounded pl-1 gap-1`}>
-                  <div className="text-sm leading-tight font-medium overflow-ellipsis overflow-hidden">
-                    {workflowList.title}
-                  </div>
-                  <div className="text-xs">
-                    {getTemporalResourceText()}
-                    {getNumericResourcesText()}
-                    {getTextualResourcesText()}
-                    {getUserResourceText()}
-                  </div>
+                <div className="mt-1 ml-1 mr-1 pl-1 text-sm leading-tight font-medium overflow-ellipsis overflow-hidden">
+                  {workflowList.title}
                 </div>
                 <div className="flex flex-col items-center">
                   <ButtonsMenu
@@ -203,6 +195,12 @@ const WorkflowlistItem = ({
                     openMoveModal={openMoveModal}
                   />
                 </div>
+              </div>
+              <div className="text-xs ml-1 pl-1">
+                  {getTemporalResourceText()}
+                  {getNumericResourcesText()}
+                  {getTextualResourcesText()}
+                  {getUserResourceText()}
               </div>
               {workflowList.description !== null && (
                 <div className="text-sm whitespace-pre-line break-words mt-1 mr-2 ml-2">
