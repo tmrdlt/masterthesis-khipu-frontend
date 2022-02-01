@@ -159,7 +159,7 @@ const TemporalQueryButton = ({
           getTemporalQueryResult(workflowList.apiId)
         }}
         ref={setTriggerRef}
-        className="bg-transparent text-gray-600 hover:bg-gray-600 hover:text-white rounded p-1 w-6 h-6 disabled:opacity-50"
+        className="bg-transparent hover:bg-gray-600 hover:text-white rounded p-1 w-6 h-6 disabled:opacity-50"
       >
         <div className={animationSpinClassName}>
           <ClockIcon />
@@ -198,7 +198,7 @@ const CreateWorkflowListButton = ({
           openCreateModal()
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600 hover:text-white rounded p-1 w-6 h-6"
       >
         <PlusIcon />
       </button>
@@ -234,7 +234,7 @@ const MoveWorkflowListButton = ({
           openMoveModal()
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600   hover:text-white rounded p-1 w-6 h-6"
       >
         <ArrowsExpand />
       </button>
@@ -265,7 +265,7 @@ const ModifyWorkflowListButton = ({
           openModifyModal()
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600   hover:text-white rounded p-1 w-6 h-6"
       >
         <PencilAltIcon />
       </button>
@@ -294,7 +294,7 @@ const ConvertToBoardButton = ({ convertWorkflowList }: ConvertToBoardButtonProps
           convertWorkflowList({ newListType: WorkflowListType.BOARD })
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600   hover:text-white rounded p-1 w-6 h-6"
       >
         <ViewBoardsIcon />
       </button>
@@ -323,7 +323,7 @@ const ConvertToItemButton = ({ setShowConvertModal }: ConvertToItemButtonProps):
           setShowConvertModal(true)
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600   hover:text-white rounded p-1 w-6 h-6"
       >
         <DocumentTextIcon />
       </button>
@@ -352,7 +352,7 @@ const ConvertToListButton = ({ convertWorkflowList }: ConvertToListButtonProps):
           convertWorkflowList({ newListType: WorkflowListType.LIST })
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600   hover:text-white rounded p-1 w-6 h-6"
       >
         <ViewListIcon />
       </button>
@@ -383,7 +383,7 @@ const DeleteWorkflowListButton = ({
           setShowDeleteModal(true)
         }}
         ref={setTriggerRef}
-        className="bg-transparent hover:bg-gray-600 text-gray-600 hover:text-white rounded p-1 w-6 h-6"
+        className="bg-transparent hover:bg-gray-600 hover:text-white rounded p-1 w-6 h-6"
       >
         <TrashIcon />
       </button>

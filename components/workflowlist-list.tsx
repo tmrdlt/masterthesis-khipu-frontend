@@ -6,6 +6,7 @@ import CreateWorkflowListModal from 'components/modals/create-workflowlist-modal
 import ModifyListModal from 'components/modals/modify-list-modal'
 import WorkflowlistBoard from 'components/workflowlist-board'
 import {
+  getBackgroundColor,
   getBorderClassList,
   getDroppableStyle,
   getMargin,
@@ -81,7 +82,7 @@ const WorkflowlistList = ({
           <>
             <div className="flex shadow-md max-w-max">
               <div
-                className={`bg-red-200 h-5 w-20 rounded-t flex items-center tracking-wide pl-4 text-xs text-gray-700 ${getMoveClass(
+                className={`${getBackgroundColor(workflowList.level)} border-t border-l border-r h-5 w-20 rounded-t flex items-center tracking-wide pl-4 text-xs text-gray-700 ${getMoveClass(
                   showMoveModal
                 )}`}
                 {...provided.dragHandleProps}
@@ -95,7 +96,7 @@ const WorkflowlistList = ({
             <div
               className={`${getBorderClassList(
                 workflowList.level
-              )} bg-red-100 shadow-md p-1 ${getMoveClass(showMoveModal)}`}
+              )} shadow-md p-1 ${getMoveClass(showMoveModal)}`}
             >
               <div className="flex place-content-between">
                 <div

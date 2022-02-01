@@ -187,8 +187,8 @@ const Home = ({ userApiId }: HomeProps): JSX.Element => {
   if (isLoading) return <LoadingSpinner />
   if (isError) return <LoadingError />
   return (
-    <div className="min-h-screen bg-blueGray-300">
-      <div className="flex justify-between shadow-md items-center px-6 py-3 w-full bg-blueGray-100">
+    <div className="min-h-screen bg-khipu-bg-2">
+      <div className="flex justify-between items-center px-6 py-3 w-full bg-khipu-bg-3 text-white">
         <div className="flex items-center gap-5">
           <Link href={'/'}>
             <a className="flex items-center">

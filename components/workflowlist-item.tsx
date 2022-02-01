@@ -17,7 +17,7 @@ import CalendarIcon, {
 } from 'components/icons'
 import 'react-popper-tooltip/dist/styles.css'
 import { ItemTemporalQueryResult } from 'components/temporal-query-results'
-import { getBorderClassItem, getMoveClass } from 'utils/style-elements'
+import { getBackgroundColor, getBorderClassItem, getMoveClass } from 'utils/style-elements'
 
 interface WorkflowlistItemProps {
   index: number
@@ -164,7 +164,7 @@ const WorkflowlistItem = ({
           <>
             <div className="flex shadow-md max-w-max">
               <div
-                className={`bg-blueGray-100 h-5 w-20 rounded-t flex items-center tracking-wide pl-3 text-xs text-gray-700 ${getMoveClass(
+                className={`${getBackgroundColor(workflowList.level)} border-t border-l border-r h-5 w-20 rounded-t flex items-center tracking-wide pl-3 text-xs text-gray-700 ${getMoveClass(
                   showMoveModal
                 )}`}
                 {...provided.dragHandleProps}
@@ -176,9 +176,9 @@ const WorkflowlistItem = ({
               )}
             </div>
             <div
-              className={`bg-white ${getBorderClassItem(
+              className={`${getBorderClassItem(
                 workflowList.level
-              )} shadow-md shadow min-w-[20rem] max-w-[20rem] p-1 pb-2 ${getMoveClass(
+              )} shadow-md min-w-[20rem] max-w-[20rem] p-1 pb-2 ${getMoveClass(
                 showMoveModal
               )}`}
             >

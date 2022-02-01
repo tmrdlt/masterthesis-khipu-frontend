@@ -6,8 +6,8 @@ export const getDraggableStyle = (isDragging): string => (isDragging ? '' : '')
 
 export const getDroppableStyle = (isDraggingOver): string =>
   isDraggingOver
-    ? 'border border-dashed rounded border-2 border-blueGray-500 border-opacity-100 transition-opacity duration-500 ease-in-out'
-    : 'border border-dashed border-2 border-blueGray-500 rounded border-opacity-0 transition-opacity transition duration-500 ease-in-out'
+    ? 'border border-dashed rounded border-2 border-slate-600 border-opacity-100 transition-opacity duration-500 ease-in-out'
+    : 'border border-dashed border-2 border-slate-600 rounded border-opacity-0 transition-opacity transition duration-500 ease-in-out'
 
 export const getMargin = (
   parentType: WorkflowListType,
@@ -35,21 +35,38 @@ export const getMoveClass = (showMoveModal: boolean): string => {
 
 export const getBorderClassBoard = (level: number): string => {
   if (level >= 0) {
-    return 'border-t-4 border-blue-300 rounded-tr rounded-b'
+    return `border rounded-tr rounded-b ${getBackgroundColor(level)}`
   } else {
   }
 }
 
 export const getBorderClassList = (level: number): string => {
   if (level >= 0) {
-    return 'border-t-4 border-red-200 rounded-tr rounded-b'
+    return `border rounded-tr rounded-b ${getBackgroundColor(level)}`
   } else {
   }
 }
 
 export const getBorderClassItem = (level: number): string => {
   if (level >= 0) {
-    return 'border-t-4 border-blueGray-100 rounded-tr rounded-b'
+    return `border rounded-tr rounded-b ${getBackgroundColor(level)}`
   } else {
   }
+}
+
+export const getBackgroundColor = (level: number): string => {
+  console.log(level)
+  if (level === 0) return 'bg-khipu-bg-1 border-khipu-border-1 text-khipu-text'
+  else if (level === 1) return 'bg-khipu-bg-2 border-khipu-border-1 text-khipu-text'
+  else if (level === 2) return 'bg-khipu-bg-3 border-khipu-border-1 text-khipu-text'
+  else if (level === 3) return 'bg-slate-600 border-khipu-border-2 text-slate-200'
+  else if (level === 4) return 'bg-slate-500 border-khipu-border-2 text-slate-200'
+  else if (level === 5) return 'bg-slate-400 border-khipu-border-2 text-slate-800'
+  else if (level === 6) return 'bg-slate-300 border-khipu-border-2 text-slate-800'
+  else if (level === 7) return 'bg-slate-200 border-khipu-border-2 text-slate-800'
+  else if (level === 8) return 'bg-slate-100 border-khipu-border-2 text-slate-800'
+  else if (level === 9) return 'bg-slate-50 border-khipu-border-2 text-slate-800'
+  else return 'bg-white border-khipu-border-2 text-slate-800'
+
+
 }
