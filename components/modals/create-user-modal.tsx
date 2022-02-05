@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CreateUserEntity } from 'utils/models'
-import { createUser, getUsersUrl } from 'utils/workflow-api'
+import { postUser, getUsersUrl } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 
 interface CreateUserModalProps {
@@ -51,7 +51,7 @@ const CreateUserModal = ({ show, closeModal }: CreateUserModalProps): JSX.Elemen
                 type="button"
                 disabled={state.username === ''}
                 onClick={() => {
-                  createUser(state).then((_res) => {
+                  postUser(state).then((_res) => {
                     mutate(getUsersUrl())
                     closeModal()
                   })

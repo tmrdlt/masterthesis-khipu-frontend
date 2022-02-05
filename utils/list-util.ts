@@ -147,8 +147,8 @@ export const recursiveParseDate = (lists: Array<WorkflowList>) => {
       if (wl.temporalResource.startDate) {
         wl.temporalResource.startDate = new Date(wl.temporalResource.startDate)
       }
-      if (wl.temporalResource.endDate) {
-        wl.temporalResource.endDate = new Date(wl.temporalResource.endDate)
+      if (wl.temporalResource.dueDate) {
+        wl.temporalResource.dueDate = new Date(wl.temporalResource.dueDate)
       }
     }
     if (wl.children.length > 0) {

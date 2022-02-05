@@ -6,8 +6,8 @@ import { compareDateOptions } from 'utils/date-util'
 import { getOptionalString } from 'utils/optional-util'
 import {
   getWorkflowListsUrl,
-  postWorkflowListResource,
-  updateWorkflowList,
+  putWorkflowListResource,
+  putWorkflowList,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import { getInitWorkflowListResourceBoard } from 'utils/resource-util'
@@ -62,7 +62,7 @@ const ModifyBoardModal = ({
   }
 
   const isTemporalResourceUnchanged = (): boolean => {
-    return compareDateOptions(resource.temporal.endDate, initResource.temporal.endDate)
+    return compareDateOptions(resource.temporal.dueDate, initResource.temporal.dueDate)
   }
 
   const isWorkflowListInvalid = (): boolean => {
@@ -130,7 +130,7 @@ const ModifyBoardModal = ({
             }
             onClick={() => {
               if (!isWorkflowListUnchanged()) {
-                updateWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then(
+                putWorkflowList(workflowList.apiId, updateBoardEntity, userApiId).then(
                   (_res) => {
                     mutate(getWorkflowListsUrl(userApiId))
                     closeModal()
@@ -138,7 +138,7 @@ const ModifyBoardModal = ({
                 )
               }
               if (!isTemporalResourceUnchanged()) {
-                postWorkflowListResource(workflowList.apiId, resource, userApiId).then((_res) => {
+                putWorkflowListResource(workflowList.apiId, resource, userApiId).then((_res) => {
                   mutate(getWorkflowListsUrl(userApiId))
                   closeModal()
                 })

@@ -188,8 +188,8 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                   onChange={(date) => handleDatePickerChange(date, 'startDate')}
                   selectsStart
                   startDate={resource.temporal.startDate}
-                  endDate={resource.temporal.endDate}
-                  maxDate={resource.temporal.endDate}
+                  dueDate={resource.temporal.dueDate}
+                  maxDate={resource.temporal.dueDate}
                   disabled={!resource.temporal}
                   placeholderText="No start date set"
                   showTimeSelect
@@ -214,7 +214,7 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                     className="text-gray-700"
                     onClick={(e) => {
                       e.preventDefault() // needed so react doesn't reload page
-                      handleDatePickerChange(null, 'endDate')
+                      handleDatePickerChange(null, 'dueDate')
                     }}
                   >
                     &#x2715; Clear date
@@ -222,11 +222,11 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                 </div>
                 <DatePicker
                   className="disabled:opacity-40 disabled:cursor-not-allowed mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                  selected={resource.temporal ? resource.temporal.endDate : null}
-                  onChange={(date) => handleDatePickerChange(date, 'endDate')}
+                  selected={resource.temporal ? resource.temporal.dueDate : null}
+                  onChange={(date) => handleDatePickerChange(date, 'dueDate')}
                   selectsEnd
                   startDate={resource.temporal.startDate}
-                  endDate={resource.temporal.endDate}
+                  dueDate={resource.temporal.dueDate}
                   minDate={resource.temporal.startDate}
                   disabled={!resource.temporal}
                   placeholderText="No due date set"
@@ -236,8 +236,8 @@ const ResourcesFormItem = ({ resource, setResource }: ItemResourcesFormProps): J
                   timeFormat="HH:mm"
                   dateFormat="dd.MM.yyyy, HH:mm"
                   autocomplete="off"
-                  id="endDate"
-                  name="endDate"
+                  id="dueDate"
+                  name="dueDate"
                 />
               </div>
               <label className="block">

@@ -13,7 +13,7 @@ import {
 import {
   deleteWorkflowList,
   getWorkflowListsUrl,
-  postWorkflowListConvert,
+  putWorkflowListType,
 } from 'utils/workflow-api'
 import { useSWRConfig } from 'swr'
 import { usePopperTooltip } from 'react-popper-tooltip'
@@ -50,7 +50,7 @@ const ButtonsMenu = ({
 
   // FUNCTIONS
   const convertWorkflowList = (convertWorkflowListEntity: ConvertWorkflowListEntity) => {
-    postWorkflowListConvert(workflowList.apiId, convertWorkflowListEntity, userApiId).then(
+    putWorkflowListType(workflowList.apiId, convertWorkflowListEntity, userApiId).then(
       (res) => {
         if (res) {
           mutate(getWorkflowListsUrl(userApiId))

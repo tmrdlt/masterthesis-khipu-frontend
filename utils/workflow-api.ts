@@ -51,7 +51,7 @@ export const getUserFetcher = (userApiId): Promise<User | undefined> => {
     })
 }
 
-export const createWorkflowList = async (
+export const postWorkflowList = async (
   entity: CreateWorkflowListEntity,
   userApiId: string
 ): Promise<string | undefined> => {
@@ -93,7 +93,7 @@ export const deleteWorkflowList = async (
       })
 }
 
-export const updateWorkflowList = async (
+export const putWorkflowList = async (
   workflowListApiId: string,
   entity: UpdateWorkflowListEntity,
   userApiId: string
@@ -103,7 +103,7 @@ export const updateWorkflowList = async (
     newDescription: entity.newDescription == '' ? null : entity.newDescription,
   }
   return axios
-    .patch(`${host}/workflowlist/${workflowListApiId}`, newEntity, {
+    .put(`${host}/workflowlist/${workflowListApiId}`, newEntity, {
       headers: {
         Authorization: userApiId,
       },
@@ -117,13 +117,13 @@ export const updateWorkflowList = async (
     })
 }
 
-export const postWorkflowListMove = async (
+export const putWorkflowListParent = async (
   workflowListApiId: string,
   entity: MoveWorkflowListEntity,
   userApiId: string
 ) => {
   return axios
-    .post(`${host}/workflowlist/${workflowListApiId}/move`, entity, {
+    .put(`${host}/workflowlist/${workflowListApiId}/parent`, entity, {
       headers: {
         Authorization: userApiId,
       },
@@ -137,13 +137,13 @@ export const postWorkflowListMove = async (
     })
 }
 
-export const postWorkflowListConvert = async (
+export const putWorkflowListType = async (
   workflowListApiId: string,
   entity: ConvertWorkflowListEntity,
   userApiId: string
 ) => {
   return axios
-    .post(`${host}/workflowlist/${workflowListApiId}/convert`, entity, {
+    .put(`${host}/workflowlist/${workflowListApiId}/type`, entity, {
       headers: {
         Authorization: userApiId,
       },
@@ -157,13 +157,13 @@ export const postWorkflowListConvert = async (
     })
 }
 
-export const postWorkflowListReorder = async (
+export const putWorkflowListPosition = async (
   workflowListApiId: string,
   entity: ReorderWorkflowListEntity,
   userApiId: string
 ) => {
   return axios
-    .post(`${host}/workflowlist/${workflowListApiId}/reorder`, entity, {
+    .put(`${host}/workflowlist/${workflowListApiId}/position`, entity, {
       headers: {
         Authorization: userApiId,
       },
@@ -177,13 +177,13 @@ export const postWorkflowListReorder = async (
     })
 }
 
-export const postWorkflowListResource = async (
+export const putWorkflowListResource = async (
   workflowListApiId: string,
   workflowListResource: WorkflowListResource,
   userApiId: string
 ) => {
   return axios
-    .post(
+    .put(
       `${host}/workflowlist/${workflowListApiId}/resource`,
       {
         ...workflowListResource,
@@ -191,7 +191,7 @@ export const postWorkflowListResource = async (
           ? {
               ...workflowListResource.temporal,
               startDate: toLocalDateTimeString(workflowListResource.temporal.startDate),
-              endDate: toLocalDateTimeString(workflowListResource.temporal.endDate),
+              dueDate: toLocalDateTimeString(workflowListResource.temporal.dueDate),
             }
           : null,
       },
@@ -210,7 +210,7 @@ export const postWorkflowListResource = async (
     })
 }
 
-export const createUser = async (createUserEntity: CreateUserEntity) => {
+export const postUser = async (createUserEntity: CreateUserEntity) => {
   return axios
     .post(`${host}/user`, createUserEntity)
     .then((response) => {
@@ -222,12 +222,12 @@ export const createUser = async (createUserEntity: CreateUserEntity) => {
     })
 }
 
-export const getTemporalQuery = async (
+export const getWorkflowListScheduling = async (
   workflowListApiId: String,
   userApiId: string
 ): Promise<TemporalQueryResult | null> => {
   return axios
-    .get<TemporalQueryResult>(`${host}/workflowlist/${workflowListApiId}/query`, {
+    .get<TemporalQueryResult>(`${host}/workflowlist/${workflowListApiId}/scheduling`, {
       headers: {
         Authorization: userApiId,
       },

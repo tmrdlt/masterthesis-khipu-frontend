@@ -7,7 +7,7 @@ export const hasNoTemporalResource = (temporalResource?: TemporalResource): bool
   } else {
     return (
       temporalResource.startDate == null &&
-      temporalResource.endDate == null &&
+      temporalResource.dueDate == null &&
       temporalResource.durationInMinutes == null
     )
   }
@@ -29,12 +29,12 @@ export const getInitWorkflowListResource = (workflowList?: WorkflowList): Workfl
         temporal: workflowList.temporalResource
           ? {
               startDate: workflowList.temporalResource.startDate,
-              endDate: workflowList.temporalResource.endDate,
+              dueDate: workflowList.temporalResource.dueDate,
               durationInMinutes: getOptionalNumber(workflowList.temporalResource.durationInMinutes),
             }
           : {
               startDate: null,
-              endDate: null,
+              dueDate: null,
               durationInMinutes: 0,
             },
         user: workflowList.userResource
@@ -50,7 +50,7 @@ export const getInitWorkflowListResource = (workflowList?: WorkflowList): Workfl
         textual: [],
         temporal: {
           startDate: null,
-          endDate: null,
+          dueDate: null,
           durationInMinutes: 0,
         },
         user: {
@@ -64,7 +64,7 @@ export const getInitWorkflowListResourceBoard = (
 ): WorkflowListResource => {
   return {
     temporal: {
-      endDate: workflowList.temporalResource ? workflowList.temporalResource.endDate : null,
+      dueDate: workflowList.temporalResource ? workflowList.temporalResource.dueDate : null,
     },
   }
 }
