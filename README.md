@@ -1,5 +1,5 @@
 # Khipu
-Khipu is a Kanban board-bases task management tool developed by Timo Erdelt for his _Masters Thesis_ @ Institute for Informatics,
+Khipu is a Kanban board-bases task management tool developed by Timo Erdelt for his _Masters Thesis_ at the Institute for Informatics,
 Ludwig-Maximilian University of Munich. Its frontend is written in TypeScript. Its backend can be found [here](https://github.com/tmrdlt/masterthesis-khipu).
 
 ## Libraries used
