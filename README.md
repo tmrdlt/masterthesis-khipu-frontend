@@ -28,7 +28,7 @@ _Installation instructions for macOS_
   npm run dev
   ```
 
-- Expose via cloudflared tunnel:
+- Optional: Expose via cloudflared tunnel:
   - (if not already installed) `brew install cloudflare/cloudflare/cloudflared`
   - Replace host in `workflow-api.ts` with cloudflared backend link 
   - `cloudflared tunnel --url http://localhost:3000`
