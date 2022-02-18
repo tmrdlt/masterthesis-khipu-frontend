@@ -16,6 +16,7 @@ Ludwig-Maximilian University of Munich. The repository contains the frontend wri
   ```
   
 ## Development
+- Make sure to have backend running
 - Run dev server on `http://localhost:3000/`:
 ```bash
 npm run dev
