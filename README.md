@@ -40,3 +40,4 @@ npm run dev
 - [swr](https://swr.vercel.app/)
 - [immer](https://immerjs.github.io/immer/)
 - Icons from [heroicons](https://heroicons.com/)
+- [Qhipu icon by Freepic](https://www.flaticon.com/free-icon/quipu_4598776)
