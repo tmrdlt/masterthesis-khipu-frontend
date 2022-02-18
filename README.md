@@ -5,7 +5,13 @@ Ludwig-Maximilian University of Munich. The repository contains the frontend wri
 - The backend can be found [here](https://github.com/tmrdlt/masterthesis-khipu).
 
 ## Demonstration
-![](khipu_demo.gif)
+
+### Unbounded nesting
+![](khipu_demo_nesting.gif)
+
+### Scheduling
+![](khipu_demo_scheduling.gif)
+
 
 ## Requirements
 - Node.js v16.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
