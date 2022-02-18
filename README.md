@@ -39,5 +39,5 @@ npm run dev
 - [axios](https://github.com/axios/axios)
 - [swr](https://swr.vercel.app/)
 - [immer](https://immerjs.github.io/immer/)
-- Icons from [heroicons](https://heroicons.com/)
+- [heroicons](https://heroicons.com/)
 - [Qhipu icon by Freepic](https://www.flaticon.com/free-icon/quipu_4598776)
