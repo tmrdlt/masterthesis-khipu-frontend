@@ -14,6 +14,7 @@ Ludwig-Maximilian University of Munich. The repository contains the frontend wri
 
 
 ## Requirements
+_Installation instructions for macOS_
 - Node.js v16.xx.x (can be installed via [nvm](https://github.com/nvm-sh/nvm)):
   ```bash
   nvm install
@@ -32,8 +33,7 @@ Ludwig-Maximilian University of Munich. The repository contains the frontend wri
   - Replace host in `workflow-api.ts` with cloudflared backend link 
   - `cloudflared tunnel --url http://localhost:3000`
 
-## Build with
-
+## Built with
 - [React](https://reactjs.org/)
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
